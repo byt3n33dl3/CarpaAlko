@@ -22,7 +22,7 @@
 
 ## CraxsRat Source Code
 
-This repository contains the leaked source code of CraxsRat, a sophisticated Android remote access trojan ( RAT ) developed by "EVLF DEV". CraxsRat has been used in various cyber-attacks to grant cybercriminals extensive control over infected devices.
+This repository contains the leaked source code of CraxsRat, a sophisticated Android remote access trojan ( **RAT** ) developed by "EVLF DEV". CraxsRat has been used in various cyber-attacks to grant cybercriminals extensive control over infected devices.
 
 ## Disclaimer
 
@@ -70,37 +70,37 @@ This repository contains the leaked source code of CraxsRat, a sophisticated And
 4. **1.cs**
    - Source code file, likely one of the early files in the project.
 
-5. **1~1.cs**
+5. **1-1.cs**
    - Backup or temporary file for `1.cs`.
 
 6. **2.cs**
    - Another source code file, possibly a continuation or related to `1.cs`.
 
-7. **2~1.cs**
+7. **2-1.cs**
    - Backup or temporary file for `2.cs`.
 
 8. **3.cs**
    - Another source code file, following `2.cs`.
 
-9. **3~1.cs**
+9. **3-1.cs**
    - Backup or temporary file for `3.cs`.
 
 10. **4.cs**
     - Another source code file, following `3.cs`.
 
-11. **4~1.cs**
+11. **4-1.cs**
     - Backup or temporary file for `4.cs`.
 
 12. **5.cs**
     - Another source code file, following `4.cs`.
 
-13. **5~1.cs**
+13. **5-1.cs**
     - Backup or temporary file for `5.cs`.
 
 14. **6.cs**
     - Another source code file, following `5.cs`.
 
-15. **6~1.cs**
+15. **6-1.cs**
     - Backup or temporary file for `6.cs`.
 
 16. **AssemblyInfo.cs**
@@ -175,7 +175,7 @@ This repository contains the leaked source code of CraxsRat, a sophisticated And
    | \  ' .'`.; |      |       \.______________________________
      _-'.'    | |--..,,,\_    \________------------""""""""""""
     '''"   _-'.'       ___"-   )
-          '''"        '''---~""
+          '''"        '''----""
 
 ```
 
