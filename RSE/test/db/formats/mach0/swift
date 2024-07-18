@@ -1,0 +1,76 @@
+NAME=mach0 swift demangle methods
+FILE=bins/mach0/swift-main
+CMDS=isq~&FooClass,method
+EXPECT=<<EOF
+0x1000047a0 0 FooClass.bar.method__String..init.witnesstable
+0x100004788 0 FooClass.foo.method__Swift.Int..init.witnesstable
+0x1000017a0 0 main.FooClass.foo.method__Swift.Int
+0x100001860 0 main.FooClass.bar.method__String
+EOF
+RUN
+
+NAME=mach0 swift-x86-64 aav
+FILE=bins/mach0/swift-main
+CMDS=<<EOF
+C*~^?Cd
+aav
+C*~^?Cd
+Cdl~?
+EOF
+EXPECT=<<EOF
+114
+134
+134
+EOF
+RUN
+
+NAME=swift-x86-64 calling convention
+FILE=bins/mach0/swift5.1-throwError
+CMDS=<<EOF
+s sym.__s10throwError7ThrowerC0a2MyB0yyKF
+af
+afc swift
+afva
+afcr
+afvl
+EOF
+EXPECT=<<EOF
+name: swift
+ret: rax
+arg0: rdi
+arg1: rsi
+arg2: rdx
+arg3: rcx
+arg4: r8
+arg5: r9
+arg6: xmm0
+arg7: xmm1
+arg8: xmm2
+arg9: xmm3
+arg10: xmm4
+self: r13
+error: r12
+var int64_t var_30h @ stack - 0x30
+var int64_t var_28h @ stack - 0x28
+var int64_t var_20h @ stack - 0x20
+var int64_t var_18h @ stack - 0x18
+var int64_t error @ r12
+var int64_t self @ r13
+EOF
+RUN
+
+NAME=swift-x86-64 calling convention json
+FILE=bins/mach0/swift5.1-throwError
+CMDS=<<EOF
+s sym.__s10throwError7ThrowerC0a2MyB0yyKF
+af
+afc swift
+afva
+afcrj
+afvlj
+EOF
+EXPECT=<<EOF
+{"name":"swift","ret":"rax","args":["rdi","rsi","rdx","rcx","r8","r9","xmm0","xmm1","xmm2","xmm3","xmm4"],"self":"r13","error":"r12"}
+{"stack":[{"name":"var_30h","arg":false,"type":"int64_t","storage":{"type":"stack","stack":-48}},{"name":"var_28h","arg":false,"type":"int64_t","storage":{"type":"stack","stack":-40}},{"name":"var_20h","arg":false,"type":"int64_t","storage":{"type":"stack","stack":-32}},{"name":"var_18h","arg":false,"type":"int64_t","storage":{"type":"stack","stack":-24}}],"reg":[{"name":"error","arg":false,"type":"int64_t","storage":{"type":"reg","reg":"r12"}},{"name":"self","arg":false,"type":"int64_t","storage":{"type":"reg","reg":"r13"}}]}
+EOF
+RUN

@@ -1,0 +1,39 @@
+NAME=&
+FILE==
+CMDS=<<EOF
+& echo "Hello\nfrom\na task!"
+&& 1
+&= 1
+EOF
+EXPECT=<<EOF
+Hello
+from
+a task!
+
+EOF
+RUN
+
+NAME=& + grep
+FILE==
+CMDS=<<EOF
+& "echo \"Hello\nfrom\na task!\"~a task!"
+&& 1
+&= 1
+EOF
+EXPECT=<<EOF
+a task!
+
+EOF
+RUN
+
+NAME=&j
+FILE==
+CMDS=<<EOF
+& echo Hello\nfrom\na task!
+&& 1
+&j
+EOF
+EXPECT=<<EOF
+[{"id":0,"state":"running","transient":false},{"id":1,"state":"done","transient":false,"cmd":"echo Hello\\nfrom\\na task!"}]
+EOF
+RUN

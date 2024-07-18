@@ -1,0 +1,120 @@
+NAME=MAIN_ABI : arm-linux_android_abi main
+FILE=bins/abi_bins/elf/platforms/arm-linux-androideabi-echo
+ARGS=-A
+CMDS=<<EOF
+e scr.utf8=false
+afs @ main
+EOF
+EXPECT=<<EOF
+int main(int argc, char **argv, char **envp);
+EOF
+RUN
+
+NAME=MAIN_ABI : arm-linux_gnu_guneabi main
+FILE=bins/abi_bins/elf/platforms/arm-linux-gnueabi-echo
+ARGS=-A
+CMDS=<<EOF
+e scr.utf8=false
+afs @ main
+EOF
+EXPECT=<<EOF
+int main(int argc, char **argv, char **envp);
+EOF
+RUN
+
+NAME=MAIN_ABI : mips-linux-gnu-echo main
+FILE=bins/abi_bins/elf/platforms/mips-linux-gnu-echo
+ARGS=-A
+CMDS=<<EOF
+e scr.utf8=false
+afs @ main
+EOF
+EXPECT=<<EOF
+int main(int argc, char **argv, char **envp);
+EOF
+RUN
+
+NAME=MAIN_ABI : mips64-linux-gnueabi main
+FILE=bins/abi_bins/elf/platforms/mips64-linux-gnueabi-echo
+ARGS=-A
+CMDS=<<EOF
+e scr.utf8=false
+s main
+afs @ main
+EOF
+EXPECT=<<EOF
+int main(int argc, char **argv, char **envp);
+EOF
+RUN
+
+NAME=MAIN_ABI : powerpc-linux-gnu main
+FILE=bins/abi_bins/elf/platforms/powerpc-linux-gnu-symexec-guess
+ARGS=-A
+CMDS=<<EOF
+e scr.utf8=false
+afs @ main
+EOF
+EXPECT=<<EOF
+int main();
+EOF
+RUN
+
+NAME=MAIN_ABI : powerpc32-linux-gnu main
+FILE=bins/abi_bins/elf/platforms/powerpc32-linux-gnu-echo
+ARGS=-A
+CMDS=<<EOF
+e scr.utf8=false
+afs @ main
+EOF
+EXPECT=<<EOF
+int main(int argc, char **argv, char **envp);
+EOF
+RUN
+
+NAME=MAIN_ABI : x86_64-linux-gnu main
+FILE=bins/abi_bins/elf/platforms/x86_64-linux-gnu-echo
+ARGS=-A
+CMDS=<<EOF
+e scr.utf8=false
+afs @ main
+EOF
+EXPECT=<<EOF
+int main(int argc, char **argv, char **envp);
+EOF
+RUN
+
+NAME=MAIN_ABI : x86-linux-gnu main
+FILE=bins/abi_bins/elf/platforms/x86-linux-gnu-echo
+ARGS=-A
+CMDS=<<EOF
+e scr.utf8=false
+afs @ main
+EOF
+EXPECT=<<EOF
+int main(int argc, char **argv, char **envp);
+EOF
+RUN
+
+NAME=MAIN_ABI : i686-w64-mingw32 main
+FILE=bins/abi_bins/pe/platforms/i686-w64-mingw32-echo
+ARGS=-A
+CMDS=<<EOF
+e scr.utf8=false
+afs @ sym._main
+EOF
+EXPECT=<<EOF
+int main(int argc, char **argv, char **envp);
+EOF
+RUN
+
+NAME=MAIN_ABI : x86_64-w64-mingw32 main
+FILE=bins/abi_bins/pe/platforms/x86_64-w64-mingw32-echo
+ARGS=-A
+CMDS=<<EOF
+e scr.utf8=false
+afs @ sym.main
+EOF
+EXPECT=<<EOF
+int main(int argc, char **argv, char **envp);
+EOF
+RUN

@@ -1,0 +1,45 @@
+NAME=agC j entry0 imports libc_start_main
+FILE=bins/elf/true
+CMDS=<<EOF
+aaa 2> /dev/null
+agc j
+EOF
+EXPECT=<<EOF
+{"nodes":[{"id":0,"title":"entry0","offset":8464,"out_nodes":[1]},{"id":1,"title":"reloc.__libc_start_main","offset":36656,"out_nodes":[]}]}
+EOF
+RUN
+
+NAME=agC d entry0 imports libc_start_main
+FILE=bins/elf/true
+CMDS=<<EOF
+aaa 2> /dev/null
+agc d ~URL
+EOF
+EXPECT=<<EOF
+0 [URL="entry0", color="lightgray", label="entry0"]
+1 [URL="reloc.__libc_start_main", color="lightgray", label="reloc.__libc_start_main"]
+EOF
+RUN
+
+NAME=agC d contains label for main
+FILE=bins/elf/true
+CMDS=<<EOF
+aaa 2> /dev/null
+agC d ~label="main"
+EOF
+EXPECT=<<EOF
+2 [URL="main", color="lightgray", label="main"]
+EOF
+RUN
+
+NAME=agC function names are resovled properly
+FILE=bins/elf/true
+CMDS=<<EOF
+aaa 2> /dev/null
+agC ~unk.
+echo end
+EOF
+EXPECT=<<EOF
+end
+EOF
+RUN

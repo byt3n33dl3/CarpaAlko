@@ -1,0 +1,269 @@
+NAME=loading a BIOS file [64k]
+FILE=bins/firmware/bios_64k.bin
+CMDS=q!
+EXPECT=<<EOF
+EOF
+RUN
+
+NAME=entrypoint decoding [64k]
+FILE=bins/firmware/bios_64k.bin
+CMDS=ie
+EXPECT=<<EOF
+vaddr      paddr      hvaddr     haddr      type    
+----------------------------------------------------
+0x000ffff0 0x00000000 ---------- ---------- program
+EOF
+RUN
+
+NAME=corrupted section data
+FILE=bins/firmware/bios_64k.bin
+CMDS=pi 1
+EXPECT=<<EOF
+ljmp 0xf000:0xffaa
+EOF
+RUN
+
+NAME=ljmp follow
+FILE=bins/firmware/bios_64k.bin
+CMDS=<<EOF
+s $j
+% $$
+EOF
+EXPECT=<<EOF
+int32   1048490
+uint32  1048490
+hex     0xfffaa
+octal   03777652
+unit    1023.9K
+segment f000:0faa
+string  "\xaa\xff\x0f"
+fvalue  1048490.0
+float   1048490.000000f
+double  1048490.000000
+binary  0b000011111111111110101010
+trits   0t1222021020222
+EOF
+RUN
+
+NAME=loading a BIOS file [128k]
+FILE=bins/firmware/bios_128k.bin
+CMDS=q!
+EXPECT=<<EOF
+EOF
+RUN
+
+NAME=entrypoint decoding [128k]
+FILE=bins/firmware/bios_128k.bin
+CMDS=ie
+EXPECT=<<EOF
+vaddr      paddr      hvaddr     haddr      type    
+----------------------------------------------------
+0x000ffff0 0x00000000 ---------- ---------- program
+EOF
+RUN
+
+NAME=corrupted section data
+FILE=bins/firmware/bios_128k.bin
+CMDS=pi 1
+EXPECT=<<EOF
+ljmp 0xf000:0xffaa
+EOF
+RUN
+
+NAME=loading a BIOS file [256k]
+FILE=bins/firmware/bios_256k.bin
+CMDS=q!
+EXPECT=<<EOF
+EOF
+RUN
+
+NAME=entrypoint decoding [256k]
+FILE=bins/firmware/bios_256k.bin
+CMDS=ie
+EXPECT=<<EOF
+vaddr      paddr      hvaddr     haddr      type    
+----------------------------------------------------
+0x000ffff0 0x00000000 ---------- ---------- program
+EOF
+RUN
+
+NAME=corrupted section data
+FILE=bins/firmware/bios_256k.bin
+CMDS=pi 1
+EXPECT=<<EOF
+ljmp 0xf000:0xffaa
+EOF
+RUN
+
+NAME=loading a BIOS file [512k]
+FILE=bins/firmware/bios_512k.bin
+CMDS=q!
+EXPECT=<<EOF
+EOF
+RUN
+
+NAME=entrypoint decoding [512k]
+FILE=bins/firmware/bios_512k.bin
+CMDS=ie
+EXPECT=<<EOF
+vaddr      paddr      hvaddr     haddr      type    
+----------------------------------------------------
+0x000ffff0 0x00000000 ---------- ---------- program
+EOF
+RUN
+
+NAME=corrupted section data
+FILE=bins/firmware/bios_512k.bin
+CMDS=pi 1
+EXPECT=<<EOF
+ljmp 0xf000:0xffaa
+EOF
+RUN
+
+NAME=loading a BIOS file [1M]
+FILE=bins/firmware/bios_1M.bin
+CMDS=q!
+EXPECT=<<EOF
+EOF
+RUN
+
+NAME=entrypoint decoding [1M]
+FILE=bins/firmware/bios_1M.bin
+CMDS=ie
+EXPECT=<<EOF
+vaddr      paddr      hvaddr     haddr      type    
+----------------------------------------------------
+0x000ffff0 0x00000000 ---------- ---------- program
+EOF
+RUN
+
+NAME=corrupted section data
+FILE=bins/firmware/bios_1M.bin
+CMDS=pi 1
+EXPECT=<<EOF
+ljmp 0xf000:0xffaa
+EOF
+RUN
+
+NAME=loading a BIOS file [2M]
+FILE=bins/firmware/bios_2M.bin
+CMDS=q!
+EXPECT=<<EOF
+EOF
+RUN
+
+NAME=entrypoint decoding [2M]
+FILE=bins/firmware/bios_2M.bin
+CMDS=ie
+EXPECT=<<EOF
+vaddr      paddr      hvaddr     haddr      type    
+----------------------------------------------------
+0x000ffff0 0x00000000 ---------- ---------- program
+EOF
+RUN
+
+NAME=corrupted section data
+FILE=bins/firmware/bios_2M.bin
+CMDS=pi 1
+EXPECT=<<EOF
+ljmp 0xf000:0xffaa
+EOF
+RUN
+
+NAME=loading a BIOS file [4M]
+FILE=bins/firmware/bios_4M.bin
+CMDS=q!
+EXPECT=<<EOF
+EOF
+RUN
+
+NAME=entrypoint decoding [4M]
+FILE=bins/firmware/bios_4M.bin
+CMDS=ie
+EXPECT=<<EOF
+vaddr      paddr      hvaddr     haddr      type    
+----------------------------------------------------
+0x000ffff0 0x00000000 ---------- ---------- program
+EOF
+RUN
+
+NAME=corrupted section data
+FILE=bins/firmware/bios_4M.bin
+CMDS=pi 1
+EXPECT=<<EOF
+ljmp 0xf000:0xffaa
+EOF
+RUN
+
+NAME=loading a BIOS file [8M]
+FILE=bins/firmware/bios_8M.bin
+CMDS=q!
+EXPECT=<<EOF
+EOF
+RUN
+
+NAME=entrypoint decoding [8M]
+FILE=bins/firmware/bios_8M.bin
+CMDS=ie
+EXPECT=<<EOF
+vaddr      paddr      hvaddr     haddr      type    
+----------------------------------------------------
+0x000ffff0 0x00000000 ---------- ---------- program
+EOF
+RUN
+
+NAME=corrupted section data
+FILE=bins/firmware/bios_8M.bin
+CMDS=pi 1
+EXPECT=<<EOF
+ljmp 0xf000:0xffaa
+EOF
+RUN
+
+NAME=test x86 IO ports
+FILE=bins/firmware/bios_1M.bin
+CMDS=<<EOF
+e asm.cpu=generic
+e asm.platform=generic
+aa
+fl @F:platform.ports
+CCl~reg
+EOF
+EXPECT=<<EOF
+0x00000018 1 PS_2_register
+0x0000001a 1 PS_2_execute
+0x0000001f 1 DMA_1
+0x00000020 1 PIC_1
+0x00000022 1 Cx486SLC_DLC
+0x00000038 1 Cozet_PC
+0x00000040 1 PIT
+0x00000060 1 PS_2_8042
+0x00000065 1 AT_T_Chip_Select
+0x0000006b 1 SSGA
+0x00000070 1 CMOS_RTC
+0x00000080 1 DMA_Page
+0x00000090 1 PS_2_POS
+0x000000a0 1 PIC_2
+0x000000c0 1 DMA_2
+0x000000f0 1 PCjr
+0x00000170 1 HDC_2
+0x000001f0 1 HDC_1
+0x00000200 1 Game_port
+0x00000278 1 Parallel_port
+0x000002e0 1 GPIAB
+0x000002e8 1 Serial_port
+0x00000330 1 MIDI
+0x00000340 1 SCSI
+0x00000360 1 NS3249C_card
+0x00000370 1 FDC_2
+0x000003a0 1 SDLC_2
+0x000003b0 1 MDA
+0x000003c0 1 EGA
+0x000003d0 1 CGA
+0x000003f0 1 FDC_1
+0x00000018 CCu "PS/2 extended function register"
+0x00000022 CCu "Cyrix Cx486SLC/DLC processor Cache Configuration Registers (0022-0023)"
+0x0000006b CCu "SSGA control registers (006B-006F)"
+0x00000080 CCu "DMA page registers (0080-008F)"
+EOF
+RUN

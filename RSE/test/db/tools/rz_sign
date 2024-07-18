@@ -1,0 +1,67 @@
+NAME=rz-sign version
+FILE==
+CMDS=!!rz-sign -v~?
+EXPECT=<<EOF
+2
+EOF
+RUN
+
+NAME=rz-sign help
+FILE==
+CMDS=!!rz-sign -h~Usage
+EXPECT=<<EOF
+Usage: rz-sign [options] [file]
+EOF
+RUN
+
+NAME=FLIRT dump libc-v7.sig
+FILE==
+CMDS=!rz-sign -d bins/other/sigs/libc-v7.sig
+EXPECT=<<EOF
+SIG format
+Signature:    , 1 modules
+Version:      7
+Architecture: 0 (x86)
+41564155B8........4154554D89C4534889CD4D89CD4881EC900000004885C0:
+ 0. 16 D2A2 0298 0000:__libc_start_main
+EOF
+RUN
+
+NAME=FLIRT dump libc-v10.sig
+FILE==
+CMDS=!rz-sign -d bins/other/sigs/libc-v10.sig
+EXPECT=<<EOF
+SIG format
+Signature:    FLIRT v10, 1 modules
+Version:      10
+Architecture: 0 (x86)
+41564155B8........4154554D89C4534889CD4D89CD4881EC900000004885C0:
+ 0. 16 D2A2 0298 0000:__libc_start_main
+EOF
+RUN
+
+NAME=FLIRT create sig & pat from bins/elf/hello_world
+FILE==
+CMDS=<<EOF
+mkdir .tmp
+!rz-sign -o .tmp/hello_world.sig bins/elf/hello_world
+!rz-sign -o .tmp/hello_world.pat bins/elf/hello_world
+EOF
+EXPECT=<<EOF
+rz-sign: written 10 signatures to .tmp/hello_world.sig.
+rz-sign: written 10 signatures to .tmp/hello_world.pat.
+EOF
+RUN
+
+NAME=FLIRT convert sig to pat and viceversa
+FILE==
+CMDS=<<EOF
+mkdir .tmp
+!rz-sign -c .tmp/converted.sig bins/flirt/elf-x86/libcurl.a.pat
+!rz-sign -c .tmp/converted.pat .tmp/converted.sig
+EOF
+EXPECT=<<EOF
+rz-sign: bins/flirt/elf-x86/libcurl.a.pat was converted to .tmp/converted.sig.
+rz-sign: .tmp/converted.sig was converted to .tmp/converted.pat.
+EOF
+RUN

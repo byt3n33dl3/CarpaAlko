@@ -1,0 +1,73 @@
+===============
+Redirect stdout
+===============
+
+afl > /tmp/test.txt
+
+---
+
+(statements
+  (redirect_stmt
+    (arged_stmt (cmd_identifier))
+    (fdn_redirect_operator)
+    (arg (arg_identifier))))
+
+
+===============
+Redirect stderr
+===============
+
+afl 2> /tmp/test.txt
+
+---
+
+(statements
+  (redirect_stmt
+    (arged_stmt (cmd_identifier))
+    (fdn_redirect_operator (file_descriptor))
+    (arg (arg_identifier))))
+
+
+=============
+Redirect HTML
+=============
+
+afl H> /tmp/test.txt
+
+---
+
+(statements
+  (redirect_stmt
+    (arged_stmt (cmd_identifier))
+    (html_redirect_operator)
+    (arg (arg_identifier))))
+
+
+===============
+Append to file
+===============
+
+afl >> /tmp/test.txt
+
+---
+
+(statements
+   (redirect_stmt
+    (arged_stmt (cmd_identifier))
+    (fdn_append_operator)
+    (arg (arg_identifier))))
+
+
+===============
+Append err to file
+===============
+
+afl 2>> /tmp/test.txt
+
+---
+
+(statements
+   (redirect_stmt
+     (arged_stmt (cmd_identifier))
+   (fdn_append_operator (file_descriptor))
+   (arg (arg_identifier))))

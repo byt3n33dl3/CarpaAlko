@@ -1,0 +1,389 @@
+NAME=mach0 headers
+FILE=bins/mach0/hello-osx-i386
+CMDS=iH
+EXPECT=<<EOF
+pf.mach0_header @ 0x00001000
+0x00001000  Magic       0xfeedface
+0x00001004  CpuType     0x7
+0x00001008  CpuSubType  0x3
+0x0000100c  FileType    0x2
+0x00001010  nCmds       11
+0x00001014  sizeOfCmds  1172
+0x00001018  Flags       0x85
+pf.mach0_segment @ 0x0000101c
+0x0000101c  cmd       0 0x1 LC_SEGMENT
+0x00001020  cmdsize     56
+0x00001024  name        __PAGEZERO
+pf.mach0_segment @ 0x00001054
+0x00001054  cmd       1 0x1 LC_SEGMENT
+0x00001058  cmdsize     396
+0x0000105c  name        __TEXT
+pf.mach0_section @ 0x0000108c
+pf.mach0_section @ 0x000010d0
+pf.mach0_section @ 0x00001114
+pf.mach0_section @ 0x00001158
+pf.mach0_section @ 0x0000119c
+pf.mach0_segment @ 0x000011e0
+0x000011e0  cmd       2 0x1 LC_SEGMENT
+0x000011e4  cmdsize     328
+0x000011e8  name        __DATA
+pf.mach0_section @ 0x00001218
+pf.mach0_section @ 0x0000125c
+pf.mach0_section @ 0x000012a0
+pf.mach0_section @ 0x000012e4
+pf.mach0_segment @ 0x00001328
+0x00001328  cmd       3 0x1 LC_SEGMENT
+0x0000132c  cmdsize     56
+0x00001330  name        __LINKEDIT
+pf.mach0_dyld_info_only_command @ 0x00001360
+0x00001360  cmd       4 0x80000022 LC_DYLD_INFO_ONLY
+0x00001364  cmdsize     48
+pf.mach0_symtab_command @ 0x00001390
+0x00001390  cmd       5 0x2 LC_SYMTAB
+0x00001394  cmdsize     24
+pf.mach0_dysymtab_command @ 0x000013a8
+0x000013a8  cmd       6 0xb LC_DYSYMTAB
+0x000013ac  cmdsize     80
+pf.mach0_load_dylinker_command @ 0x000013f8
+0x000013f8  cmd       7 0xe LC_LOAD_DYLINKER
+0x000013fc  cmdsize     28
+pf.mach0_uuid_command @ 0x00001414
+0x00001414  cmd       8 0x1b LC_UUID
+0x00001418  cmdsize     24
+0x0000141c  uuid        2310026f6db717b4a9d7d991a5a686ff
+pf.mach0_unixthread_command @ 0x0000142c
+0x0000142c  cmd       9 0x5 LC_UNIXTHREAD
+0x00001430  cmdsize     80
+pf.mach0_dylib_command @ 0x0000147c
+0x0000147c  cmd      10 0xc LC_LOAD_DYLIB
+0x00001480  cmdsize     52
+0x0000148c  current     125.2.10
+0x00001490  compat      1.0.0
+0x00001494  load_dylib  /usr/lib/libSystem.B.dylib
+EOF
+RUN
+
+NAME=mach0 headers big-endian
+FILE=bins/mach0/ppc-ls
+CMDS=iH
+EXPECT=<<EOF
+pf.mach0_header @ 0x00001000
+0x00001000  Magic       0xfeedface
+0x00001004  CpuType     0x12
+0x00001008  CpuSubType  0x0
+0x0000100c  FileType    0x2
+0x00001010  nCmds       11
+0x00001014  sizeOfCmds  1608
+0x00001018  Flags       0x85
+pf.mach0_segment @ 0x0000101c
+0x0000101c  cmd       0 0x1 LC_SEGMENT
+0x00001020  cmdsize     56
+0x00001024  name        __PAGEZERO
+pf.mach0_segment @ 0x00001054
+0x00001054  cmd       1 0x1 LC_SEGMENT
+0x00001058  cmdsize     600
+0x0000105c  name        __TEXT
+pf.mach0_section @ 0x0000108c
+pf.mach0_section @ 0x000010d0
+pf.mach0_section @ 0x00001114
+pf.mach0_section @ 0x00001158
+pf.mach0_section @ 0x0000119c
+pf.mach0_section @ 0x000011e0
+pf.mach0_section @ 0x00001224
+pf.mach0_section @ 0x00001268
+pf.mach0_segment @ 0x000012ac
+0x000012ac  cmd       2 0x1 LC_SEGMENT
+0x000012b0  cmdsize     464
+0x000012b4  name        __DATA
+pf.mach0_section @ 0x000012e4
+pf.mach0_section @ 0x00001328
+pf.mach0_section @ 0x0000136c
+pf.mach0_section @ 0x000013b0
+pf.mach0_section @ 0x000013f4
+pf.mach0_section @ 0x00001438
+pf.mach0_segment @ 0x0000147c
+0x0000147c  cmd       3 0x1 LC_SEGMENT
+0x00001480  cmdsize     56
+0x00001484  name        __LINKEDIT
+pf.mach0_load_dylinker_command @ 0x000014b4
+0x000014b4  cmd       4 0xe LC_LOAD_DYLINKER
+0x000014b8  cmdsize     28
+pf.mach0_dylib_command @ 0x000014d0
+0x000014d0  cmd       5 0xc LC_LOAD_DYLIB
+0x000014d4  cmdsize     56
+0x000014e0  current     4.5.0
+0x000014e4  compat      4.5.0
+0x000014e8  load_dylib  /usr/lib/libncurses.5.4.dylib
+pf.mach0_dylib_command @ 0x00001508
+0x00001508  cmd       6 0xc LC_LOAD_DYLIB
+0x0000150c  cmdsize     52
+0x00001518  current     0.88.0
+0x0000151c  compat      0.1.0
+0x00001520  load_dylib  /usr/lib/libSystem.B.dylib
+pf.mach0_symtab_command @ 0x0000153c
+0x0000153c  cmd       7 0x2 LC_SYMTAB
+0x00001540  cmdsize     24
+pf.mach0_dysymtab_command @ 0x00001554
+0x00001554  cmd       8 0xb LC_DYSYMTAB
+0x00001558  cmdsize     80
+0x000015a4  cmd       9 0x16 LC_TWOLEVEL_HINTS
+0x000015a8  cmdsize     16
+pf.mach0_unixthread_command @ 0x000015b4
+0x000015b4  cmd      10 0x5 LC_UNIXTHREAD
+0x000015b8  cmdsize     176
+EOF
+RUN
+
+NAME=mach0 headers2
+FILE=bins/mach0/ired
+ARGS=-aarm -b32
+CMDS=iH
+EXPECT=<<EOF
+pf.mach0_header @ 0x00004000
+0x00004000  Magic       0xfeedface
+0x00004004  CpuType     0xc
+0x00004008  CpuSubType  0x9
+0x0000400c  FileType    0x2
+0x00004010  nCmds       17
+0x00004014  sizeOfCmds  1148
+0x00004018  Flags       0x200085
+pf.mach0_segment @ 0x0000401c
+0x0000401c  cmd       0 0x1 LC_SEGMENT
+0x00004020  cmdsize     56
+0x00004024  name        __PAGEZERO
+pf.mach0_segment @ 0x00004054
+0x00004054  cmd       1 0x1 LC_SEGMENT
+0x00004058  cmdsize     328
+0x0000405c  name        __TEXT
+pf.mach0_section @ 0x0000408c
+pf.mach0_section @ 0x000040d0
+pf.mach0_section @ 0x00004114
+pf.mach0_section @ 0x00004158
+pf.mach0_segment @ 0x0000419c
+0x0000419c  cmd       2 0x1 LC_SEGMENT
+0x000041a0  cmdsize     328
+0x000041a4  name        __DATA
+pf.mach0_section @ 0x000041d4
+pf.mach0_section @ 0x00004218
+pf.mach0_section @ 0x0000425c
+pf.mach0_section @ 0x000042a0
+pf.mach0_segment @ 0x000042e4
+0x000042e4  cmd       3 0x1 LC_SEGMENT
+0x000042e8  cmdsize     56
+0x000042ec  name        __LINKEDIT
+pf.mach0_dyld_info_only_command @ 0x0000431c
+0x0000431c  cmd       4 0x80000022 LC_DYLD_INFO_ONLY
+0x00004320  cmdsize     48
+pf.mach0_symtab_command @ 0x0000434c
+0x0000434c  cmd       5 0x2 LC_SYMTAB
+0x00004350  cmdsize     24
+pf.mach0_dysymtab_command @ 0x00004364
+0x00004364  cmd       6 0xb LC_DYSYMTAB
+0x00004368  cmdsize     80
+pf.mach0_load_dylinker_command @ 0x000043b4
+0x000043b4  cmd       7 0xe LC_LOAD_DYLINKER
+0x000043b8  cmdsize     28
+pf.mach0_uuid_command @ 0x000043d0
+0x000043d0  cmd       8 0x1b LC_UUID
+0x000043d4  cmdsize     24
+0x000043d8  uuid        ef8520a2ad483e1aa0e38b60d92c1dc8
+pf.mach0_version_min_command @ 0x000043e8
+0x000043e8  cmd       9 0x25 LC_VERSION_MIN_IPHONEOS
+0x000043ec  cmdsize     16
+pf.mach0_source_version_command @ 0x000043f8
+0x000043f8  cmd      10 0x2a LC_SOURCE_VERSION
+0x000043fc  cmdsize     16
+pf.mach0_entry_point_command @ 0x00004408
+0x00004408  cmd      11 0x80000028 LC_MAIN
+0x0000440c  cmdsize     24
+0x00004410  entry0      0x4da9
+0x00004414  stacksize   0x0
+pf.mach0_encryption_info_command @ 0x00004420
+0x00004420  cmd      12 0x21 LC_ENCRYPTION_INFO
+0x00004424  cmdsize     20
+0x00004428  cryptoff   0x00004000
+0x0000442c  cryptsize  16384
+0x00004430  cryptid    0
+pf.mach0_dylib_command @ 0x00004434
+0x00004434  cmd      13 0xc LC_LOAD_DYLIB
+0x00004438  cmdsize     52
+0x00004444  current     1214.5.1
+0x00004448  compat      1.0.0
+0x0000444c  load_dylib  /usr/lib/libSystem.B.dylib
+pf.mach0_function_starts_command @ 0x00004468
+0x00004468  cmd      14 0x26 LC_FUNCTION_STARTS
+0x0000446c  cmdsize     16
+pf.mach0_data_in_code_command @ 0x00004478
+0x00004478  cmd      15 0x29 LC_DATA_IN_CODE
+0x0000447c  cmdsize     16
+0x00004488  cmd      16 0x2b LC_DYLIB_CODE_SIGN_DRS
+0x0000448c  cmdsize     16
+EOF
+RUN
+
+NAME=mach0 entrypoint
+FILE=bins/mach0/hello-osx-i386
+CMDS=ie:quiet
+EXPECT=<<EOF
+0x00001f14 0x00000f14 ---------- 0x00000464 program
+EOF
+RUN
+
+NAME=mach0 entry0 data
+FILE=bins/mach0/hello-osx-i386
+CMDS=p8 10 @ entry0
+EXPECT=<<EOF
+6a0089e583e4f083ec10
+EOF
+RUN
+
+NAME=mach0 entrypoint i386 LC_MAIN
+FILE=bins/mach0/mach0-i386
+CMDS=ie:quiet
+EXPECT=<<EOF
+0x00001f80 0x00000f80 ---------- 0x00000240 program
+EOF
+RUN
+
+NAME=mach0 entrypoint x86_64 LC_MAIN
+FILE=bins/mach0/mach0_2-x86_64
+CMDS=ie:quiet
+EXPECT=<<EOF
+0x100000f70 0x00000f70 ---------- 0x000002e0 program
+EOF
+RUN
+
+NAME=osx mach0 entrypoint
+FILE=bins/mach0/ls-osx-x86_64
+CMDS=ie:quiet
+EXPECT=<<EOF
+0x1000013d8 0x000013d8 ---------- 0x00000648 program
+EOF
+RUN
+
+NAME=osx mach0 ik
+FILE=bins/mach0/ls-osx-x86_64
+CMDS=ik~uuid
+EXPECT=<<EOF
+mach0_cmd_8.cmd=uuid
+mach0_cmd_8.format=mach0_uuid_command
+mach0_load_command_type.cparse=enum mach0_load_command_type{ LC_SEGMENT=0x00000001ULL, LC_SYMTAB=0x00000002ULL, LC_SYMSEG=0x00000003ULL, LC_THREAD=0x00000004ULL, LC_UNIXTHREAD=0x00000005ULL, LC_LOADFVMLIB=0x00000006ULL, LC_IDFVMLIB=0x00000007ULL, LC_IDENT=0x00000008ULL, LC_FVMFILE=0x00000009ULL, LC_PREPAGE=0x0000000aULL, LC_DYSYMTAB=0x0000000bULL, LC_LOAD_DYLIB=0x0000000cULL, LC_ID_DYLIB=0x0000000dULL, LC_LOAD_DYLINKER=0x0000000eULL, LC_ID_DYLINKER=0x0000000fULL, LC_PREBOUND_DYLIB=0x00000010ULL, LC_ROUTINES=0x00000011ULL, LC_SUB_FRAMEWORK=0x00000012ULL, LC_SUB_UMBRELLA=0x00000013ULL, LC_SUB_CLIENT=0x00000014ULL, LC_SUB_LIBRARY=0x00000015ULL, LC_TWOLEVEL_HINTS=0x00000016ULL, LC_PREBIND_CKSUM=0x00000017ULL, LC_LOAD_WEAK_DYLIB=0x80000018ULL, LC_SEGMENT_64=0x00000019ULL, LC_ROUTINES_64=0x0000001aULL, LC_UUID=0x0000001bULL, LC_RPATH=0x8000001cULL, LC_CODE_SIGNATURE=0x0000001dULL, LC_SEGMENT_SPLIT_INFO=0x0000001eULL, LC_REEXPORT_DYLIB=0x8000001fULL, LC_LAZY_LOAD_DYLIB=0x00000020ULL, LC_ENCRYPTION_INFO=0x00000021ULL, LC_DYLD_INFO=0x00000022ULL, LC_DYLD_INFO_ONLY=0x80000022ULL, LC_LOAD_UPWARD_DYLIB=0x80000023ULL, LC_VERSION_MIN_MACOSX=0x00000024ULL, LC_VERSION_MIN_IPHONEOS=0x00000025ULL, LC_FUNCTION_STARTS=0x00000026ULL, LC_DYLD_ENVIRONMENT=0x00000027ULL, LC_MAIN=0x80000028ULL, LC_DATA_IN_CODE=0x00000029ULL, LC_SOURCE_VERSION=0x0000002aULL, LC_DYLIB_CODE_SIGN_DRS=0x0000002bULL, LC_ENCRYPTION_INFO_64=0x0000002cULL, LC_LINKER_OPTION=0x0000002dULL, LC_LINKER_OPTIMIZATION_HINT=0x0000002eULL, LC_VERSION_MIN_TVOS=0x0000002fULL, LC_VERSION_MIN_WATCHOS=0x00000030ULL, LC_NOTE=0x00000031ULL, LC_BUILD_VERSION=0x00000032ULL };
+mach0_uuid_command.format=[4]Ed[16]b (mach0_load_command_type)cmd cmdsize uuid
+uuid.0=ff4d6c2e1dc0369d98d0d3040a8049e8
+EOF
+RUN
+
+NAME=mach0 exports trie
+FILE=bins/mach0/Alamofire-stripped
+CMDS=<<EOF
+iE~_AlamofireVersionString?
+ps @ sym._AlamofireVersionString @e:str.search.encoding=utf8
+EOF
+EXPECT=<<EOF
+1
+@(#)PROGRAM:Alamofire  PROJECT:Pods-1
+
+EOF
+RUN
+
+NAME=mach0 arm/thumb symbols bitness
+FILE=bins/mach0/macho-bash
+CMDS=<<EOF
+ahl. @ sym._main
+ahl. @ sym.__dyld_func_lookup
+EOF
+EXPECT=<<EOF
+ 0x00002c44 => bits=16
+ 0x0000206c => bits=32
+EOF
+RUN
+
+NAME=mach0 symbols
+FILE=bins/mach0/longIdentifiers.dylib
+CMDS=is
+EXPECT=<<EOF
+nth paddr      vaddr      bind   type size lib name                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              
+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+0   0x00007fa8 0x00007fa8 GLOBAL FUNC 0        _abcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghij
+1   0x00007fb0 0x00007fb0 GLOBAL FUNC 0        _abcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrst
+2   0x00007fa8 0x00007fa8 LOCAL  FUNC 0        func.00007fa8
+3   0x00007fb0 0x00007fb0 LOCAL  FUNC 0        func.00007fb0
+EOF
+RUN
+
+NAME=mach0 sections
+FILE=bins/mach0/hello-osx-x86_64
+CMDS=iS
+EXPECT=<<EOF
+paddr      size vaddr       vsize align perm name                     type                     flags                               
+-----------------------------------------------------------------------------------------------------------------------------------
+0x00000ed0 0x53 0x100000ed0 0x53  0x4   -r-x 0.__TEXT.__text          REGULAR                  PURE_INSTRUCTIONS,SOME_INSTRUCTIONS
+0x00000f24 0xc  0x100000f24 0xc   0x2   -r-x 1.__TEXT.__symbol_stub1  SYMBOL_STUBS             PURE_INSTRUCTIONS,SOME_INSTRUCTIONS
+0x00000f30 0xc  0x100000f30 0xc   0x1   -r-x 2.__TEXT.__cstring       CSTRING_LITERALS         
+0x00000f3c 0x24 0x100000f3c 0x24  0x1   -r-x 3.__TEXT.__stub_helper   REGULAR                  PURE_INSTRUCTIONS,SOME_INSTRUCTIONS
+0x00000f60 0x54 0x100000f60 0x54  0x10  -r-x 4.__TEXT.__unwind_info   REGULAR                  
+0x00000fb8 0x48 0x100000fb8 0x48  0x8   -r-x 5.__TEXT.__eh_frame      COALESCED                NO_TOC,STRIP_STATIC_SYMS
+0x00001000 0x28 0x100001000 0x28  0x20  -rw- 6.__DATA.__program_vars  REGULAR                  
+0x00001028 0x10 0x100001028 0x10  0x4   -rw- 7.__DATA.__nl_symbol_ptr NON_LAZY_SYMBOL_POINTERS 
+0x00001038 0x10 0x100001038 0x10  0x4   -rw- 8.__DATA.__la_symbol_ptr LAZY_SYMBOL_POINTERS     
+0x00001048 0x20 0x100001048 0x20  0x8   -rw- 9.__DATA.__data          REGULAR                  
+EOF
+RUN
+
+NAME=mach0 segments
+FILE=bins/mach0/hello-osx-x86_64
+CMDS=iSS
+EXPECT=<<EOF
+paddr      size   vaddr       vsize  align perm name     
+---------------------------------------------------------
+0x00000000 0x1000 0x100000000 0x1000 0x0   -r-x TEXT
+0x00001000 0x1000 0x100001000 0x1000 0x0   -rw- DATA
+0x00002000 0x1000 0x100002000 0x1000 0x0   -r-- LINKEDIT
+EOF
+RUN
+
+NAME=DYLD_CHAINED_PTR_64
+FILE=bins/mach0/ios-DYLD_CHAINED_PTR_64
+CMDS=<<EOF
+pv8 @ 0x100011538 # resolved pointer to "v32@0:8@16@24" string
+ic
+EOF
+EXPECT=<<EOF
+0x000000010000b672
+address     min         max         name                       super            
+--------------------------------------------------------------------------------
+0x1000115c0 0x100007f40 0x100008318 Chained_iOS.ViewController UIViewController
+0x100011608 0x1000083c4 0x1000089c4 Chained_iOS.AppDelegate    UIResponder
+0x100011668 0x100009194 0x100009940 Chained_iOS.SceneDelegate  UIResponder
+EOF
+RUN
+
+NAME=arm64_32, DYLD_CHAINED_PTR_32
+FILE=bins/mach0/arm64_32-fixups-nonptr
+CMDS=<<EOF
+i~machine
+pxr4 0x100 @ 0xc000
+EOF
+EXPECT=<<EOF
+machine  arm64_32
+0x0000c000 0x0000bf94  .... @ sym._some_struct 49044 0.__TEXT.__text section.0.__TEXT.__text,_myfunc,func.0000bf94 R X 'ret'
+0x0000c004 ..[ null bytes ]..   00000000 
+0x0000c078 0x00001234  4... 4660
+0x0000c07c 0x0000002a  *... 42 ascii ('*')
+0x0000c080 0x00000056  V... 86 ascii ('V')
+0x0000c084 0x0000bf98  .... 49048 0.__TEXT.__text _myotherfunc,func.0000bf98 R X 'ret'
+0x0000c088 ..[ null bytes ]..   00000000 
+EOF
+RUN
+
+NAME=mach-o platform recognition
+FILE=bins/mach0/hello-visionos-arm64
+CMDS=<<EOF
+i~^os
+i~^subsys
+EOF
+EXPECT=<<EOF
+os       darwin
+subsys   visionOS
+EOF
+RUN

@@ -1,0 +1,144 @@
+NAME=ao_aoj
+FILE==
+CMDS=<<EOF
+e asm.arch=x86
+e asm.bits=64
+wx c745f400000000
+ao
+aoj~{}
+EOF
+EXPECT=<<EOF
+address: 0x0
+opcode: mov dword [rbp - 0xc], 0
+esilcost: 12
+disasm: mov dword [rbp - 0xc], 0
+pseudo: dword [rbp - 0xc] = 0
+mnemonic: mov
+description: moves data from src to dst
+mask: ffffffffffffff
+prefix: 0
+id: 460
+bytes: c745f400000000
+val: 0x00000000
+disp: 0xfffffffffffffff4
+refptr: 4
+size: 7
+sign: false
+type: mov
+cycles: 1
+esil: 0,0xc,rbp,-,=[4]
+rzil: (storew 0 (+ (var rbp) (bv 64 0xfffffffffffffff4)) (bv 32 0x0))
+direction: write
+family: cpu
+stackop: set
+stackptr: 8
+[
+  {
+    "opcode": "mov dword [rbp - 0xc], 0",
+    "disasm": "mov dword [rbp - 0xc], 0",
+    "pseudo": "dword [rbp - 0xc] = 0",
+    "description": "moves data from src to dst",
+    "mnemonic": "mov",
+    "mask": "ffffffffffffff",
+    "esil": "0,0xc,rbp,-,=[4]",
+    "rzil": {
+      "opcode": "storew",
+      "mem": 0,
+      "key": {
+        "opcode": "+",
+        "x": {
+          "opcode": "var",
+          "value": "rbp"
+        },
+        "y": {
+          "opcode": "bitv",
+          "bits": "0xfffffffffffffff4",
+          "len": 64
+        }
+      },
+      "value": {
+        "opcode": "bitv",
+        "bits": "0x0",
+        "len": 32
+      }
+    },
+    "sign": false,
+    "prefix": 0,
+    "id": 460,
+    "opex": {
+      "operands": [
+        {
+          "size": 4,
+          "rw": 2,
+          "type": "mem",
+          "base": "rbp",
+          "scale": 1,
+          "disp": -12
+        },
+        {
+          "size": 4,
+          "rw": 0,
+          "type": "imm",
+          "value": 0
+        }
+      ],
+      "modrm": true,
+      "disp": -12
+    },
+    "addr": 0,
+    "bytes": "c745f400000000",
+    "val": 0,
+    "disp": 18446744073709551604,
+    "size": 7,
+    "type": "mov",
+    "esilcost": 12,
+    "scale": 0,
+    "refptr": 4,
+    "cycles": 1,
+    "failcycles": 0,
+    "delay": 0,
+    "stack": "set",
+    "stackptr": 8,
+    "family": "cpu"
+  }
+]
+EOF
+RUN
+
+NAME=pimm/cimm
+FILE==
+CMDS=<<EOF
+e asm.arch=arm
+e asm.bits=32
+e asm.cpu=cortexA8
+wx 2f6c642d
+aoj~{[0].disasm}
+aoj~{[0].opex}
+EOF
+EXPECT=<<EOF
+stclhs p12, c6, [r4, -0xbc]!
+{"operands":[{"type":"pimm","value":12},{"type":"cimm","value":6},{"type":"mem","base":"r4","scale":1,"disp":188,"subtracted":true}],"writeback":true,"cc":"hs"}
+EOF
+RUN
+
+NAME=aom
+FILE==
+CMDS=<<EOF
+e asm.arch=x86
+e asm.bits=64
+aom 3
+aom aam
+aoma~mova
+EOF
+EXPECT=<<EOF
+aam
+3
+cmova           conditional move - above/not below nor equal (cf=0 and zf=0)
+cmovae          conditional move - above or equal/not below/not carry (cf=0)
+movabs          absolute data moves
+movapd          move aligned packed double-fp values
+movaps          move aligned packed single-fp values
+vmovapd         move aligned packed double-precision floating-point values
+vmovaps         move aligned packed single-precision floating-point values
+EOF
+RUN

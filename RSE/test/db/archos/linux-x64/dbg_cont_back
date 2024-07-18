@@ -1,0 +1,70 @@
+NAME=debug continue back from callee
+FILE=bins/elf/analysis/calls_x64
+ARGS=-d -e dbg.bpsysign=true
+CMDS=<<EOF
+db @ main
+db @ 0x0040052f
+dc
+dts+
+dc
+dcb
+dcb
+dr rip
+EOF
+EXPECT=<<EOF
+rip = 0x0000000000400574
+EOF
+RUN
+
+NAME=debug continue back from caller
+FILE=bins/elf/analysis/calls_x64
+ARGS=-d
+CMDS=<<EOF
+db @ main
+db @ 0x0040057c
+dc
+dts+
+dc
+dcb
+dr rip
+EOF
+EXPECT=<<EOF
+rip = 0x0000000000400574
+EOF
+RUN
+
+NAME=dbg.manycontback
+FILE=bins/elf/analysis/ls-linux-x86_64-zlul
+ARGS=-d -e dbg.bpsysign=true
+CMDS=<<EOF
+db @ main
+db @ 0x004028ca
+db @ 0x004028d1
+db @ 0x0040290d
+db @ 0x0040294b
+dc
+dts+
+dc
+dc
+dc
+dc
+dsb
+dcb
+dr rip
+dsb
+dcb
+dr rip
+dsb
+dcb
+dr rip
+dsb
+dcb
+dr rip
+EOF
+EXPECT=<<EOF
+rip = 0x000000000040290d
+rip = 0x00000000004028d1
+rip = 0x00000000004028ca
+rip = 0x00000000004028a0
+EOF
+RUN

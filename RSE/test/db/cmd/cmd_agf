@@ -1,0 +1,26 @@
+NAME=agf j resolv reloc symbols
+FILE=bins/elf/ls
+CMDS=<<EOF
+aa 2> /dev/null
+aac 2> /dev/null
+sf loc.0000f190
+agf j ~reloc.free
+EOF
+EXPECT=
+RUN
+
+NAME=agf J
+FILE==
+CMDS=<<EOF
+e asm.arch=x86
+e asm.bytes=true
+e asm.bits=64
+s 0x42
+wx 00004883f80074060000000000000000c3
+af
+agf J
+EOF
+EXPECT=<<EOF
+{"nodes":[{"id":0,"title":"0x42","body":"fcn.00000042();\nadd byte [rax], al\ncmp rax, 0\nje 0x50\n","offset":66,"out_nodes":[1,2]},{"id":1,"title":"0x50","body":"add byte [rax], al\nret\n","offset":80,"out_nodes":[]},{"id":2,"title":"0x4a","body":"add byte [rax], al\nadd byte [rax], al\nadd byte [rax], al\n","offset":74,"out_nodes":[1]}]}
+EOF
+RUN

@@ -1,0 +1,47 @@
+NAME=WASM: Wasm - open
+FILE=bins/wasm/basic.wasm
+CMDS=q!
+EXPECT=<<EOF
+EOF
+RUN
+
+NAME=WASM: Wasm - detection
+FILE=bins/wasm/basic.wasm
+CMDS=iI~os
+EXPECT=<<EOF
+os       WebAssembly
+EOF
+RUN
+
+NAME=WASM: Wasm - entrypoint
+FILE=bins/wasm/start.wasm
+CMDS=ie:quiet
+EXPECT=<<EOF
+0x0000002d 0x0000002d ---------- ---------- program
+EOF
+RUN
+
+NAME=WASM: Wasm - sections
+FILE=bins/wasm/binary.wasm
+CMDS=iS
+EXPECT=<<EOF
+paddr      size  vaddr      vsize align perm name     type flags 
+-----------------------------------------------------------------
+0x0000000a 0x10  0x0000000a 0x10  0x0   ---- type          
+0x0000001d 0x2c  0x0000001d 0x2c  0x0   ---- function      
+0x0000004d 0x1dc 0x0000004d 0x1dc 0x0   ---- export        
+0x0000022d 0x1f6 0x0000022d 0x1f6 0x0   ---- code          
+EOF
+RUN
+
+NAME=WASM: Wasm - maps
+FILE=bins/wasm/binary.wasm
+CMDS=oml
+EXPECT=<<EOF
+ 1 fd: 3 +0x0000000a 0x0000000a - 0x00000019 --- fmap.type
+ 2 fd: 3 +0x0000001d 0x0000001d - 0x00000048 --- fmap.function
+ 3 fd: 3 +0x0000004d 0x0000004d - 0x00000228 --- fmap.export
+ 4 fd: 3 +0x0000022d 0x0000022d - 0x00000422 --- fmap.code
+ 5 fd: 3 +0x00000000 0x00000000 * 0x00000423 r-x 
+EOF
+RUN

@@ -1,0 +1,82 @@
+fd_mask=typedef
+typedef.fd_mask=long int
+
+__idtype=enum
+enum.__idtype=P_ALL,P_GID,P_PGID
+enum.__idtype.P_ALL=0x0
+enum.__idtype.P_GID=0x1
+enum.__idtype.P_PGID=0x2
+
+idtype_t=typedef
+typedef.idtype_t=enum __idtype
+
+_fd_set=struct
+struct._fd_set=fds_bits
+struct._fd_set.fds_bits=fd_mask,0,32
+
+fd_set=typedef
+typedef.fd_set=struct _fd_set
+
+sigval=union
+union.sigval=sival_int,sival_ptr
+union.sigval.sival_int=int,0,0
+union.sigval.sival_ptr=void*,0,0
+
+__siginfo_t=struct
+struct.__siginfo_t=si_signo,si_code,si_value,si_errno,si_pid,si_uid,si_addr,si_status,si_band
+struct.__siginfo_t.si_signo=int,0,0
+struct.__siginfo_t.si_code=int,4,0
+struct.__siginfo_t.si_value=union sigval,8,0
+struct.__siginfo_t.si_errno=int,16,0
+struct.__siginfo_t.si_pid=pid_t,20,0
+struct.__siginfo_t.si_uid=uid_t,24,0
+struct.__siginfo_t.si_addr=void*,28,0
+struct.__siginfo_t.si_status=int,32,0
+struct.__siginfo_t.si_band=int,36,0
+
+siginfo_t=typedef
+typedef.siginfo_t=struct __siginfo_t
+
+__sigset_t=struct
+struct.__sigset_t=sig
+struct.__sigset_t.sig=unsigned long,0,2
+
+sigset_t=typedef
+typedef.sigset_t=struct __sigset_t
+
+sigaction=struct
+struct.sigaction=sa_handler,sa_flags,sa_restorer,sa_mask
+struct.sigaction.sa_handler=void*,0,0
+struct.sigaction.sa_flags=unsigned long,8,0
+struct.sigaction.sa_restorer=void*,12,0
+struct.sigaction.sa_mask=sigset_t,20,0
+
+time_t=typedef
+typedef.time_t=long
+
+suseconds_t=typedef
+typedef.suseconds_t=long
+
+timeval=struct
+struct.timeval=tv_sec,tv_usec
+struct.timeval.tv_sec=time_t,0,0
+struct.timeval.tv_usec=suseconds_t,8,0
+
+timespec=struct
+struct.timespec=tv_sec,tv_nsec
+struct.timespec.tv_sec=time_t,0,0
+struct.timespec.tv_nsec=long,8,0
+
+std__type_info=struct
+struct.std__type_info=
+
+access_perm=enum
+enum.access_perm=F_OK,X_OK,W_OK,R_OK,WX_OK,RX_OK,RW_OK,RWX_OK
+enum.access_perm.F_OK=0
+enum.access_perm.X_OK=1
+enum.access_perm.WX_OK=3
+enum.access_perm.W_OK=2
+enum.access_perm.R_OK=4
+enum.access_perm.RX_OK=5
+enum.access_perm.RW_OK=6
+enum.access_perm.RWX_OK=7

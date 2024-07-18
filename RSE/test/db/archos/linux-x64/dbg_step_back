@@ -1,0 +1,67 @@
+NAME=dbg.stepback
+FILE=bins/elf/analysis/ls-linux-x86_64-zlul
+ARGS=-d -e dbg.bpsysign=true
+CMDS=<<EOF
+db @ main
+db @ 0x004028b6
+dc
+dts+
+dc
+dr rip
+$rsp_after=$`dr rsp`
+2dsb
+dr rip
+%v `dr rsp~[1]`-`$rsp_after~[1]`
+EOF
+EXPECT=<<EOF
+rip = 0x00000000004028b6
+rip = 0x00000000004028af
+0x398
+EOF
+RUN
+
+NAME=debug stepback from callee
+FILE=bins/elf/analysis/calls_x64
+ARGS=-d
+CMDS=<<EOF
+db @ main
+db @ 0x00400510
+dc
+dts+
+dc
+dr rax
+dr rip
+$rsp_after=$`dr rsp`
+dsb
+dsb
+dr rax
+dr rip
+%v `dr rsp~[1]`-`$rsp_after~[1]`
+EOF
+EXPECT=<<EOF
+rax = 0x0000000000600980
+rip = 0x0000000000400510
+rax = 0x0000000000600980
+rip = 0x000000000040056e
+0x8
+EOF
+RUN
+
+NAME=debug stepback from caller
+FILE=bins/elf/analysis/calls_x64
+ARGS=-d -e dbg.bpsysign=true
+CMDS=<<EOF
+wao nop @ 0x00400529
+db @ main
+db @ 0x0040057c
+dc
+dts+
+dc
+dsb
+dsb
+dr rip
+EOF
+EXPECT=<<EOF
+rip = 0x000000000040053b
+EOF
+RUN

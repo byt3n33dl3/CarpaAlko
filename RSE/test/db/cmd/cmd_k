@@ -1,0 +1,110 @@
+NAME=1: k syscall/
+FILE=malloc://512
+CMDS=<<EOF
+e asm.arch=x86
+e asm.bits=64
+e asm.os=linux
+k syscall/0x80.4
+EOF
+EXPECT=<<EOF
+stat
+EOF
+RUN
+
+NAME=2: k syscall/
+FILE=malloc://512
+CMDS=<<EOF
+e asm.arch=x86
+e asm.bits=64
+e asm.os=linux
+k syscall/stat
+EOF
+EXPECT=<<EOF
+0x80,4,2,
+EOF
+RUN
+
+NAME=3: test kj
+FILE=bins/elf/ioli/crackme0x03
+ARGS=-A
+CMDS=<<EOF
+kj~{}
+EOF
+EXPECT=<<EOF
+{
+  "analysis": {
+    "cur_cmd": [
+      "spec",
+      "gcc=spec",
+      "spec.gcc.c=char",
+      "spec.gcc.d=int",
+      "spec.gcc.f=float",
+      "spec.gcc.g=double",
+      "spec.gcc.ld=long int",
+      "spec.gcc.lf=double",
+      "spec.gcc.li=long int",
+      "spec.gcc.lld=long long int",
+      "spec.gcc.lli=long long int",
+      "spec.gcc.llu=unsigned long long int",
+      "spec.gcc.lu=unsigned long int",
+      "spec.gcc.p=void *",
+      "spec.gcc.s=const char *",
+      "spec.gcc.u=unsigned int",
+      "cc",
+      "borland=cc",
+      "cc.borland.arg0=eax",
+      "cc.borland.arg1=edx",
+      "cc.borland.arg2=ecx",
+      "cc.borland.argn=stack_rev",
+      "cc.borland.maxargs=3",
+      "cc.cdecl-fastcall-ms.argn=stack",
+      "cc.cdecl-fastcall-ms.maxargs=1",
+      "cc.cdecl-fastcall-ms.ret=eax",
+      "cc.cdecl-thiscall-ms.arg0=ecx",
+      "cc.cdecl.argn=stack",
+      "cc.cdecl.maxargs=0",
+      "cc.cdecl.ret=eax",
+      "cc.fastcall.arg0=ecx",
+      "cc.fastcall.arg1=edx",
+      "cc.fastcall.argn=stack",
+      "cc.fastcall.maxargs=2",
+      "cc.fastcall.ret=eax",
+      "cc.optlink.arg0=eax",
+      "cc.optlink.arg1=edx",
+      "cc.optlink.arg2=ecx",
+      "cc.optlink.argn=stack",
+      "cc.optlink.maxargs=3",
+      "cc.optlink.ret=eax",
+      "cc.pascal.argn=stack_rev",
+      "cc.pascal.maxargs=0",
+      "cc.reg.arg0=eax",
+      "cc.reg.arg1=ebx",
+      "cc.reg.arg2=ecx",
+      "cc.reg.arg3=edx",
+      "cc.reg.maxargs=4",
+      "cc.reg.ret=eax",
+      "cc.stdcall.argn=stack",
+      "cc.stdcall.maxargs=0",
+      "cc.stdcall.ret=eax",
+      "cc.watcom.arg0=eax",
+      "cc.watcom.arg1=edx",
+      "cc.watcom.arg2=ebx",
+      "cc.watcom.arg3=ecx",
+      "cc.watcom.argn=stack",
+      "cc.watcom.maxargs=4",
+      "cdecl=cc",
+      "cdecl-thiscall-ms=cc",
+      "default.cc=cdecl",
+      "fastcall=cc",
+      "optlink=cc",
+      "pascal=cc",
+      "reg=cc",
+      "stdcall=cc",
+      "watcom=cc",
+      "classes",
+      "noreturn"
+    ]
+  }
+}
+EOF
+RUN

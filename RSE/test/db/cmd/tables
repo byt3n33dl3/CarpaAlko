@@ -1,0 +1,215 @@
+NAME=tables sum
+FILE=bins/elf/analysis/elf-virtualtable
+CMDS=<<EOF
+flt:size/sum
+EOF
+EXPECT=<<EOF
+size  
+------
+12.9K
+EOF
+RUN
+
+NAME=tables sort
+FILE=bins/elf/analysis/elf-virtualtable
+CMDS=<<EOF
+flt:size/cols:size/sort:size/uniq
+EOF
+EXPECT=<<EOF
+size 
+-----
+0
+1
+2
+3
+4
+6
+8
+9
+13
+16
+21
+23
+24
+26
+28
+32
+36
+42
+43
+52
+56
+62
+64
+66
+68
+80
+88
+96
+101
+104
+124
+158
+176
+203
+240
+256
+272
+432
+448
+464
+497
+512
+540
+978
+1160
+4132
+EOF
+RUN
+
+NAME=tables csv
+FILE=bins/elf/analysis/elf-virtualtable
+CMDS=<<EOF
+flt:size/ne/0:addr/ne/0x00000000:/head/10:csv~:..20
+flt:space/eq/relocs:addr/cols/name:/head/3:json~{}
+flt:/head/10:/tail/4:space/cols/name
+flt:/page/2/10:sort/cols/space/size/name:name/sort/inc:fancy
+EOF
+EXPECT=<<EOF
+addr,size,space,name,realname
+0x00400000,4132,segments,segment.LOAD0,segment.LOAD0
+0x00400000,64,segments,segment.ehdr,segment.ehdr
+0x00400040,448,segments,segment.PHDR,segment.PHDR
+0x00400200,28,sections,section..interp,section..interp
+0x00400200,28,segments,segment.INTERP,segment.INTERP
+0x0040021c,32,sections,section..note.ABI_tag,section..note.ABI_tag
+0x0040021c,68,segments,segment.NOTE,segment.NOTE
+0x0040023c,36,sections,section..note.gnu.build_id,section..note.gnu.build_id
+0x00400260,56,sections,section..gnu.hash,section..gnu.hash
+0x00400298,432,sections,section..dynsym,section..dynsym
+[
+  {
+    "addr": 6296136,
+    "name": "reloc.__gmon_start"
+  },
+  {
+    "addr": 6296168,
+    "name": "reloc.std::ostream::operator___int"
+  },
+  {
+    "addr": 6296176,
+    "name": "reloc.operator_delete_void"
+  }
+]
+space            name                  
+---------------------------------------
+sections         section..interp
+segments         segment.INTERP
+symbols.sections sym..interp
+sections         section..note.ABI_tag
+segments         segment.NOTE
+.------------------------------------------------------.
+| space            | size | name                       |
+)------------------------------------------------------(
+| sections         | 497  | section..dynstr            |
+| sections         | 432  | section..dynsym            |
+| sections         | 56   | section..gnu.hash          |
+| sections         | 36   | section..gnu.version       |
+| sections         | 36   | section..note.gnu.build_id |
+| segments         | 68   | segment.NOTE               |
+| symbols.sections | 0    | sym..dynstr                |
+| symbols.sections | 0    | sym..dynsym                |
+| symbols.sections | 0    | sym..gnu.hash              |
+| symbols.sections | 0    | sym..note.ABI_tag          |
+| symbols.sections | 0    | sym..note.gnu.build_id     |
+`------------------------------------------------------'
+EOF
+RUN
+
+NAME=afl table
+FILE=bins/elf/hello_world
+CMDS=<<EOF
+s main
+af
+aflt:simple
+EOF
+EXPECT=<<EOF
+addr       name           size xrefsTo xrefsFrom calls nbbs edges cc cost noreturn 
+-----------------------------------------------------------------------------------
+0x00000630 sym.imp.free   6    1       1         0     1    0     1  3    false
+0x00000640 sym.imp.strcpy 6    1       1         0     1    0     1  3    false
+0x00000650 sym.imp.puts   6    1       1         0     1    0     1  3    false
+0x00000660 sym.imp.strlen 6    2       1         0     1    0     1  3    false
+0x00000670 sym.imp.malloc 6    1       1         0     1    0     1  3    false
+0x00000680 sym.imp.strcat 6    1       1         0     1    0     1  3    false
+0x000007aa main           157  0       9         6     3    3     2  61   false
+EOF
+RUN
+
+NAME=tables sum
+FILE=bins/elf/hello_world
+CMDS=<<EOF
+s main
+af
+afbt
+afbt:fancy
+afbt:size/sort/inc:simple
+EOF
+EXPECT=<<EOF
+addr  size jump  fail  
+-----------------------
+0x7aa 92   0x844 0x806
+0x806 62   0x844 -1
+0x844 3    -1    -1
+.------------------------------.
+| addr  | size | jump  | fail  |
+)------------------------------(
+| 0x7aa | 92   | 0x844 | 0x806 |
+| 0x806 | 62   | 0x844 | -1    |
+| 0x844 | 3    | -1    | -1    |
+`------------------------------'
+addr  size jump  fail  
+-----------------------
+0x844 3    -1    -1
+0x806 62   0x844 -1
+0x7aa 92   0x844 0x806
+EOF
+RUN
+
+NAME=tables gt/ge/lt/le
+FILE=bins/elf/ls
+CMDS=<<EOF
+omlt:size/ge/0x3480:size
+echo
+omlt:size/gt/0x3480:size/cols
+echo
+omlt:size/le/0x3480:size:quiet
+echo
+omlt:size/lt/0x3480:size/cols:quiet
+EOF
+EXPECT=<<EOF
+.---------.
+| size    |
+)---------(
+| 0x3480  |
+| 0x12791 |
+| 0x87c0  |
+`---------'
+
+.---------.
+| size    |
+)---------(
+| 0x12791 |
+| 0x87c0  |
+`---------'
+
+0x9b8
+0x3480
+0x12f0
+0x1218
+
+0x9b8
+0x12f0
+0x1218
+EOF
+RUN

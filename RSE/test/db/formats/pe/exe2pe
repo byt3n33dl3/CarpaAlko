@@ -1,0 +1,8 @@
+NAME=PE: corkami exe2pe.exe - open and don't parse oob relocs
+FILE=bins/pe/exe2pe.exe
+CMDS=ir
+EXPECT=<<EOF
+vaddr paddr type name 
+----------------------
+EOF
+RUN

@@ -1,0 +1,138 @@
+NAME=et
+FILE==
+CMDS=<<EOF
+et asm.slow
+et asm.bits
+et asm.arch
+et search.from
+EOF
+EXPECT=<<EOF
+bool
+int
+str
+addr
+EOF
+RUN
+
+NAME=e-dot
+FILE==
+CMDS=e zoom.
+EXPECT=<<EOF
+zoom.byte=h
+zoom.from=0
+zoom.in=io.map
+zoom.maxsz=512
+zoom.to=0
+EOF
+RUN
+
+NAME=e analysis.gp(mips)
+FILE=bins/elf/analysis/mips64r2-cc1
+CMDS=e analysis.gp
+EXPECT=<<EOF
+0x1213a5940
+EOF
+RUN
+
+NAME=e asm.os
+FILE=bins/elf/analysis/hello-linux-x86_64
+CMDS=e asm.os=?
+EXPECT=<<EOF
+ios
+dos
+darwin
+linux
+freebsd
+openbsd
+netbsd
+windows
+s110
+none
+EOF
+RUN
+
+NAME=e asm.cpu
+FILE=bins/elf/analysis/hello-linux-x86_64
+CMDS=<<EOF
+e asm.arch=mips
+e asm.cpu=?
+EOF
+EXPECT=<<EOF
+mips32/64
+micro
+r6
+v3
+v2
+EOF
+RUN
+
+NAME=e asm.syntax
+FILE==
+CMDS=<<EOF
+wx eb0e
+e asm.arch=x86
+e asm.syntax=masm
+pi 1
+EOF
+EXPECT=<<EOF
+jmp 10h
+EOF
+RUN
+
+NAME=multiple assignments
+FILE==
+CMDS=<<EOF
+e scr.highlight=" scr.highlight.grep =scr.utf8 =true"
+e scr.highlight
+e scr.highlight.grep
+e scr.utf8
+EOF
+EXPECT=<<EOF
+ scr.highlight.grep =scr.utf8 =true
+false
+false
+EOF
+RUN
+
+NAME=multiple assignments with quotes
+FILE==
+CMDS=<<EOF
+e cmd.prompt='scr.highlight = "e cmd.prompt =  "e scr.highlight = cmd.prompt ="e scr.utf8 = true """'
+e cmd.prompt
+e scr.highlight
+EOF
+EXPECT=<<EOF
+scr.highlight = "e cmd.prompt =  "e scr.highlight = cmd.prompt ="e scr.utf8 = true """
+
+EOF
+RUN
+
+NAME=el commands test
+FILE=bins/elf/analysis/hello-linux-x86_64
+CMDS=<<EOF
+elj zoom
+elJ zoom
+el* zoom
+ell zoom
+elq zoom
+EOF
+EXPECT=<<EOF
+{"zoom.byte":"h","zoom.from":0,"zoom.in":"io.map","zoom.maxsz":512,"zoom.to":0}
+[{"name":"zoom.byte","value":"h","type":"str","desc":"Zoom callback to calculate each byte (See pz? for help)","ro":false},{"name":"zoom.from","value":0,"type":"int","desc":"Zoom start address","ro":false},{"name":"zoom.in","value":"io.map","type":"str","desc":"Specify  boundaries for zoom","ro":false,"options":["raw","block","bin.section","bin.sections","bin.sections.rwx","bin.sections.r","bin.sections.rw","bin.sections.rx","bin.sections.wx","bin.sections.x","io.map","io.maps","io.maps.rwx","io.maps.r","io.maps.rw","io.maps.rx","io.maps.wx","io.maps.x","dbg.stack","dbg.heap","dbg.map","dbg.maps","dbg.maps.rwx","dbg.maps.r","dbg.maps.rw","dbg.maps.rx","dbg.maps.wx","dbg.maps.x","analysis.fcn","analysis.bb"]},{"name":"zoom.maxsz","value":512,"type":"int","desc":"Zoom max size of block","ro":false},{"name":"zoom.to","value":0,"type":"int","desc":"Zoom end address","ro":false}]
+e zoom.byte=h
+e zoom.from=0
+e zoom.in=io.map
+e zoom.maxsz=512
+e zoom.to=0
+zoom.byte = h ; Zoom callback to calculate each byte (See pz? for help)
+zoom.from = 0 ; Zoom start address
+zoom.in = io.map ; Specify  boundaries for zoom [raw, block, bin.section, bin.sections, bin.sections.rwx, bin.sections.r, bin.sections.rw, bin.sections.rx, bin.sections.wx, bin.sections.x, io.map, io.maps, io.maps.rwx, io.maps.r, io.maps.rw, io.maps.rx, io.maps.wx, io.maps.x, dbg.stack, dbg.heap, dbg.map, dbg.maps, dbg.maps.rwx, dbg.maps.r, dbg.maps.rw, dbg.maps.rx, dbg.maps.wx, dbg.maps.x, analysis.fcn, analysis.bb]
+zoom.maxsz = 512 ; Zoom max size of block
+zoom.to = 0 ; Zoom end address
+zoom.byte=h
+zoom.from=0
+zoom.in=io.map
+zoom.maxsz=512
+zoom.to=0
+EOF
+RUN

@@ -1,0 +1,118 @@
+#ifndef RZ_CONFIGURE_H
+#define RZ_CONFIGURE_H
+
+#include "rz_build_version.h"
+
+// clang-format off
+#define RZ_CHECKS_LEVEL             @RZ_CHECKS_LEVEL@
+#define DEBUGGER                    @DEBUGGER@
+#define HAVE_THREADS                @HAVE_THREADS@
+#define HAVE_PTHREAD                @HAVE_PTHREAD@
+#define HAVE_LZMA                   @HAVE_LZMA@
+#define HAVE_ZLIB                   @HAVE_ZLIB@
+#define HAVE_DECL_ADDR_NO_RANDOMIZE @HAVE_DECL_ADDR_NO_RANDOMIZE@
+#define HAVE_DECL_PROCCTL_ASLR_CTL  @HAVE_DECL_PROCCTL_ASLR_CTL@
+#define HAVE_ARC4RANDOM             @HAVE_ARC4RANDOM@
+#define HAVE_ARC4RANDOM_UNIFORM     @HAVE_ARC4RANDOM_UNIFORM@
+#define HAVE_EXPLICIT_BZERO         @HAVE_EXPLICIT_BZERO@
+#define HAVE_EXPLICIT_MEMSET        @HAVE_EXPLICIT_MEMSET@
+#define HAVE_CLOCK_NANOSLEEP        @HAVE_CLOCK_NANOSLEEP@
+#define HAVE_SIGACTION              @HAVE_SIGACTION@
+#define HAVE_PIPE                   @HAVE_PIPE@
+#define HAVE_EXECV                  @HAVE_EXECV@
+#define HAVE_EXECVE                 @HAVE_EXECVE@
+#define HAVE_EXECVP                 @HAVE_EXECVP@
+#define HAVE_EXECL                  @HAVE_EXECL@
+#define HAVE_SYSTEM                 @HAVE_SYSTEM@
+#define HAVE_REALPATH               @HAVE_REALPATH@
+#define HAVE_PIPE2                  @HAVE_PIPE2@
+#define HAVE_ENVIRON                @HAVE_ENVIRON@
+#define HAVE_OPENPTY                @HAVE_OPENPTY@
+#define HAVE_FORKPTY                @HAVE_FORKPTY@
+#define HAVE_LOGIN_TTY              @HAVE_LOGIN_TTY@
+#define HAVE_SHM_OPEN               @HAVE_SHM_OPEN@
+#define HAVE_LIB_MAGIC              @HAVE_LIB_MAGIC@
+#define USE_LIB_MAGIC               @USE_LIB_MAGIC@
+#define HAVE_LIB_XXHASH             @HAVE_LIB_XXHASH@
+#define USE_LIB_XXHASH              @USE_LIB_XXHASH@
+#define HAVE_LIB_SSL                @HAVE_OPENSSL@
+#define HAVE_PTRACE                 @HAVE_PTRACE@
+#define USE_PTRACE_WRAP             @USE_PTRACE_WRAP@
+#define HAVE_FORK                   @HAVE_FORK@
+#define HAVE_STRLCPY                @HAVE_STRLCPY@
+#define HAVE_STRNLEN                @HAVE_STRNLEN@
+#define WANT_DYLINK                 @WANT_DYLINK@
+#define WITH_GPL                    @WITH_GPL@
+#define HAVE_JEMALLOC               @HAVE_JEMALLOC@
+#define IS_IOS                      @IS_IOS@
+#define RZ_BUILD_DEBUG              @RZ_BUILD_DEBUG@
+#define WITH_SWIFT_DEMANGLER        @WITH_SWIFT_DEMANGLER@
+#define N_THREAD_LIMIT              @N_THREAD_LIMIT@
+#define HAVE_COPYFILE               @HAVE_COPYFILE@
+#define HAVE_COPY_FILE_RANGE        @HAVE_COPY_FILE_RANGE@
+#define HAVE_BACKTRACE              @HAVE_BACKTRACE@
+#define HAVE___BUILTIN_BSWAP16      @HAVE___BUILTIN_BSWAP16@
+#define HAVE___BUILTIN_BSWAP32      @HAVE___BUILTIN_BSWAP32@
+#define HAVE___BUILTIN_BSWAP64      @HAVE___BUILTIN_BSWAP64@
+#define HAVE___BUILTIN_CLZLL        @HAVE___BUILTIN_CLZLL@
+#define HAVE_POSIX_MEMALIGN         @HAVE_POSIX_MEMALIGN@
+#define HAVE__ALIGNED_MALLOC        @HAVE__ALIGNED_MALLOC@
+
+#define HAVE_HEADER_LINUX_ASHMEM_H  @HAVE_HEADER_LINUX_ASHMEM_H@
+#define HAVE_HEADER_SYS_SHM_H       @HAVE_HEADER_SYS_SHM_H@
+#define HAVE_HEADER_SYS_IPC_H       @HAVE_HEADER_SYS_IPC_H@
+#define HAVE_HEADER_SYS_MMAN_H      @HAVE_HEADER_SYS_MMAN_H@
+#define HAVE_HEADER_INTTYPES_H      @HAVE_HEADER_INTTYPES_H@
+
+#define RZ_IS_PORTABLE @IS_PORTABLE@
+
+#define RZ_BINDIR_DEPTH @BINDIR_DEPTH@
+// clang-format on
+
+#define RZ_PREFIX "@PREFIX@"
+#define RZ_BINDIR "@BINDIR@"
+#define RZ_LIBDIR "@LIBDIR@"
+#define RZ_INCDIR "@INCLUDEDIR@"
+#define RZ_DATDIR "@DATADIR@"
+
+#define RZ_WWWROOT  "@WWWROOT@"
+#define RZ_PLUGINS  "@PLUGINS@"
+#define RZ_DATADIR  "@DATADIR_RZ@"
+#define RZ_SDB      "@SDB@"
+#define RZ_SIGDB    "@SIGDB@"
+#define RZ_THEMES   "@THEMES@"
+#define RZ_FORTUNES "@FORTUNES@"
+#define RZ_FLAGS    "@FLAGS@"
+#define RZ_HUD      "@HUD@"
+
+#define RZ_SDB_ARCH_PLATFORMS RZ_JOIN_3_PATHS(RZ_SDB, "arch", "platforms")
+#define RZ_SDB_ARCH_CPUS      RZ_JOIN_3_PATHS(RZ_SDB, "asm", "cpus")
+#define RZ_SDB_TYPES          RZ_JOIN_2_PATHS(RZ_SDB, "types")
+#define RZ_SDB_OPCODES        RZ_JOIN_2_PATHS(RZ_SDB, "opcodes")
+#define RZ_SDB_REG            RZ_JOIN_2_PATHS(RZ_SDB, "reg")
+#define RZ_SDB_MAGIC          RZ_JOIN_2_PATHS(RZ_SDB, "magic")
+#define RZ_SDB_FORMAT         RZ_JOIN_2_PATHS(RZ_SDB, "format")
+#define RZ_PDB                RZ_JOIN_2_PATHS(RZ_DATADIR, "pdb")
+#define RZ_PROJECTS           RZ_JOIN_2_PATHS(RZ_DATADIR, "projects")
+#define RZ_BINRC              RZ_JOIN_2_PATHS(RZ_DATADIR, "rc.d")
+
+#define RZ_HOME_PREFIX    ".local"
+#define RZ_HOME_CONFIGDIR RZ_JOIN_2_PATHS(".config", "rizin")
+#define RZ_HOME_CACHEDIR  RZ_JOIN_2_PATHS(".cache", "rizin")
+
+#define RZ_HOME_HISTORY RZ_JOIN_2_PATHS(RZ_HOME_CACHEDIR, "history")
+
+#define RZ_HOME_CONFIG_RC     RZ_JOIN_2_PATHS(RZ_HOME_CONFIGDIR, "rizinrc")
+#define RZ_HOME_CONFIG_RC_DIR RZ_JOIN_2_PATHS(RZ_HOME_CONFIGDIR, "rizinrc.d")
+#define RZ_GLOBAL_RC          RZ_JOIN_2_PATHS(RZ_DATADIR, "rizinrc")
+#define RZ_HOME_RC            ".rizinrc"
+
+// This is an optional extra prefix used to load plugins, sdb files, sdb files,
+// etc. It can be outside the default prefix. Used e.g. by Homebrew to load
+// plugins from the general /opt/homebrew prefix instead of the version specific
+// prefix e.g. /opt/homebrew/Cellar/rizin/0.x.y/
+// clang-format off
+#define RZ_EXTRA_PREFIX @EXTRA_PREFIX@
+// clang-format on
+
+#endif

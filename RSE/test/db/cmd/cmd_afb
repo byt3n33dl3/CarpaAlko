@@ -1,0 +1,150 @@
+NAME=af localflag
+FILE=bins/mach0/mac-ls2
+CMDS=<<EOF
+aaa
+afi~?
+afl.
+afbi
+EOF
+EXPECT=<<EOF
+32
+0x1000011e8 entry0
+0x1000011e8 0x100001211 00:0000 41 j 0x100001216 f 0x100001211
+EOF
+RUN
+
+NAME=ab opaddr
+FILE=bins/mach0/mac-ls2
+CMDS=<<EOF
+af
+abil
+sd +1
+abil~opaddr
+sd +1
+abil~opaddr
+abij~{}
+sd +1
+abil~opaddr
+sd +1
+abil~opaddr
+EOF
+EXPECT=<<EOF
+jump: 0x100001216
+fail: 0x100001211
+opaddr: 0x1000011e8
+addr: 0x1000011e8
+size: 41
+inputs: 0
+outputs: 2
+ninstr: 14
+traced: false
+opaddr: 0x1000011e9
+opaddr: 0x1000011e9
+{
+  "jump": 4294971926,
+  "fail": 4294971921,
+  "opaddr": 4294971881,
+  "addr": 4294971880,
+  "size": 41,
+  "inputs": 0,
+  "outputs": 2,
+  "ninstr": 14,
+  "traced": false
+}
+opaddr: 0x1000011e9
+opaddr: 0x1000011ec
+EOF
+RUN
+
+NAME=afb misc
+FILE=bins/elf/hello_world
+CMDS=<<EOF
+aaa
+s main
+afbi
+afbil
+afbij~{}
+afbj~{}
+afb*
+afbr
+EOF
+EXPECT=<<EOF
+0x000007aa 0x00000806 00:0000 92 j 0x00000844 f 0x00000806
+jump: 0x00000844
+fail: 0x00000806
+opaddr: 0x000007aa
+addr: 0x000007aa
+size: 92
+inputs: 0
+outputs: 2
+ninstr: 25
+traced: true
+{
+  "jump": 2116,
+  "fail": 2054,
+  "opaddr": 1962,
+  "addr": 1962,
+  "size": 92,
+  "inputs": 0,
+  "outputs": 2,
+  "ninstr": 25,
+  "traced": true
+}
+[
+  {
+    "jump": 2116,
+    "fail": 2054,
+    "opaddr": 1962,
+    "addr": 1962,
+    "size": 92,
+    "inputs": 0,
+    "outputs": 2,
+    "ninstr": 25,
+    "traced": true
+  },
+  {
+    "jump": 2116,
+    "opaddr": 2054,
+    "addr": 2054,
+    "size": 62,
+    "inputs": 1,
+    "outputs": 1,
+    "ninstr": 16,
+    "traced": true
+  },
+  {
+    "opaddr": 2116,
+    "addr": 2116,
+    "size": 3,
+    "inputs": 2,
+    "outputs": 0,
+    "ninstr": 3,
+    "traced": true
+  }
+]
+fs blocks
+f bb.007aa @ 0x000007aa
+f bb.00806 @ 0x00000806
+f bb.00844 @ 0x00000844
+0x00000846
+EOF
+RUN
+
+NAME=afbet
+FILE=bins/elf/game_of_thrones
+CMDS=<<EOF
+s main
+af
+td "enum test {a=1,b,c,d=6}"
+afbet 0x00401125 test
+pd 1 @@f:case*~case
+EOF
+EXPECT=<<EOF
+|           ;-- case a:                                                ; from 0x401125
+|           ;-- case b:                                                ; from 0x401125
+|           ;-- case c:                                                ; from 0x401125
+|           ;-- case 4:                                                ; from 0x401125
+|           ;-- case 5:                                                ; from 0x401125
+|           ;-- case d:                                                ; from 0x401125
+EOF
+RUN

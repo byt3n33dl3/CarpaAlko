@@ -1,0 +1,111 @@
+NAME=classes analysis
+FILE=bins/pe/cpp_sample.exe
+CMDS=<<EOF
+aar
+avrr
+acll
+EOF
+EXPECT=<<EOF
+[Album]
+  (vtable at 0x140009d80)
+nth addr          vt_offset type    name      
+----------------------------------------------
+1   0x1400011f4  0x00000000 VIRTUAL virtual_0
+2   0x140001267  0x00000008 VIRTUAL virtual_8
+
+[InAbsentia: Album]
+  (vtable at 0x140009da0)
+nth addr          vt_offset type    name      
+----------------------------------------------
+1   0x1400010a5  0x00000000 VIRTUAL virtual_0
+2   0x14000102d  0x00000008 VIRTUAL virtual_8
+
+[type_info]
+  (vtable at 0x140009dc0)
+nth addr          vt_offset type    name      
+----------------------------------------------
+1   0x1400011ea  0x00000000 VIRTUAL virtual_0
+
+EOF
+RUN
+
+NAME=classes analysis armv7
+FILE=bins/mach0/TestRTTI-armv7
+CMDS=<<EOF
+avrr
+acl
+acll~\@
+avra~0x0000c1c8:0
+avra~vmi:0
+echo `avraj~{[0]}`~{:
+EOF
+EXPECT=<<EOF
+[A]
+[B: A]
+[C: A]
+[D: B, C]
+Type Info at 0x0000c1c8:
+  Type Info type: __vmi_class_type_info
+type: __class_type_info
+found_at: 49228
+class_vtable: 49216
+ref_to_type_class: 8
+ref_to_type_name: 49137
+name: A
+name_unique: true
+EOF
+RUN
+
+NAME=classes analysis arm64
+FILE=bins/mach0/TestRTTI-arm64
+CMDS=<<EOF
+avrr
+acl
+acll~\@
+avra~0x100008378:0
+avra~vmi:0
+echo `avraj~{[0]}`~{:
+EOF
+EXPECT=<<EOF
+[A]
+[B: A]
+[C: A]
+[D: B, C]
+Type Info at 0x100008378:
+  Type Info type: __vmi_class_type_info
+type: __class_type_info
+found_at: 4295000208
+class_vtable: 4295000184
+ref_to_type_class: 16
+ref_to_type_name: 4294999928
+name: A
+name_unique: true
+EOF
+RUN
+
+NAME=classes analysis arm64e
+FILE=bins/mach0/TestRTTI-arm64e
+CMDS=<<EOF
+avrr
+acl
+acll~\@
+avra~0x100008370:0
+avra~vmi:0
+echo `avraj~{[0]}`~{:
+EOF
+EXPECT=<<EOF
+[A]
+[B: A]
+[C: A]
+[D: B, C]
+Type Info at 0x100008370:
+  Type Info type: __vmi_class_type_info
+type: __class_type_info
+found_at: 4295000200
+class_vtable: 4295000176
+ref_to_type_class: 4295065704
+ref_to_type_name: 4294999928
+name: A
+name_unique: true
+EOF
+RUN

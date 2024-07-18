@@ -1,0 +1,4 @@
+### memoryapi.h ###
+
+PWIN32_MEMORY_RANGE_ENTRY=type
+type.PWIN32_MEMORY_RANGE_ENTRY=p

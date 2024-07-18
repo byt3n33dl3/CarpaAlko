@@ -1,0 +1,1030 @@
+NAME=add Rm,Rn
+FILE=malloc://0x200
+CMDS=<<EOF
+e asm.arch=sh
+e cfg.bigendian=true
+aei
+ar r1=0xF2
+ar r2=0x2
+wx 0x312C
+aes
+ar r1
+EOF
+EXPECT=<<EOF
+r1 = 0x000000f4
+EOF
+RUN
+
+NAME=add #imm,Rn
+FILE=malloc://0x200
+CMDS=<<EOF
+e asm.arch=sh
+e cfg.bigendian=true
+aei
+ar r1=0xF2
+wx 0x712C
+aes
+ar r1
+
+aeip
+ar r1=0xF2
+wx 0x71FE
+aes
+ar r1
+EOF
+EXPECT=<<EOF
+r1 = 0x0000011e
+r1 = 0x000000f0
+EOF
+RUN
+
+NAME=addc Rm,Rn
+FILE=malloc://0x200
+CMDS=<<EOF
+e asm.arch=sh
+e cfg.bigendian=true
+aei
+ar r2=0xF2
+ar r3=0x4
+ar sr=1
+wx 0x323E
+aes
+ar r2
+ar r3
+ar sr
+
+aeip
+ar r2=0xFFFF0000
+ar r3=0x10000000
+ar sr=0
+wx 0x323E
+aes
+ar r2
+ar sr
+
+aeip
+ar r2=0xFFFF0000
+ar r3=0x0000FFFF
+ar sr=1
+wx 0x323E
+aes
+ar r2
+ar sr
+EOF
+EXPECT=<<EOF
+r2 = 0x000000f7
+r3 = 0x00000004
+sr = 0x00000000
+r2 = 0x0fff0000
+sr = 0x00000001
+r2 = 0x00000000
+sr = 0x00000001
+EOF
+RUN
+
+NAME=addv Rm,Rn
+FILE=malloc://0x200
+CMDS=<<EOF
+e asm.arch=sh
+e cfg.bigendian=true
+aei
+ar r2=0xF2
+ar r3=0x4
+ar sr=1
+wx 0x323F
+aes
+ar r2
+ar sr
+
+aeip
+ar r2=0x8FFF0000
+ar r3=0x800A0000
+ar sr=0
+wx 0x323F
+aes
+ar r2
+ar sr
+
+aeip
+ar r2=0x4FFF0000
+ar r3=0x6F0F0000
+ar sr=0
+wx 0x323F
+aes
+ar r2
+ar sr
+EOF
+EXPECT=<<EOF
+r2 = 0x000000f6
+sr = 0x00000000
+r2 = 0x10090000
+sr = 0x00000001
+r2 = 0xbf0e0000
+sr = 0x00000001
+EOF
+RUN
+
+NAME=and Rm,Rn
+FILE=malloc://0x200
+CMDS=<<EOF
+e asm.arch=sh
+e cfg.bigendian=true
+aei
+ar r1=0x123456F3
+ar r2=0xcada4532
+wx 0x2129
+aes
+ar r1
+EOF
+EXPECT=<<EOF
+r1 = 0x02104432
+EOF
+RUN
+
+NAME=and #imm,@(R0+GBR)
+FILE=malloc://0x200
+CMDS=<<EOF
+e asm.arch=sh
+e cfg.bigendian=true
+aei
+ar r0=0x15
+ar gbr=0x10
+wx 0xcd26
+s 0x24
+wx 0x12345678
+aes
+s 0x24
+px0 4
+EOF
+EXPECT=<<EOF
+12245678
+EOF
+RUN
+
+NAME=BF
+FILE=malloc://0x200
+CMDS=<<EOF
+e asm.arch=sh
+e cfg.bigendian=true
+aei
+ar sr=0
+s 0x10
+aeip
+wx 0x8b26
+aes
+ar pc
+s 0x10
+aeip
+wx 0x8bfc
+aes
+ar pc
+ar sr=1
+s 0x10
+aeip
+aes
+ar pc
+EOF
+EXPECT=<<EOF
+pc = 0x00000060
+pc = 0x0000000c
+pc = 0x00000012
+EOF
+RUN
+
+NAME=BF/S
+FILE=malloc://0x200
+CMDS=<<EOF
+e asm.arch=sh
+e cfg.bigendian=true
+aei
+ar sr=0
+s 0x10
+aeip
+ar r1=0;
+wx 0x8f26e102
+aes
+ar pc
+ar r1
+s 0x10
+aeip
+ar r1=0;
+wx 0x8ffce102
+aes
+ar pc
+ar r1
+ar sr=1
+s 0x10
+aeip
+aes
+ar pc
+EOF
+EXPECT=<<EOF
+pc = 0x00000060
+r1 = 0x00000002
+pc = 0x0000000c
+r1 = 0x00000002
+pc = 0x00000012
+EOF
+RUN
+
+NAME=BRA
+FILE=malloc://0x200
+CMDS=<<EOF
+e asm.arch=sh
+e cfg.bigendian=true
+aei
+s 0x10
+aeip
+ar r1=0
+wx 0xa026e102
+aes
+ar pc
+ar r1
+s 0x10
+aeip
+ar r1=0
+wx 0xaffce102
+aes
+ar pc
+ar r1
+EOF
+EXPECT=<<EOF
+pc = 0x00000060
+r1 = 0x00000002
+pc = 0x0000000c
+r1 = 0x00000002
+EOF
+RUN
+
+NAME=BRAF
+FILE=malloc://0x200
+CMDS=<<EOF
+e asm.arch=sh
+e cfg.bigendian=true
+aei
+s 0x10
+aeip
+ar r1=0
+ar r2=0x4c
+wx 0x0223e102
+aes
+ar pc
+ar r1
+EOF
+EXPECT=<<EOF
+pc = 0x00000060
+r1 = 0x00000002
+EOF
+RUN
+
+NAME=BSR
+FILE=malloc://0x200
+CMDS=<<EOF
+e asm.arch=sh
+e cfg.bigendian=true
+aei
+s 0x10
+aeip
+ar r1=0
+wx 0xb026e102
+aes
+ar pc
+ar pr
+ar r1
+EOF
+EXPECT=<<EOF
+pc = 0x00000060
+pr = 0x00000014
+r1 = 0x00000002
+EOF
+RUN
+
+NAME=BSRF
+FILE=malloc://0x200
+CMDS=<<EOF
+e asm.arch=sh
+e cfg.bigendian=true
+aei
+s 0x10
+aeip
+ar r1=0
+ar r2=0x4c
+wx 0x0203e102
+aes
+ar pc
+ar pr
+ar r1
+EOF
+EXPECT=<<EOF
+pc = 0x00000060
+pr = 0x00000014
+r1 = 0x00000002
+EOF
+RUN
+
+NAME=BT
+FILE=malloc://0x200
+CMDS=<<EOF
+e asm.arch=sh
+e cfg.bigendian=true
+aei
+ar sr=1
+s 0x10
+aeip
+wx 0x8926
+aes
+ar pc
+s 0x10
+aeip
+wx 0x89fc
+aes
+ar pc
+ar sr=0
+s 0x10
+aeip
+aes
+ar pc
+EOF
+EXPECT=<<EOF
+pc = 0x00000060
+pc = 0x0000000c
+pc = 0x00000012
+EOF
+RUN
+
+NAME=BT/S
+FILE=malloc://0x200
+CMDS=<<EOF
+e asm.arch=sh
+e cfg.bigendian=true
+aei
+ar sr=1
+s 0x10
+aeip
+ar r1=0;
+wx 0x8d26e102
+aes
+ar pc
+ar r1
+s 0x10
+aeip
+ar r1=0;
+wx 0x8dfce102
+aes
+ar pc
+ar r1
+ar sr=0
+s 0x10
+aeip
+aes
+ar pc
+EOF
+EXPECT=<<EOF
+pc = 0x00000060
+r1 = 0x00000002
+pc = 0x0000000c
+r1 = 0x00000002
+pc = 0x00000012
+EOF
+RUN
+
+NAME=CLRMAC
+FILE=malloc://0x200
+CMDS=<<EOF
+e asm.arch=sh
+e cfg.bigendian=true
+aei
+ar mach=0xa
+ar macl=0xa
+wx 0x0028
+aes
+ar mach
+ar macl
+EOF
+EXPECT=<<EOF
+mach = 0x00000000
+macl = 0x00000000
+EOF
+RUN
+
+NAME=CLRT
+FILE=malloc://0x200
+CMDS=<<EOF
+e asm.arch=sh
+e cfg.bigendian=true
+aei
+ar sr=3
+wx 0x0008
+aes
+ar sr
+EOF
+EXPECT=<<EOF
+sr = 0x00000002
+EOF
+RUN
+
+NAME=CMP/EQ Rm,Rn
+FILE=malloc://0x200
+CMDS=<<EOF
+e asm.arch=sh
+e cfg.bigendian=true
+aei
+ar sr=0
+ar r1=0xa
+ar r2=0xa
+wx 0x3120
+aes
+ar sr
+s 0
+aeip
+ar sr=1
+ar r1=0xa
+ar r2=0xb
+aes
+ar sr
+EOF
+EXPECT=<<EOF
+sr = 0x00000001
+sr = 0x00000000
+EOF
+RUN
+
+NAME=CMP/GE Rm,Rn
+FILE=malloc://0x200
+CMDS=<<EOF
+e asm.arch=sh
+e cfg.bigendian=true
+aei
+ar sr=1
+ar r1=0xFFFFFFFF
+ar r2=1
+wx 0x3123
+aes
+ar sr
+s 0 
+aeip
+ar sr=0x0
+ar r1=0x5
+aes
+ar sr
+s 0 
+aeip
+ar r1=0x1
+ar sr=0
+aes
+ar sr
+EOF
+EXPECT=<<EOF
+sr = 0x00000000
+sr = 0x00000001
+sr = 0x00000001
+EOF
+RUN
+
+NAME=CMP/GT Rm,Rn
+FILE=malloc://0x200
+CMDS=<<EOF
+e asm.arch=sh
+e cfg.bigendian=true
+aei
+ar sr=1
+ar r1=0xFFFFFFFF
+ar r2=1
+wx 0x3127
+aes
+ar sr
+s 0 
+aeip
+ar sr=0x0
+ar r1=0x5
+aes
+ar sr
+s 0 
+aeip
+ar sr=0x1
+ar r1=0x1
+aes
+ar sr
+EOF
+EXPECT=<<EOF
+sr = 0x00000000
+sr = 0x00000001
+sr = 0x00000000
+EOF
+RUN
+
+NAME=CMP/HI Rm,Rn
+FILE=malloc://0x200
+CMDS=<<EOF
+e asm.arch=sh
+e cfg.bigendian=true
+aei
+ar sr=0
+ar r1=0xFFFFFFFF
+ar r2=1
+wx 0x3126
+aes
+ar sr
+s 0 
+aeip
+ar r2=0xFFFFFFFF
+ar sr=0x1
+ar r1=0x5
+aes
+ar sr
+s 0 
+aeip
+ar sr=0x1
+ar r2=0x1
+ar r1=0x1
+aes
+ar sr
+EOF
+EXPECT=<<EOF
+sr = 0x00000001
+sr = 0x00000000
+sr = 0x00000000
+EOF
+RUN
+
+NAME=CMP/HS Rm,Rn
+FILE=malloc://0x200
+CMDS=<<EOF
+e asm.arch=sh
+e cfg.bigendian=true
+aei
+ar sr=0
+ar r1=0xFFFFFFFF
+ar r2=1
+wx 0x3122
+aes
+ar sr
+s 0 
+aeip
+ar sr=0x1
+ar r2=0xFFFFFFFF
+ar r1=0x5
+aes
+ar sr
+s 0 
+aeip
+ar sr=0x0
+ar r2=0x1
+ar r1=0x1
+aes
+ar sr
+EOF
+EXPECT=<<EOF
+sr = 0x00000001
+sr = 0x00000000
+sr = 0x00000001
+EOF
+RUN
+
+NAME=CMP/PL Rn
+FILE=malloc://0x200
+CMDS=<<EOF
+e asm.arch=sh
+e cfg.bigendian=true
+aei
+ar sr=1
+ar r1=0xFFFFFFFF
+wx 0x4115
+aes
+ar sr
+s 0 
+aeip
+ar r1=0x5
+ar sr=0x0
+aes
+ar sr
+s 0 
+aeip
+ar r1=0x0
+ar sr=0x1
+aes
+ar sr
+EOF
+EXPECT=<<EOF
+sr = 0x00000000
+sr = 0x00000001
+sr = 0x00000000
+EOF
+RUN
+
+NAME=CMP/PZ Rn
+FILE=malloc://0x200
+CMDS=<<EOF
+e asm.arch=sh
+e cfg.bigendian=true
+aei
+ar sr=1
+ar r1=0xFFFFFFFF
+wx 0x4111
+aes
+ar sr
+s 0 
+aeip
+ar r1=0x5
+ar sr=0x0
+aes
+ar sr
+s 0 
+aeip
+ar r1=0x0
+ar sr=0x1
+aes
+ar sr
+EOF
+EXPECT=<<EOF
+sr = 0x00000000
+sr = 0x00000001
+sr = 0x00000001
+EOF
+RUN
+
+NAME=CMP/STR Rm,Rn
+FILE=malloc://0x200
+CMDS=<<EOF
+e asm.arch=sh
+e cfg.bigendian=true
+aei
+wx 0x212C
+ar sr=0
+ar r1=0x01234567
+ar r2=0x12344578
+aes
+ar sr
+s 0 
+aeip
+ar sr=1
+ar r1=0x01234567
+ar r2=0x12345678
+aes
+ar sr
+s 0 
+aeip
+ar sr=0
+ar r1=0x01234567
+ar r2=0x01235678
+aes
+ar sr
+EOF
+EXPECT=<<EOF
+sr = 0x00000001
+sr = 0x00000000
+sr = 0x00000001
+EOF
+RUN
+
+NAME=CMP/EQ #imm,R0
+FILE=malloc://0x200
+CMDS=<<EOF
+e asm.arch=sh
+e cfg.bigendian=true
+aei
+wx 0x8816
+ar sr=0
+ar r0=0x16
+aes
+ar sr
+s 0 
+aeip
+wx 0x88FE
+ar sr=0
+ar r0=0xFFFFFFFE
+aes
+ar sr
+s 0 
+aeip
+wx 0x88FE
+ar sr=1
+ar r0=0xFFeFFFFE
+aes
+ar sr
+EOF
+EXPECT=<<EOF
+sr = 0x00000001
+sr = 0x00000001
+sr = 0x00000000
+EOF
+RUN
+
+NAME=DIV0S Rm,Rn
+FILE=malloc://0x200
+CMDS=<<EOF
+e asm.arch=sh
+e cfg.bigendian=true
+aei
+wx 0x2127
+ar sr=0
+ar r1=0xF0000000
+ar r2=0xF0000000
+aes
+ar sr
+s 0
+aeip
+ar sr=0
+ar r1=0xF0000000
+ar r2=0x00000000
+aes
+ar sr
+s 0
+aeip
+ar sr=0
+ar r1=0x00000000
+ar r2=0xF0000000
+aes
+ar sr
+s 0
+aeip
+ar sr=0xffffffff
+ar r1=0x5
+ar r2=0x5
+aes
+ar sr
+EOF
+EXPECT=<<EOF
+sr = 0x00000300
+sr = 0x00000101
+sr = 0x00000201
+sr = 0xfffffcfe
+EOF
+RUN
+
+NAME=DIV0U
+FILE=malloc://0x200
+CMDS=<<EOF
+e asm.arch=sh
+e cfg.bigendian=true
+aei
+wx 0x0019
+ar sr=0xFFFFFFFF
+aes
+ar sr
+EOF
+EXPECT=<<EOF
+sr = 0xfffffcfe
+EOF
+RUN
+
+NAME=DIV1
+FILE=malloc://0x200
+CMDS=<<EOF
+e asm.arch=sh
+e cfg.bigendian=true
+aei
+wx 0x3124
+ar sr=0x0
+ar r1=02345678
+ar r2=00120000
+aes
+ar sr
+ar r1
+EOF
+EXPECT=<<EOF
+sr = 0x00000001
+r1 = 0x0001d2ee
+EOF
+RUN
+
+NAME=DMULS.W Rm,Rn
+FILE=malloc://0x200
+CMDS=<<EOF
+e asm.arch=sh
+e cfg.bigendian=true
+aei
+wx 0x312D
+ar r1=0x12345678
+ar r2=0x76543210
+aes
+ar mach
+ar macl
+s 0
+aeip
+ar r1=0xFFFFFF78
+ar r2=0x00043210
+aes
+ar mach
+ar macl
+EOF
+EXPECT=<<EOF
+mach = 0x086a1c97
+macl = 0x0b88d780
+mach = 0xffffffff
+macl = 0xfdc56780
+EOF
+RUN
+
+NAME=DMULU.L Rm,Rn
+FILE=malloc://0x200
+CMDS=<<EOF
+e asm.arch=sh
+e cfg.bigendian=true
+aei
+wx 0x3125
+ar r1=0x12345678
+ar r2=0x76543210
+aes
+ar mach
+ar macl
+s 0
+aeip
+ar r1=0xFFFFFF78
+ar r2=0x00043210
+aes
+ar mach
+ar macl
+EOF
+EXPECT=<<EOF
+mach = 0x086a1c97
+macl = 0x0b88d780
+mach = 0x0004320f
+macl = 0xfdc56780
+EOF
+RUN
+
+NAME=DT Rn
+FILE=malloc://0x200
+CMDS=<<EOF
+e asm.arch=sh
+e cfg.bigendian=true
+aei
+ar sr=0xffffffff
+wx 0x4110
+ar r1=0x12345678
+aes
+ar sr
+s 0
+aeip
+ar sr=0
+ar r1=0x1
+aes
+ar sr
+EOF
+EXPECT=<<EOF
+sr = 0xfffffffe
+sr = 0x00000001
+EOF
+RUN
+
+NAME=EXT.S Rm,Rn
+FILE=malloc://0x200
+CMDS=<<EOF
+e asm.arch=sh
+e cfg.bigendian=true
+aei
+wx 0x612e
+ar r2=0x12345678
+ar r1=0x00000123
+aes
+ar r1
+s 0
+aeip
+ar r2=0x12345688
+ar r1=0x00000123
+aes
+ar r1
+EOF
+EXPECT=<<EOF
+r1 = 0x00000078
+r1 = 0xffffff88
+EOF
+RUN
+
+NAME=EXT.W Rm,Rn
+FILE=malloc://0x200
+CMDS=<<EOF
+e asm.arch=sh
+e cfg.bigendian=true
+aei
+wx 0x612f
+ar r2=0x12345678
+ar r1=0x00000123
+aes
+ar r1
+s 0
+aeip
+ar r2=0x12348688
+ar r1=0x00000123
+aes
+ar r1
+EOF
+EXPECT=<<EOF
+r1 = 0x00005678
+r1 = 0xffff8688
+EOF
+RUN
+
+NAME=EXTU.B Rm,Rn
+FILE=malloc://0x200
+CMDS=<<EOF
+e asm.arch=sh
+e cfg.bigendian=true
+aei
+wx 0x612c
+ar r2=0xffffff78
+ar r1=0x00000123
+aes
+ar r1
+EOF
+EXPECT=<<EOF
+r1 = 0x00000078
+EOF
+RUN
+
+NAME=EXTU.W Rm,Rn
+FILE=malloc://0x200
+CMDS=<<EOF
+e asm.arch=sh
+e cfg.bigendian=true
+aei
+wx 0x612d
+ar r2=0xffffff78
+ar r1=0x00000123
+aes
+ar r1
+EOF
+EXPECT=<<EOF
+r1 = 0x0000ff78
+EOF
+RUN
+
+NAME=JMP @Rm
+FILE=malloc://0x200
+CMDS=<<EOF
+e asm.arch=sh
+e cfg.bigendian=true
+aei
+s 0x10
+aeip
+wx 0x412be202
+ar r2=0x5
+ar r1=0x00000123
+aes
+ar pc
+ar r2
+EOF
+EXPECT=<<EOF
+pc = 0x00000122
+r2 = 0x00000002
+EOF
+RUN
+
+NAME=JSR @Rm
+FILE=malloc://0x200
+CMDS=<<EOF
+e asm.arch=sh
+e cfg.bigendian=true
+aei
+s 0x10
+aeip
+wx 0x410be202
+ar r2=0x5
+ar pr=0x1
+ar r1=0x00000123
+aes
+ar pc
+ar r2
+ar pr
+EOF
+EXPECT=<<EOF
+pc = 0x00000122
+r2 = 0x00000002
+pr = 0x00000014
+EOF
+RUN
+
+NAME=LDC Rm,SR
+FILE=malloc://0x200
+CMDS=<<EOF
+e asm.arch=sh
+e cfg.bigendian=true
+aei
+wx 0x410e
+ar sr=0x5
+ar r1=0x12345
+aes
+ar sr
+EOF
+EXPECT=<<EOF
+sr = 0x00010345
+EOF
+RUN
+
+NAME=LDC Rm,GBR
+FILE=malloc://0x200
+CMDS=<<EOF
+e asm.arch=sh
+e cfg.bigendian=true
+aei
+wx 0x411e
+ar gbr=0x5
+ar r1=0x12345
+aes
+ar gbr
+EOF
+EXPECT=<<EOF
+gbr = 0x00012345
+EOF
+RUN

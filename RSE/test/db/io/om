@@ -1,0 +1,60 @@
+NAME=om output
+FILE=--
+CMDS=<<EOF
+on malloc://256
+on malloc://256 0x300
+omni 1 aaaaaa
+omni 2 bbbbbb
+oml
+oml. @ 0x300
+EOF
+EXPECT=<<EOF
+ 1 fd: 3 +0x00000000 0x00000000 * 0x000000ff rw- aaaaaa
+ 2 fd: 4 +0x00000000 0x00000300 - 0x000003ff rw- bbbbbb
+ 2 fd: 4 +0x00000000 0x00000300 - 0x000003ff rw- bbbbbb
+EOF
+RUN
+
+NAME=omlt
+FILE=bins/elf/ls
+CMDS=<<EOF
+omlt
+echo
+omlt:quiet
+echo
+omlt:size
+echo
+omlt:name/str/fmap.LOAD3:size:quiet
+EOF
+EXPECT=<<EOF
+.---------------------------------------------------------------------------------------.
+| id | fd | pa      | pa_end  | size    | va      | va_end  | perm | name               |
+)---------------------------------------------------------------------------------------(
+| 1  | 4  | 0x0     | 0x9b8   | 0x9b8   | 0x23560 | 0x23f18 | r--  | vmap.reloc-targets |
+| 2  | 3  | 0x0     | 0x3480  | 0x3480  | 0x0     | 0x3480  | r--  | fmap.LOAD0         |
+| 3  | 3  | 0x4000  | 0x16791 | 0x12791 | 0x4000  | 0x16791 | r-x  | fmap.LOAD1         |
+| 4  | 3  | 0x17000 | 0x1f7c0 | 0x87c0  | 0x17000 | 0x1f7c0 | r--  | fmap.LOAD2         |
+| 5  | 5  | 0x0     | 0x12f0  | 0x12f0  | 0x22268 | 0x23558 | rw-  | mmap.LOAD3         |
+| 6  | 6  | 0x20050 | 0x21268 | 0x1218  | 0x21050 | 0x22268 | r--  | vmap.LOAD3         |
+`---------------------------------------------------------------------------------------'
+
+1  4  0x0     0x9b8   0x9b8   0x23560 0x23f18 r--  vmap.reloc-targets
+2  3  0x0     0x3480  0x3480  0x0     0x3480  r--  fmap.LOAD0
+3  3  0x4000  0x16791 0x12791 0x4000  0x16791 r-x  fmap.LOAD1
+4  3  0x17000 0x1f7c0 0x87c0  0x17000 0x1f7c0 r--  fmap.LOAD2
+5  5  0x0     0x12f0  0x12f0  0x22268 0x23558 rw-  mmap.LOAD3
+6  6  0x20050 0x21268 0x1218  0x21050 0x22268 r--  vmap.LOAD3
+
+.---------.
+| size    |
+)---------(
+| 0x9b8   |
+| 0x3480  |
+| 0x12791 |
+| 0x87c0  |
+| 0x12f0  |
+| 0x1218  |
+`---------'
+
+EOF
+RUN

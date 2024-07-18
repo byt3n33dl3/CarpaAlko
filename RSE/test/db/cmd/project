@@ -1,0 +1,413 @@
+NAME=load with file without moving anything
+FILE=bins/elf/crackme0x05
+CMDS=<<EOF
+e asm.bytes=true
+f i_do_hope_that_no_entity_knocks_over_my_beverage @ 0x080483d8
+Ps .tmp_load_no_move.rzdb
+o--
+Po .tmp_load_no_move.rzdb
+rm .tmp_load_no_move.rzdb
+pdq 3 @ 0x080483d8
+EOF
+EXPECT=<<EOF
+0x080483d8   i_do_hope_that_no_entity_knocks_over_my_beverage:
+0x080483d8                   50  push eax
+0x080483d9                   54  push esp
+0x080483da                   52  push edx
+EOF
+RUN
+
+NAME=load with file using saved absolute file path after project file was moved
+FILE=bins/elf/crackme0x05
+CMDS=<<EOF
+e asm.bytes=true
+f i_do_hope_that_no_entity_knocks_over_my_beverage @ 0x080483d8
+Ps .tmp_load_move_project.rzdb
+o--
+mkdir -p .tmp_load_move_project
+mv .tmp_load_move_project.rzdb .tmp_load_move_project/
+cd .tmp_load_move_project
+Po .tmp_load_move_project.rzdb
+rm .tmp_load_move_project.rzdb
+cd ..
+rm .tmp_load_move_project
+pdq 3 @ 0x080483d8
+EOF
+EXPECT=<<EOF
+0x080483d8   i_do_hope_that_no_entity_knocks_over_my_beverage:
+0x080483d8                   50  push eax
+0x080483d9                   54  push esp
+0x080483da                   52  push edx
+EOF
+RUN
+
+NAME=load with file using saved relative file path after project file and binary were moved together
+FILE=--
+CMDS=<<EOF
+e asm.bytes=true
+cp bins/elf/crackme0x05 .tmp_load_move_both.bin
+o .tmp_load_move_both.bin
+f i_do_hope_that_no_entity_knocks_over_my_beverage @ 0x080483d8
+Ps .tmp_load_move_both.rzdb
+o--
+mkdir -p .tmp_load_move_both
+mv .tmp_load_move_both.rzdb .tmp_load_move_both/
+mv .tmp_load_move_both.bin .tmp_load_move_both/
+Po .tmp_load_move_both/.tmp_load_move_both.rzdb
+pdq 3 @ 0x080483d8
+o--
+rm .tmp_load_move_both/.tmp_load_move_both.rzdb
+rm .tmp_load_move_both/.tmp_load_move_both.bin
+rm .tmp_load_move_both
+EOF
+EXPECT=<<EOF
+0x080483d8   i_do_hope_that_no_entity_knocks_over_my_beverage:
+0x080483d8                   50  push eax
+0x080483d9                   54  push esp
+0x080483da                   52  push edx
+EOF
+RUN
+
+NAME=load with file using saved relative file path after project file and binary were moved together with different relation
+FILE=--
+CMDS=<<EOF
+e asm.bytes=true
+mkdir -p .tmp_load_move_both2/.tmp_load_move_both2
+cp bins/elf/crackme0x05 .tmp_load_move_both2/somebin
+o .tmp_load_move_both2/somebin
+f i_do_hope_that_no_entity_knocks_over_my_beverage @ 0x080483d8
+Ps .tmp_load_move_both2.rzdb
+o--
+mv .tmp_load_move_both2.rzdb .tmp_load_move_both2/
+mv .tmp_load_move_both2/somebin .tmp_load_move_both2/.tmp_load_move_both2/somebin
+Po .tmp_load_move_both2/.tmp_load_move_both2.rzdb
+pdq 3 @ 0x080483d8
+o--
+rm .tmp_load_move_both2/.tmp_load_move_both2.rzdb
+rm .tmp_load_move_both2/.tmp_load_move_both2/somebin
+rm .tmp_load_move_both2/.tmp_load_move_both2
+rm .tmp_load_move_both2
+EOF
+EXPECT=<<EOF
+0x080483d8   i_do_hope_that_no_entity_knocks_over_my_beverage:
+0x080483d8                   50  push eax
+0x080483d9                   54  push esp
+0x080483da                   52  push edx
+EOF
+RUN
+
+NAME=load with file using saved raw file path after everything has been messed up, but binary is in cwd
+FILE=--
+CMDS=<<EOF
+e asm.bytes=true
+mkdir -p .tmp_load_move_bin
+cp bins/elf/crackme0x05 .tmp_load_move_bin.bin
+o .tmp_load_move_bin.bin
+f i_do_hope_that_no_entity_knocks_over_my_beverage @ 0x080483d8
+Ps .tmp_load_move_bin.rzdb
+o--
+mv .tmp_load_move_bin.bin .tmp_load_move_bin/.tmp_load_move_bin.bin
+cd .tmp_load_move_bin
+Po ../.tmp_load_move_bin.rzdb
+pdq 3 @ 0x080483d8
+o--
+cd ..
+rm .tmp_load_move_bin/.tmp_load_move_bin.bin
+rm .tmp_load_move_bin
+rm .tmp_load_move_bin.rzdb
+EOF
+EXPECT=<<EOF
+0x080483d8   i_do_hope_that_no_entity_knocks_over_my_beverage:
+0x080483d8                   50  push eax
+0x080483d9                   54  push esp
+0x080483da                   52  push edx
+EOF
+RUN
+
+NAME=load without file
+FILE=bins/elf/crackme0x05
+CMDS=<<EOF
+e asm.bytes=true
+f a_nice_refreshing_un-moisten @ 0x080483d8
+Ps .tmp_load_without_file.rzdb
+ol
+echo --
+o--
+ol
+pdq 3 @ 0x080483d8
+echo --
+Poo .tmp_load_without_file.rzdb
+rm .tmp_load_without_file.rzdb
+ol
+echo --
+pdq 3 @ 0x080483d8
+EOF
+EXPECT=<<EOF
+ 3 * r-x 0x00001de8 bins/elf/crackme0x05
+ 4 - r-x 0x0000001c vfile://0/reloc-targets
+ 5 - rw- 0x00000004 null://4
+--
+0x080483d8                   ff  invalid
+0x080483d9                   ff  invalid
+0x080483da                   ff  invalid
+--
+--
+0x080483d8   a_nice_refreshing_un_moisten:
+0x080483d8                   ff  invalid
+0x080483d9                   ff  invalid
+0x080483da                   ff  invalid
+EOF
+RUN
+
+NAME=load on top of file
+FILE=bins/elf/crackme0x05
+CMDS=<<EOF
+e asm.bytes=true
+f a_nice_refreshing_un-moisten @ 0x080483d8
+Ps .tmp_load_on_top_of_file.rzdb
+ol
+echo --
+o--
+ol
+pdq 3 @ 0x080483d8
+echo --
+o bins/elf/crackme0x00b
+Poo .tmp_load_on_top_of_file.rzdb
+rm .tmp_load_on_top_of_file.rzdb
+echo --
+pdq 3 @ 0x080483d8
+EOF
+EXPECT=<<EOF
+ 3 * r-x 0x00001de8 bins/elf/crackme0x05
+ 4 - r-x 0x0000001c vfile://0/reloc-targets
+ 5 - rw- 0x00000004 null://4
+--
+0x080483d8                   ff  invalid
+0x080483d9                   ff  invalid
+0x080483da                   ff  invalid
+--
+--
+0x080483d8   a_nice_refreshing_un_moisten:
+0x080483d8                 0000  add byte [eax], al
+0x080483da                 00e9  add cl, ch
+0x080483dc                   90  nop
+EOF
+RUN
+
+NAME=flags
+FILE=bins/elf/crackme0x05
+CMDS=<<EOF
+fr sym.main sym.renamedmain
+fl~?
+fl~main
+Ps .tmp_flags.rzdb
+echo --
+o--
+fl
+echo --
+Poo .tmp_flags.rzdb
+rm .tmp_flags.rzdb
+fl~?
+fl~main
+EOF
+EXPECT=<<EOF
+111
+0x08048364 16 sym.imp.__libc_start_main
+0x08048540 256 main
+0x08048540 92 sym.renamedmain
+0x0804a000 4 reloc.__libc_start_main
+--
+--
+111
+0x08048364 16 sym.imp.__libc_start_main
+0x08048540 92 sym.renamedmain
+0x08048540 256 main
+0x0804a000 4 reloc.__libc_start_main
+EOF
+RUN
+
+NAME=config
+FILE==
+CMDS=<<EOF
+e asm.describe=1
+e asm.describe
+e asm.indentspace=8
+e asm.indentspace
+e analysis.fcnprefix=myfunctions
+e analysis.fcnprefix
+Ps .tmp_config.rzdb
+echo --
+e asm.describe=0
+e asm.describe
+e asm.indentspace=0
+e asm.indentspace
+e analysis.fcnprefix=fcn
+e analysis.fcnprefix
+echo --
+Poo .tmp_config.rzdb
+rm .tmp_config.rzdb
+e asm.describe
+e asm.indentspace
+e analysis.fcnprefix
+EOF
+EXPECT=<<EOF
+true
+8
+myfunctions
+--
+false
+0
+fcn
+--
+true
+8
+myfunctions
+EOF
+RUN
+
+NAME=seek
+FILE==
+CMDS=<<EOF
+s 0x1337
+s
+Ps .tmp_seek.rzdb
+o--
+s 0
+Poo .tmp_seek.rzdb
+rm .tmp_seek.rzdb
+s
+EOF
+EXPECT=<<EOF
+0x1337
+0x1337
+EOF
+RUN
+
+NAME=analysis
+FILE==
+CMDS=<<EOF
+af+ windowpane @ 0x100
+afb+ windowpane 0x100 0x30
+afl
+Ps .tmp_analysis.rzdb
+echo --
+o--
+afl
+echo --
+Poo .tmp_analysis.rzdb
+rm .tmp_analysis.rzdb
+afl
+EOF
+EXPECT=<<EOF
+0x00000100    1 48           windowpane
+--
+--
+0x00000100    1 48           windowpane
+EOF
+RUN
+
+NAME=remember saved project file during session
+FILE=bins/elf/crackme0x05
+CMDS=<<EOF
+e asm.bytes=true
+Ps .tmp_remember.rzdb
+e prj.file
+f cashews @ 0x080483d8
+Ps
+o--
+e prj.file=
+e prj.file
+Po .tmp_remember.rzdb
+e prj.file
+rm .tmp_remember.rzdb
+pdq 1 @ 0x080483d8
+EOF
+EXPECT=<<EOF
+.tmp_remember.rzdb
+
+.tmp_remember.rzdb
+0x080483d8   cashews:
+0x080483d8                   50  push eax
+EOF
+RUN
+
+NAME=raw file permissions after reload
+FILE=bins/other/0x3
+CMDS=<<EOF
+oml
+Ps .tmp_perms.rzdb
+o--
+echo --
+oml
+echo --
+Po .tmp_perms.rzdb
+oml
+rm .tmp_perms.rzdb
+EOF
+EXPECT=<<EOF
+ 1 fd: 3 +0x00000000 0x00000000 * 0x00000002 r-x 
+--
+--
+ 1 fd: 3 +0x00000000 0x00000000 * 0x00000002 r-x 
+EOF
+RUN
+
+NAME=migrate info
+FILE=--
+CMDS=<<EOF
+Po prj/v1-noreturn.rzdb
+EOF
+EXPECT=<<EOF
+Detailed project load info:
+  project migrated from version 1 to 2.
+  project migrated from version 2 to 3.
+  project migrated from version 3 to 4.
+  project migrated from version 4 to 5.
+  project migrated from version 5 to 6.
+  project migrated from version 6 to 7.
+  project migrated from version 7 to 8.
+  project migrated from version 8 to 9.
+  project migrated from version 9 to 10.
+  project migrated from version 10 to 11.
+  project migrated from version 11 to 12.
+  project migrated from version 12 to 13.
+  project migrated from version 13 to 14.
+  project migrated from version 14 to 15.
+  project migrated from version 15 to 16.
+  project migrated from version 16 to 17.
+  project migrated from version 17 to 18.
+EOF
+RUN
+
+NAME=longkeys (> 256)
+FILE=bins/elf/crackme0x00b
+CMDS=<<EOF
+s 0x08048464
+af Loooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooongname
+ac Claaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaasssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssss
+acm Claaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaasssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssss Meeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeethod 0x100
+Ps .tmp_longkeys.rzdb
+echo --
+o--
+ol
+echo --
+Po .tmp_longkeys.rzdb
+rm .tmp_longkeys.rzdb
+echo --
+afl
+acll
+EOF
+EXPECT=<<EOF
+--
+--
+--
+0x08048464    1 1            Loooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooongname
+[Claaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaasssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssss]
+nth addr         vt_offset type    name                                                                                                                                                                                                                                                                                                                            
+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+1   0x00000100  ---------- DEFAULT Meeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeethod
+
+EOF
+EXPECT_ERR=<<EOF
+EOF
+RUN

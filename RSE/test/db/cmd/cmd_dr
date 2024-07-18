@@ -1,0 +1,26 @@
+NAME=drrj color
+FILE==
+ARGS=-a x86 -b 32 -m 0x10000
+CMDS=<<EOF
+e scr.color=1
+ar ebx=0x10
+arrj~{2}
+EOF
+EXPECT=<<EOF
+{"role":"A1","reg":"ebx","value":"0x10","refstr":"16 ebx"}
+EOF
+RUN
+
+NAME=dr rflags
+FILE==
+ARGS=-a x86 -b 64 -m 0x10000
+CMDS=<<EOF
+ar rflags
+ar rflags=0x137
+ar rflags
+EOF
+EXPECT=<<EOF
+rflags = 0x0000000000000000
+rflags = 0x0000000000000137
+EOF
+RUN

@@ -1,0 +1,69 @@
+NAME=Double quotes - rzshell
+FILE==
+CMDS=<<EOF
+w "Hello World"
+ps
+w0 15
+w "\"Hello World\""
+ps
+w0 15
+w "Hello;World"
+ps
+w0 15
+w "Hello@World"
+ps
+EOF
+EXPECT=<<EOF
+Hello World
+"Hello World"
+Hello;World
+Hello@World
+EOF
+RUN
+
+NAME=Single quotes - rzshell
+FILE==
+CMDS=<<EOF
+w 'Hello World'
+ps
+w0 15
+w '"Hello World"'
+ps
+w0 15
+w '\'Hello World\''
+ps
+w0 15
+w 'Hello;World'
+ps
+w0 15
+w 'Hello@World'
+ps
+EOF
+EXPECT=<<EOF
+Hello World
+"Hello World"
+'Hello World'
+Hello;World
+Hello@World
+EOF
+RUN
+
+NAME=Quotes and substitution - rzshell
+FILE==
+CMDS=<<EOF
+w "Hello $(echo World)"
+ps
+w0 15
+w 'Hello $(echo World)'
+ps
+w0 15
+w "Hello \$(echo World)"
+ps
+w0 15
+EOF
+EXPECT=<<EOF
+Hello World
+Hello $(echo World)
+Hello $(echo World)
+EOF
+RUN

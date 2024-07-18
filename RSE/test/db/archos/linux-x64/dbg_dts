@@ -1,0 +1,44 @@
+NAME=save and load debug session (dtst, dtsf)
+FILE=bins/elf/analysis/calls_x64
+ARGS=-d
+CMDS=<<EOF
+dcu main
+dts+
+ds 200
+dtst ./
+dtsf ./
+dr rip
+ds 10
+dr rip
+rm ./session.sdb
+rm ./registers.sdb
+rm ./memory.sdb
+rm ./checkpoints.sdb
+EOF
+EXPECT=<<EOF
+rip = 0x0000000000400574
+rip = 0x0000000000400565
+EOF
+RUN
+
+NAME=stop trace session (dts-)
+FILE=bins/elf/analysis/calls_x64
+ARGS=-d -e dbg.bpsysign=true
+CMDS=<<EOF
+dcu main
+dts+
+ds
+ds
+ds
+ds
+dts-
+ds
+s
+dsb
+s
+EOF
+EXPECT=<<EOF
+0x40052f
+0x40052f
+EOF
+RUN

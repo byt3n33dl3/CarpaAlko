@@ -1,0 +1,31 @@
+NAME=dbg.dcu+step
+FILE=bins/elf/analysis/elf-nx
+ARGS=-d
+CMDS=<<EOF
+e scr.color=0
+dcu entry0
+dr PC
+ds
+dr PC
+EOF
+EXPECT=<<EOF
+eip = 0x080482d0
+eip = 0x080482d2
+EOF
+RUN
+
+NAME=dbg.dcu+step
+FILE=bins/elf/analysis/elf-nx
+ARGS=-d
+CMDS=<<EOF
+e scr.color=0
+dcu entry0
+dr PC
+3ds
+dr PC
+EOF
+EXPECT=<<EOF
+eip = 0x080482d0
+eip = 0x080482d5
+EOF
+RUN

@@ -1,0 +1,15 @@
+NAME=spc700 regs
+FILE=
+CMDS=<<EOF
+e asm.arch=spc700
+ar
+EOF
+EXPECT=<<EOF
+a = 0x00
+x = 0x00
+y = 0x00
+flags = 0x00
+sp = 0x00
+pc = 0x0000
+EOF
+RUN

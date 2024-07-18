@@ -1,0 +1,1319 @@
+NAME=noreturn errno
+FILE=malloc://32
+CMDS=<<EOF
+e asm.arch=arm
+e asm.bits=16
+s main
+af
+afi~^size
+EOF
+EXPECT=<<EOF
+size: 32
+EOF
+RUN
+
+NAME=thumb ldr pc-rel analysis
+FILE=malloc://32
+CMDS=<<EOF
+e asm.bytes=true
+e asm.arch=arm
+e asm.bits=16
+wx dff80000 12000000 34000000
+pd 1
+EOF
+EXPECT=<<EOF
+            0x00000000      dff80000       ldr.w r0, [0x00000004]      ; [0x4:4]=18 ; 4
+EOF
+RUN
+
+NAME=thumb ldr pc-rel emulation
+FILE=malloc://32
+CMDS=<<EOF
+e asm.arch=arm
+e asm.bits=16
+wx dff80000 12000000 34000000
+aes
+ar r0
+EOF
+EXPECT=<<EOF
+r0 = 0x00000012
+EOF
+RUN
+
+NAME=bx ip eof
+FILE=malloc://32
+CMDS=<<EOF
+e asm.arch=arm
+e asm.bits=16
+wx dff804c0 fc446047 18e0 0200
+af
+afi~size[1]
+EOF
+EXPECT=<<EOF
+8
+EOF
+RUN
+
+NAME=thumb ldr pc-rel analysis
+FILE=malloc://32
+CMDS=<<EOF
+e asm.bytes=true
+e asm.arch=arm
+e asm.bits=16
+wx 0149 014a 014b 0000 1111 2222 3333 4444 5555 6666
+pd 3
+EOF
+EXPECT=<<EOF
+            0x00000000      0149           ldr   r1, [0x00000008]      ; [0x8:4]=0x22221111 ; 8
+            0x00000002      014a           ldr   r2, [0x00000008]      ; [0x8:4]=0x22221111 ; 8
+            0x00000004      014b           ldr   r3, [0x0000000c]      ; [0xc:4]=0x44443333 ; 12
+EOF
+RUN
+
+NAME=thumb ldr+add pc-rel analysis
+FILE=malloc://32
+CMDS=<<EOF
+e asm.bytes=true
+e asm.arch=arm
+e asm.bits=16
+e asm.emu=1
+wx 0249 024a 024b 7944 7a44 7b44 1111 2222 3333 4444 5555 6666 7777
+pd 6
+EOF
+EXPECT=<<EOF
+            0x00000000      0249           ldr   r1, [0x0000000c]      ; [0xc:4]=0x22221111 ; 12 ; r1=0x22221111
+            0x00000002      024a           ldr   r2, [0x0000000c]      ; [0xc:4]=0x22221111 ; 12 ; r2=0x22221111
+            0x00000004      024b           ldr   r3, [0x00000010]      ; [0x10:4]=0x44443333 ; 16 ; r3=0x44443333
+            0x00000006      7944           add   r1, pc                ; r1=0x2222111b
+            0x00000008      7a44           add   r2, pc                ; r2=0x2222111d
+            0x0000000a      7b44           add   r3, pc                ; r3=0x44443341
+EOF
+RUN
+
+NAME=thumb adr pc-rel analysis
+FILE=malloc://32
+CMDS=<<EOF
+e asm.bytes=true
+e asm.arch=arm
+e asm.bits=16
+wx 10b5 01a0 00bf 00bf 52616461726532207465737420737472696e6700
+pd 1 @ 0x2
+EOF
+EXPECT=<<EOF
+            0x00000002      01a0           adr   r0, 4                 ; "Radare2 test string"
+                                                                       ; 0x8 ; 8
+EOF
+RUN
+
+NAME=pd bits override for arm
+FILE=malloc://32
+CMDS=<<EOF
+e asm.arch=arm
+e asm.bytes=true
+e asm.bits=32
+wa "mov r0, r0"
+pi 1
+pd 1
+ahb 32
+pd 1
+pd 1 @a:arm @b:32
+pd 1 @a:arm @b:16
+ahb 16
+pd 1 @a:arm @b:32
+pd 1 @a:arm @b:16
+pd 1 @a:arm @b:32 @ 2
+pd 1 @a:arm @b:16 @ 2
+EOF
+EXPECT=<<EOF
+mov r0, r0
+            0x00000000      0000a0e1       mov   r0, r0
+            0x00000000      0000a0e1       mov   r0, r0
+            0x00000000      0000a0e1       mov   r0, r0
+            0x00000000      0000           movs  r0, r0
+            0x00000000      0000a0e1       mov   r0, r0
+            0x00000000      0000           movs  r0, r0
+            0x00000002                    unaligned
+        ,=< 0x00000002      a0e1           b     0x346
+EOF
+RUN
+
+NAME=thumb adr pc-rel analysis with newline
+FILE=malloc://32
+CMDS=<<EOF
+e asm.bytes=true
+e asm.arch=arm
+e asm.bits=16
+wx 10b5 01a0 00bf 00bf 5261646172653220746573740d0a00
+pd 1 @ 0x2
+EOF
+EXPECT=<<EOF
+            0x00000002      01a0           adr   r0, 4                 ; "Radare2 test\r\n"
+                                                                       ; 0x8 ; 8
+EOF
+RUN
+
+NAME=arm 16 BE 4 bytes instruction
+FILE==
+ARGS=-a arm -b 16
+CMDS=<<EOF
+e cfg.bigendian=1
+wa "blx 0x33b8"
+p8 4
+pi 1
+e cfg.bigendian=0
+wa "blx 0x33b8"
+p8 4
+pi 1
+EOF
+EXPECT=<<EOF
+f003e9da
+blx 0x33b8
+03f0dae9
+blx 0x33b8
+EOF
+RUN
+
+NAME=arm-or-thumb visual bug
+FILE=bins/mach0/arm-or-thumb
+CMDS=<<EOF
+e scr.interactive=1
+e scr.null=1
+Vprdfq
+e scr.null=0
+afi~^size[1]
+EOF
+EXPECT=<<EOF
+32
+EOF
+RUN
+
+NAME=arm-or-thumb visual bug
+FILE=bins/mach0/arm-or-thumb
+CMDS=<<EOF
+af
+afi~^size[1]
+EOF
+EXPECT=<<EOF
+32
+EOF
+RUN
+
+NAME=ARM32 bb 0 size -- af
+FILE=malloc://32
+CMDS=<<EOF
+wx ff0000e2010050e30000001affffffea70009de594008de5e4139fe500f09ee5
+e asm.arch=arm
+e asm.bits=32
+af
+#pdf
+afb
+EOF
+EXPECT=<<EOF
+0x00000000 0x0000000c 00:0000 12 j 0x00000010 f 0x0000000c
+0x0000000c 0x00000010 00:0000 4 j 0x00000010
+0x00000010 0x00000020 00:0000 16
+EOF
+RUN
+
+NAME=ldr code analysis
+FILE=malloc://32
+CMDS=<<EOF
+wx 20c09fe5 0cc09ae7
+e asm.arch=arm
+e asm.bits=32
+# pd 2 - note different colors
+pi 2
+ao~type[1]
+ao@ 4~type[1]
+EOF
+EXPECT=<<EOF
+ldr ip, [0x00000028]
+ldr ip, [sl, ip]
+load
+load
+EOF
+RUN
+
+NAME=endian
+FILE=malloc://32
+CMDS=<<EOF
+e asm.arch=arm
+e asm.bits=32
+wx e59a9ae7
+e cfg.bigendian=false
+pi 1@ 0
+e cfg.bigendian=true
+pi 1@ 0
+EOF
+EXPECT=<<EOF
+ldr sb, [sl, r5, ror 21]
+ldr sb, [sl, 0xae7]
+EOF
+RUN
+
+NAME=ldr thumb
+FILE=malloc://32
+CMDS=<<EOF
+e asm.arch=arm
+e asm.bits=16
+wx 2249224a
+ao~^ptr
+ao@ 2~^ptr
+EOF
+EXPECT=<<EOF
+ptr: 0x0000008c
+ptr: 0x0000008c
+EOF
+RUN
+
+NAME=arm32 bxeq lr
+FILE=malloc://512
+CMDS=<<EOF
+e asm.bytes=true
+e asm.calls=false
+e asm.arch=arm
+e asm.bits=32
+wx 021081e0 1eff2f01 0020a0e3 1eff2fe1
+af
+pd 4
+EOF
+EXPECT=<<EOF
+/ fcn.00000000(int32_t arg2);
+|           ; arg int32_t arg2 @ r1
+|           0x00000000      021081e0       add   r1, r1, r2            ; arg2
+|           0x00000004      1eff2f01       bxeq  lr
+|           0x00000008      0020a0e3       mov   r2, 0
+\           0x0000000c      1eff2fe1       bx    lr
+EOF
+RUN
+
+NAME=arm32 blx switches bits
+FILE=malloc://512
+CMDS=<<EOF
+e asm.arch=arm
+e asm.bits=32
+wx fffffffa 04210924
+af
+pi 2 @ 4
+EOF
+EXPECT=<<EOF
+movs r1, 4
+movs r4, 9
+EOF
+RUN
+
+NAME=arm32 bx switches bits on odd location
+FILE=malloc://512
+CMDS=<<EOF
+e asm.arch=arm
+e asm.bits=32
+e analysis.armthumb=true
+wx 0910 a0e3 11ff 2fe1 0421 0924
+aae
+pi 2 @ 8
+EOF
+EXPECT=<<EOF
+movs r1, 4
+movs r4, 9
+EOF
+RUN
+
+NAME=ELF ARM: thumb/arm switch
+FILE=bins/elf/analysis/libstagefright_soft_g711dec.so
+CMDS=<<EOF
+af
+e asm.bytes=true
+afi~size
+afi~size
+EOF
+EXPECT=<<EOF
+size: 28
+size: 28
+EOF
+RUN
+
+NAME=arm: ldr code analysis
+FILE=malloc://32
+CMDS=<<EOF
+wx 20c09fe5
+wx 0cc09ae7 @ 4
+e asm.arch=arm
+e asm.bits=32
+# pd 2 - note different colors
+pi 2
+ao~type[1]
+ao@ 4~type[1]
+EOF
+EXPECT=<<EOF
+ldr ip, [0x00000028]
+ldr ip, [sl, ip]
+load
+load
+EOF
+RUN
+
+NAME=arm: endian
+FILE=malloc://32
+CMDS=<<EOF
+e asm.arch=arm
+e asm.bits=32
+wx e59a9ae7
+e cfg.bigendian=false
+pi 1@ 0
+e cfg.bigendian=true
+pi 1@ 0
+EOF
+EXPECT=<<EOF
+ldr sb, [sl, r5, ror 21]
+ldr sb, [sl, 0xae7]
+EOF
+RUN
+
+NAME=arm: no afterjmp or nopskip
+FILE=malloc://32
+CMDS=<<EOF
+e asm.arch=arm
+e asm.bits=64
+wx 1f2003d5d0d8065800021fd61f2003d5
+e analysis.nopskip=false
+e analysis.jmp.after=false
+af
+afl~[2]
+EOF
+EXPECT=<<EOF
+12
+EOF
+RUN
+
+NAME=arm: afterjmp
+FILE=malloc://32
+CMDS=<<EOF
+e asm.arch=arm
+e asm.bits=64
+wx 1f2003d5d0d8065800021fd61f2003d5
+e analysis.nopskip=false
+e analysis.jmp.after=true
+af
+afl~[2]
+EOF
+EXPECT=<<EOF
+12
+EOF
+RUN
+
+NAME=arm: afterjmp nopskip
+FILE=malloc://32
+CMDS=<<EOF
+e asm.arch=arm
+e asm.bits=64
+wx 1f2003d5d0d8065800021fd61f2003d5
+e analysis.nopskip=true
+e analysis.jmp.after=false
+af
+afl~[2]
+EOF
+EXPECT=<<EOF
+8
+EOF
+RUN
+
+NAME=ARM64 bl capstone
+FILE=malloc://32
+CMDS=<<EOF
+s 4
+wx 07000094
+e asm.arch=arm
+e asm.bits=64
+pi 1
+ao~jump
+EOF
+EXPECT=<<EOF
+bl 0x20
+jump: 0x00000020
+EOF
+RUN
+
+NAME=arm subrel >256
+FILE=malloc://800
+CMDS=<<EOF
+wx 0d039fe5
+e asm.arch=arm
+e asm.bits=32
+e asm.comments=false
+e asm.bytes=false
+e asm.offset=false
+f sym.callback @ 0x315
+pd 1
+EOF
+EXPECT=<<EOF
+                 ldr   r0, [sym.callback]
+EOF
+RUN
+
+NAME=arm subrel <256
+FILE==
+CMDS=<<EOF
+wx 0c009fe5
+e asm.arch=arm
+e asm.bits=32
+e asm.comments=false
+e asm.bytes=false
+e asm.offset=false
+f sym.callback @ 0x14
+pd 1
+e asm.sub.varmin=0
+pd 1
+EOF
+EXPECT=<<EOF
+                 ldr   r0, [0x00000014]
+                 ldr   r0, [sym.callback]
+EOF
+RUN
+
+NAME=arm subrel
+FILE=bins/elf/arm1.bin
+CMDS=<<EOF
+e asm.arch=arm
+e asm.bits=32
+e asm.comments=false
+e asm.bytes=false
+e asm.offset=false
+pd 1 @ 0x00008168
+pd 1 @ 0x00008204
+pd 1 @ 0x0000816c
+pd 1 @ 0x000081b0
+EOF
+EXPECT=<<EOF
+                 ldr   r0, main
+                 ldr   r1, obj.object.6286
+                 ldr   r3, sym.__libc_csu_init
+                 ldr   r4, obj.completed.6278
+EOF
+RUN
+
+NAME=arm subrel
+FILE=bins/elf/analysis/arm-ls
+BROKEN=1
+CMDS=<<EOF
+e asm.arch=arm
+e asm.bits=32
+e asm.comments=false
+e asm.bytes=false
+e asm.offset=false
+pd 1 @ 0x00014368
+EOF
+EXPECT=<<EOF
+                 ldr r0, main
+                 ldr r1, obj.object.6286
+                 ldr r3, sym.__libc_csu_init
+                 ldr r4, obj.completed.6278
+EOF
+RUN
+
+NAME=jump sign extend : arm.cs
+FILE=malloc://4
+CMDS=<<EOF
+e asm.arch=arm
+e asm.bits=32
+e io.va=true
+wx ffffffea # bl 0x80000000
+om 3 0x7ffffffc
+ao @ 0x7ffffffc~jump
+EOF
+EXPECT=<<EOF
+jump: 0x80000000
+EOF
+RUN
+
+NAME=ELF ARM: function names
+FILE=bins/elf/analysis/arm_32_flags0
+CMDS=<<EOF
+s sym.call_weak_fn
+af
+afi~name
+EOF
+EXPECT=<<EOF
+name: sym.call_weak_fn
+EOF
+RUN
+
+NAME=ELF ARM: function names 2
+FILE=bins/elf/analysis/arm_32_flags0
+CMDS=<<EOF
+aa
+afl~abort
+EOF
+EXPECT=<<EOF
+0x000102bc    1 12           sym.imp.abort
+EOF
+RUN
+
+NAME=ELF ARM: function names 3
+FILE=bins/elf/analysis/arm_32_flags0
+CMDS=<<EOF
+aa
+afl~weak
+EOF
+EXPECT=<<EOF
+0x00010304    1 28           sym.call_weak_fn
+EOF
+RUN
+
+NAME=ELF ARM: function names 4
+FILE=bins/elf/analysis/arm_32_flags0
+CMDS=<<EOF
+af @@f:sym*
+afl~weak
+EOF
+EXPECT=<<EOF
+0x00010304    1 28           sym.call_weak_fn
+EOF
+RUN
+
+NAME=ELF ARM: aa
+FILE=bins/elf/analysis/arm_32_flags0
+CMDS=<<EOF
+aa
+fl~sym?
+afl~?
+EOF
+EXPECT=<<EOF
+41
+15
+EOF
+RUN
+
+NAME=ELF ARM: aa2
+FILE=bins/elf/analysis/arm_32_flags0
+CMDS=<<EOF
+aa
+afl
+EOF
+EXPECT=<<EOF
+0x00010278    1 12           sym._init
+0x00010298    1 12           sym.imp.printf
+0x000102a4    1 12           sym.imp.__libc_start_main
+0x000102bc    1 12           sym.imp.abort
+0x000102c8    1 44           entry0
+0x00010304    1 28           sym.call_weak_fn
+0x00010328    1 36           sym.deregister_tm_clones
+0x00010358    1 44           sym.register_tm_clones
+0x00010390    1 36           sym.__do_global_dtors_aux
+0x000103b8    4 44           entry.init0
+0x000103ec    1 28           sym.func
+0x00010408    1 40           main
+0x00010434    3 88           sym.__libc_csu_init
+0x00010494    1 4            sym.__libc_csu_fini
+0x00010498    1 8            sym._fini
+EOF
+RUN
+
+NAME=ELF ARM: function arg
+FILE=bins/elf/analysis/armcall
+CMDS=<<EOF
+e asm.calls=false
+e asm.bytes=true
+afr@ main
+afva@ sym.call
+pdf@ sym.call
+EOF
+EXPECT=<<EOF
+            ; CALL XREF from main @ 0x10468
+/ sym.call(int32_t arg1);
+|           ; arg int32_t arg1 @ r0
+|           ; var int32_t var_ch @ stack - 0xc
+|           0x00010420      00482de9       push  {fp, lr}
+|           0x00010424      04b08de2       add   fp, sp, 4
+|           0x00010428      08d04de2       sub   sp, sp, 8
+|           0x0001042c      08000be5       str   r0, [var_ch]          ; 0x8 ; 8 ; arg1
+|           0x00010430      14009fe5       ldr   r0, [0x0001044c]      ; [0x1044c:4]=0x104f0
+|           0x00010434      08101be5       ldr   r1, [var_ch]          ; 0x8 ; 8
+|           0x00010438      a2ffffeb       bl    sym.imp.printf
+|           0x0001043c      0030a0e3       mov   r3, 0
+|           0x00010440      0300a0e1       mov   r0, r3
+|           0x00010444      04d04be2       sub   sp, fp, 4
+\           0x00010448      0088bde8       pop   {fp, pc}
+EOF
+RUN
+
+NAME=ELF ARM: function args
+FILE=bins/elf/analysis/armcall
+CMDS=<<EOF
+e asm.calls=false
+e asm.bytes=true
+af@ main
+afva@ main
+pdf@ main
+EOF
+EXPECT=<<EOF
+/ int main(int argc, char **argv, char **envp);
+|           ; arg int argc @ r0
+|           ; arg char **argv @ r1
+|           ; var int32_t var_10h @ stack - 0x10
+|           ; var int32_t var_ch @ stack - 0xc
+|           0x00010450      00482de9       push  {fp, lr}
+|           0x00010454      04b08de2       add   fp, sp, 4
+|           0x00010458      08d04de2       sub   sp, sp, 8
+|           0x0001045c      08000be5       str   r0, [var_ch]          ; 0x8 ; 8 ; argc
+|           0x00010460      0c100be5       str   r1, [var_10h]         ; 0xc ; 12 ; argv
+|           0x00010464      08001be5       ldr   r0, [var_ch]          ; 0x8 ; 8
+|           0x00010468      ecffffeb       bl    sym.call
+|           0x0001046c      0030a0e1       mov   r3, r0
+|           0x00010470      0300a0e1       mov   r0, r3
+|           0x00010474      04d04be2       sub   sp, fp, 4
+\           0x00010478      0088bde8       pop   {fp, pc}
+EOF
+RUN
+
+NAME=ELF ARM: aav
+FILE=bins/elf/analysis/armcall
+CMDS=<<EOF
+e asm.calls=false
+aav
+pd 3 @ 0x00010328
+EOF
+EXPECT=<<EOF
+            0x00010328      .dword 0x000104e0 ; sym.__libc_csu_fini
+            0x0001032c      .dword 0x00010450 ; main ; sym.main
+            ; UNKNOWN XREF from section..plt @ +0x10
+            ;-- aav.0x00010330:
+            0x00010330      .dword 0x0001047c ; sym.__libc_csu_init
+EOF
+RUN
+
+NAME=ELF ARM: af and aav
+FILE=bins/elf/arm1.bin
+CMDS=<<EOF
+e asm.arch=arm
+e asm.bits=32
+e asm.comments=false
+e asm.bytes=false
+e asm.offset=false
+e asm.flags=false
+af @ sym.call_gmon_start
+af @ entry0
+aav
+pd 1 @ 0x000081e0
+pd 1 @ 0x0000817c
+pd 1 @ 0x00008180
+pd 1 @ 0x00008184
+EOF
+EXPECT=<<EOF
+                 andeq r4, r8, r8, asr r7
+                 .dword 0x00008b00 ; sym.__libc_csu_fini
+                 .dword 0x00008290 ; main ; sym.main
+                 .dword 0x00008b48 ; sym.__libc_csu_init
+EOF
+RUN
+
+NAME=ELF ARM: aav string
+FILE=bins/elf/arm1.bin
+BROKEN=1
+CMDS=<<EOF
+e asm.arch=arm
+e asm.bits=32
+e asm.comments=false
+e asm.bytes=false
+e asm.offset=false
+e asm.flags=false
+af @ sym.deregister_tm_clones
+aav
+pd 1 @ 0x0001037c
+EOF
+EXPECT=<<EOF
+            .dword 0x0002061f ; str.:__Raspbian_4.9.2_10__4.9.2
+EOF
+RUN
+
+NAME=ELF ARM: vars
+FILE=bins/elf/analysis/arm-ls
+CMDS=<<EOF
+e asm.calls=false
+s main
+af
+pd 1~var?
+EOF
+EXPECT=<<EOF
+17
+EOF
+RUN
+
+NAME=sp vars arm16
+FILE=malloc://1024
+CMDS=<<EOF
+e asm.arch=arm
+e asm.bits=16
+wx f0b503af2de9000d95b0002001210222032340f2040940f2050c40f2060e0724082509261490139112921193cdf80090cdf804c0cdf808e0039404950596ddf85080cdf81880ddf84ca0cdf81ca0ddf848b0cdf820b0ddf84480cdf82480cdf82890cdf82cc0cdf830e00d940e950f96fff740ff00211090084615b0bde8000df0bd
+aa
+afvl~var
+EOF
+EXPECT=<<EOF
+var int32_t var_74h @ stack - 0x74
+var int32_t var_70h @ stack - 0x70
+var int32_t var_6ch @ stack - 0x6c
+var int32_t var_68h @ stack - 0x68
+var int32_t var_64h @ stack - 0x64
+var int32_t var_60h @ stack - 0x60
+var int32_t var_5ch @ stack - 0x5c
+var int32_t var_58h @ stack - 0x58
+var int32_t var_54h @ stack - 0x54
+var int32_t var_50h @ stack - 0x50
+var int32_t var_4ch @ stack - 0x4c
+var int32_t var_48h @ stack - 0x48
+var int32_t var_44h @ stack - 0x44
+var int32_t var_40h @ stack - 0x40
+var int32_t var_3ch @ stack - 0x3c
+var int32_t var_38h @ stack - 0x38
+var int32_t var_34h @ stack - 0x34
+var int32_t var_30h @ stack - 0x30
+var int32_t var_2ch @ stack - 0x2c
+var int32_t var_28h @ stack - 0x28
+var int32_t var_24h @ stack - 0x24
+var int32_t var_8h @ stack - 0x8
+EOF
+RUN
+
+NAME=arm thumb basic block detection with ITTE
+BROKEN=1
+FILE=bins/elf/analysis/bug-it-bb
+CMDS=aaa ; s 0x00010074 ; afb
+EXPECT=<<EOF
+0x00010074 0x0001007a 00:0000 6 j 0x0001007a f 0x0001007e 0x0001007a 0x0001007e 00:0000 4 j 0x00010080 0x0001007e 0x00010080 00:0000 2 j 0x00010080 0x00010080 0x00010082 00:0000 2
+EOF
+RUN
+
+NAME=arm jump table
+FILE=bins/elf/analysis/callback.elf
+CMDS=<<EOF
+af @ sym.input_handler2
+CC. @ 0x000105b8~?\(7
+EOF
+EXPECT=<<EOF
+1
+EOF
+RUN
+
+NAME=arm jump table
+FILE=bins/elf/analysis/mobile_bank.45115ff5f655d94fc26cb5244928b3fc
+CMDS=<<EOF
+af @ 0x11284
+CC. @ 0x000112b0~?\(8
+EOF
+EXPECT=<<EOF
+1
+EOF
+RUN
+
+NAME=arm main analyzed with aaa
+FILE=bins/elf/analysis/ch23.bin
+CMDS=<<EOF
+aaa
+afl~?0x00008470
+EOF
+EXPECT=<<EOF
+1
+EOF
+RUN
+
+NAME=arm main in disassembly
+FILE=bins/elf/analysis/ch23.bin
+BROKEN=1
+CMDS=<<EOF
+aaa
+pd 1 @ 0x000083d8~[5]
+EOF
+EXPECT=<<EOF
+main
+EOF
+RUN
+
+NAME=tbh jump table
+FILE=malloc://2048
+CMDS=<<EOF
+e asm.arch=arm
+e asm.bits=16
+e cfg.wseek=true
+wx 01380793d3b24ff00109024600bf00bf00bf00bf59b2a1f120005a28139200f28d81404d02eb8004082601270122dfe810f09700850185015c0085015b008501850185018501a2
+wx 0097008501ac007b008501af005d005d005d005d005d005d005d005d005d008501850185018501850185018501c300850185018501c3008501c30085018501850185019c008501
+wx 85018501850185018501850185018501850185010d0185018501850185018501850185018501c30085011c01e700c300c300c300b200e700b50085019c00850129016801390185
+wx 0185014c019f006201850185010e0185019f00b1e6d7e6139ca1f13000224612f9013fa3f1300109293ff686afa21c00eb800012f9013b01eb4000a3f130010a29f5d3dbb2013a
+wx c0f1000878e700bf07df0100139a104610f9011fcbb22a2b35d0303900274ff00109079709293ff662af901c002303eb830310f9012b01eb4303a2f130010a29f5d34fe758b20a
+wx 9001200b9096e60cf1010c93e64ff0010c90e609981ef0010f50f8048b099018bfc8f1000886e60122129f85e60120089080e6acf1010c7de64ff0020c7ae6139000e013920998
+wx 4ff0010950f8041b079109906fe6bcf1010f18bfbcf1000f40f0bb800998ddf830a008300990e7e0ddf830a0139d109c0e98012805d195f90000119900f02dfc05e014f0ff0f04
+wx bf28780af8010b0d9801300d9018e60cf10200042800f29980dfe810f00500050005000500a901099a52f8040bc1170a9f0029d14d4ff030090b9eb8bf01260b96b8bf2d2710eb
+wx e1700a9780eae17441ebe17080eae1770a26b3e0c84d129810f0010f52d058b2302141ea00200a90022010260b9001204ae00999bcf1000f01f10400dcbf09688df86b10099001
+wx 9f0121dfe00cf10200042857d8dfe810f078028102050005008a02099951f8040b099185e20998002250f8044b0990002c00f0c48004920220ac4d10220b900820079047f63000
+wx 0a9030e0099819f0010f50f8047b099000f0ac80079a30230021002a00f0b080785c002800f0ac8001319142f8d3a7e09d4d0a2602e00020102612900cf10200042817d8dfe800
+wx f0030308084d00099a52f8044be71748e00998324650f8044b09900020049020463023059014ae029f104662e00696139d2c4614f8010d2528fbd1ddf830a0ac4229d80d980025
+wx 009901eb00080f98b0f1ff3f06d018eb050002bf0af801bb012010900e98012806d1139e119996f9000000f061fb07e01098139e10f0ff0f04bf30780af8010b01356019b042de
+wx d90d9828440d90139d109c
+s 0
+af
+pds 1@ 0x2e~:1
+EOF
+EXPECT=<<EOF
+0x0000002e switch table (92 cases) at 0x32
+EOF
+RUN
+
+NAME=test platform profiles for arm BCM 2835
+FILE=bins/arm/elf/hello_world
+CMDS=<<EOF
+e asm.cpu=arm1176
+e asm.platform=bcm2835
+aa
+fl~AUX
+CCl~Broadcom
+EOF
+EXPECT=<<EOF
+0x07e21500 1 AUX_ENABLES
+0x7e215000 1 AUX_IRQ
+0x7e215040 1 AUX_MU_IO_REG
+0x7e215044 1 AUX_MU_IER_REG
+0x7e215048 1 AUX_MU_IIR_REG
+0x7e21504c 1 AUX_MU_LCR_REG
+0x7e215050 1 AUX_MU_MCR_REG
+0x7e215054 1 AUX_MU_LSR_REG
+0x7e215058 1 AUX_MU_MSR_REG
+0x7e21505c 1 AUX_MU_SCRATCH
+0x7e215060 1 AUX_MU_CNTL_REG
+0x7e215064 1 AUX_MU_STAT_REG
+0x7e215068 1 AUX_MU_BAUD_REG
+0x7e215080 1 AUX_SPI0_CNTL0_REG
+0x7e215084 1 AUX_SPI0_CNTL1_REG
+0x7e215088 1 AUX_SPI0_STAT_REG
+0x7e215090 1 AUX_SPI0_IO_REG
+0x7e215094 1 AUX_SPI0_PEEK_REG
+0x7e2150c0 1 AUX_SPI1_CNTL0_REG
+0x7e2150c4 1 AUX_SPI1_CNTL1_REG
+0x7e2150c8 1 AUX_SPI1_STAT_REG
+0x7e2150d0 1 AUX_SPI1_IO_REG
+0x7e2150d4 1 AUX_SPI1_PEEK_REG
+0x7e205000 CCu "Broadcom Serial Controller 0 (BSC)"
+0x7e804000 CCu "Broadcom Serial Controller 1 (BSC)"
+0x7e805000 CCu "Broadcom Serial Controller 2 (BSC)"
+EOF
+RUN
+
+NAME=ao 16 after ao 32
+FILE=bins/arm/elf/hello_world
+CMDS=<<EOF
+e asm.bits=16
+ao@ 0x568
+echo --
+ao@ 0x50e
+EOF
+EXPECT=<<EOF
+address: 0x568
+opcode: push {r3, lr}
+esilcost: 24
+disasm: push {r3, lr}
+pseudo: push (r3, lr)
+mnemonic: push
+mask: ffffffff
+prefix: 0
+id: 438
+bytes: 08402de9
+refptr: 0
+size: 4
+sign: false
+type: push
+cycles: 1
+esil: r3,sp,-8,+,=[4],lr,sp,-4,+,=[4],-8,sp,+=,
+rzil: (seq (storew 0 (- (var sp) (bv 32 0x8)) (var r3)) (storew 0 (- (var sp) (bv 32 0x4)) (var lr)) (set sp (- (var sp) (bv 32 0x8))))
+direction: write
+family: cpu
+stackop: inc
+stackptr: 8
+--
+address: 0x50e
+opcode: add r7, sp, 0
+esilcost: 0
+disasm: add r7, sp, 0
+pseudo: r7 = sp + 0
+mnemonic: add
+description: add two values
+mask: ffff
+prefix: 0
+id: 31
+bytes: 00af
+refptr: 0
+size: 2
+sign: false
+type: add
+cycles: 1
+esil: 0,sp,+,0xffffffff,&,r7,=
+rzil: (set r7 (+ (var sp) (bv 32 0x0)))
+family: cpu
+EOF
+RUN
+
+NAME=arm aae with bit switch
+FILE=bins/arm/elf/hello_world
+CMDS=<<EOF
+aei
+e asm.bytes=true
+e asm.bits=32
+aae 20 @ main
+pd 9 @ main
+EOF
+EXPECT=<<EOF
+            ;-- main:
+            0x0000050c      80b5           push  {r7, lr}
+            0x0000050e      00af           add   r7, sp, 0
+            0x00000510      034b           ldr   r3, [0x00000520]      ; [0x520:4]=94 ; 1312
+            0x00000512      7b44           add   r3, pc                ; 0x574 ; "Hello world!"
+            0x00000514      1846           mov   r0, r3
+            0x00000516      fff75aef       blx   sym.imp.puts
+            0x0000051a      0023           movs  r3, 0
+            0x0000051c      1846           mov   r0, r3
+            0x0000051e      80bd           pop   {r7, pc}
+EOF
+RUN
+
+NAME=arm show registers in table
+FILE==
+CMDS=<<EOF
+e asm.arch=arm
+e asm.bits=32
+ar=
+EOF
+EXPECT=<<EOF
+     sb 0x00000000           sl 0x00000000           fp 0x00000000           ip 0x00000000
+     sp 0x00000000           lr 0x00000000           pc 0x00000000           r0 0x00000000
+     r1 0x00000000           r2 0x00000000           r3 0x00000000           r4 0x00000000
+     r5 0x00000000           r6 0x00000000           r7 0x00000000           r8 0x00000000
+     r9 0x00000000          r10 0x00000000          r11 0x00000000          r12 0x00000000
+    r13 0x00000000          r14 0x00000000          r15 0x00000000         cpsr 0x00000000
+  fpscr 0x00000000      
+EOF
+RUN
+
+NAME=arm jmptbl flags and comments
+FILE=bins/elf/arm1.bin
+CMDS=<<EOF
+af@ sym.__gcc_personality_v0
+fl~switch.,case.
+CCl~switch
+EOF
+EXPECT=<<EOF
+0x00064c7c 1 switch.0x00064c7c
+0x00064c80 1 case.default.0x64c7c
+0x00064c84 1 case.0x64c7c.0
+0x00064c88 1 case.0x64c7c.1
+0x00064c8c 1 case.0x64c7c.2
+0x00064c90 1 case.0x64c7c.3
+0x00064c94 1 case.0x64c7c.4
+0x00064c98 1 case.0x64c7c.5
+0x00064c9c 1 case.0x64c7c.6
+0x00064ca0 1 case.0x64c7c.7
+0x00064ca4 1 case.0x64c7c.8
+0x00064ca8 1 case.0x64c7c.9
+0x00064cac 1 case.0x64c7c.10
+0x00064cb0 1 case.0x64c7c.11
+0x00064cb4 1 case.0x64c7c.12
+0x00064df0 1 switch.0x00064df0
+0x00064df4 1 case.default.0x64df0
+0x00064df8 1 case.0x64df0.0
+0x00064dfc 1 case.0x64df0.1
+0x00064e00 1 case.0x64df0.2
+0x00064e04 1 case.0x64df0.3
+0x00064e08 1 case.0x64df0.4
+0x00064e0c 1 case.0x64df0.5
+0x00064e10 1 case.0x64df0.6
+0x00064e14 1 case.0x64df0.7
+0x00064e18 1 case.0x64df0.8
+0x00064e1c 1 case.0x64df0.9
+0x00064e20 1 case.0x64df0.10
+0x00064e24 1 case.0x64df0.11
+0x00064e28 1 case.0x64df0.12
+0x00064f94 1 switch.0x00064f94
+0x00064f98 1 case.default.0x64f94
+0x00064f9c 1 case.0x64f94.0
+0x00064fa0 1 case.0x64f94.1
+0x00064fa4 1 case.0x64f94.2
+0x00064fa8 1 case.0x64f94.3
+0x00064fac 1 case.0x64f94.4
+0x00064fb0 1 case.0x64f94.5
+0x00064fb4 1 case.0x64f94.6
+0x00064fb8 1 case.0x64f94.7
+0x00064fbc 1 case.0x64f94.8
+0x00064fc0 1 case.0x64f94.9
+0x00064fc4 1 case.0x64f94.10
+0x00064fc8 1 case.0x64f94.11
+0x00064fcc 1 case.0x64f94.12
+0x0006506c 1 switch.0x0006506c
+0x00065070 1 case.default.0x6506c
+0x00065074 1 case.0x6506c.0
+0x00065078 1 case.0x6506c.1
+0x0006507c 1 case.0x6506c.2
+0x00065080 1 case.0x6506c.3
+0x00065084 1 case.0x6506c.4
+0x00065088 1 case.0x6506c.5
+0x0006508c 1 case.0x6506c.6
+0x00065090 1 case.0x6506c.7
+0x00065094 1 case.0x6506c.8
+0x00065098 1 case.0x6506c.9
+0x0006509c 1 case.0x6506c.10
+0x000650a0 1 case.0x6506c.11
+0x000650a4 1 case.0x6506c.12
+0x00064c7c CCu "switch table (13 cases) at 0x64c84"
+0x00064df0 CCu "switch table (13 cases) at 0x64df8"
+0x00064f94 CCu "switch table (13 cases) at 0x64f9c"
+0x0006506c CCu "switch table (13 cases) at 0x65074"
+EOF
+RUN
+
+NAME=misaligned arm string xref
+FILE=bins/mach0/misaligned_data-iOS-armv7
+CMDS=<<EOF
+aaa
+axt @ str.helloradareworl
+pd 1 @ 0xbf9c
+EOF
+EXPECT=<<EOF
+entry0 0xbf9c [DATA] add r0, pc
+|           0x0000bf9c      add   r0, pc                               ; 0xbfed ; "helloradareworld\n" ; const char *format
+EOF
+RUN
+
+NAME=thumb bx lr
+FILE==
+CMDS=<<EOF
+wx 000090e50fe0a0e113ff2fe1000090e51eff2fe1
+e asm.arch=arm
+e asm.bits=32
+af
+afi~size
+EOF
+EXPECT=<<EOF
+size: 20
+EOF
+RUN
+
+NAME=aaef xrefs without pcache
+FILE=bins/arm/elf/hello_world
+CMDS=<<EOF
+aaa
+axt @ str.Hello_world
+EOF
+EXPECT=<<EOF
+main 0x512 [DATA] add r3, pc
+EOF
+RUN
+
+NAME=arm pcalign
+FILE=
+CMDS=<<EOF
+e asm.arch=arm
+e asm.bits=32
+e asm.pcalign
+e asm.bits=16
+e asm.pcalign
+EOF
+EXPECT=<<EOF
+4
+2
+EOF
+RUN
+
+NAME=arm thumb it tracking
+FILE=malloc://0x1000
+CMDS=<<EOF
+e asm.arch=arm
+e asm.bits=16
+s 0x100
+wx 54bf53f8182c52181846
+pi 4
+ao @ 0x102~mnemonic
+ao @ 0x106~mnemonic
+ao @ 0x108~mnemonic
+echo -- Update after code change
+wx 1846
+pi 4
+ao @ 0x102~mnemonic
+ao @ 0x106~mnemonic
+ao @ 0x108~mnemonic
+EOF
+EXPECT=<<EOF
+ite pl
+ldrpl r2, [r3, -0x18]
+addmi r2, r2, r1
+mov r0, r3
+mnemonic: ldrpl
+mnemonic: addmi
+mnemonic: mov
+-- Update after code change
+mov r0, r3
+ldr r2, [r3, -0x18]
+adds r2, r2, r1
+mov r0, r3
+mnemonic: ldr
+mnemonic: adds
+mnemonic: mov
+EOF
+RUN
+
+NAME=arm32 function is NOT cut off when setting lr with add before bx
+FILE==
+CMDS=<<EOF
+e asm.arch=arm
+e asm.bits=32
+wx 10402de90040a0e100e08fe214ff2fe11080bde8
+af
+pdf
+EOF
+EXPECT=<<EOF
+/ fcn.00000000(int32_t arg1);
+|           ; arg int32_t arg1 @ r0
+|           0x00000000      push  {r4, lr}
+|           0x00000004      mov   r4, r0                               ; arg1
+|           0x00000008      add   lr, pc, 0
+|           0x0000000c      bx    r4
+\           0x00000010      pop   {r4, pc}
+EOF
+RUN
+
+NAME=aav thumb detection
+FILE=bins/firmware/armthumb.bin
+ARGS=-aarm -b32
+CMDS=<<EOF
+aav
+fl
+EOF
+EXPECT=<<EOF
+0x0000000d 4 aav.0x0000000d
+EOF
+RUN
+
+NAME=no string on cbz
+FILE=malloc://8096
+CMDS=<<EOF
+e asm.bytes=true
+e asm.arch=arm
+e asm.bits=64
+e cfg.bigendian=false
+e emu.str=true
+wv 0x52800015
+wv 0x340000b5 @ 4
+w hello @ 0x18
+pd 2
+EOF
+EXPECT=<<EOF
+            0x00000000      15008052       mov   w21, 0
+        ,=< 0x00000004      b5000034       cbz   w21, 0x18             ; likely
+EOF
+RUN
+
+NAME=Function definition
+FILE=bins/elf/arm1.bin
+CMDS=<<EOF
+afr @ main
+s 0x000082cc
+pd 1~?*xmalloc
+EOF
+EXPECT=<<EOF
+1
+EOF
+RUN
+
+NAME=raw aac (using a PIC bin)
+FILE=bins/elf/libmagic.so
+CMDS=<<EOF
+aac
+afl~?
+EOF
+EXPECT=<<EOF
+199
+EOF
+RUN
+
+NAME=raw aac with maps (using a PIC bin)
+FILE=bins/elf/libmagic.so
+ARGS=-n -m 0x80000 -a arm -b 16 -e cfg.bigendian=false
+CMDS=<<EOF
+aac
+e search.in=io.maps
+afl~?
+EOF
+EXPECT=<<EOF
+94
+EOF
+RUN
+
+NAME=add/adc pc, pc issue #3965
+FILE==
+ARGS=-a arm -b 32 -e cfg.bigendian=false
+CMDS=<<EOF
+wx ffff8f024fffaf02
+pd 2
+aa
+ags
+EOF
+EXPECT=<<EOF
+            0x00000000      addeq pc, pc, 0x3fc                        ; [0x8:4]=0
+            0x00000004      adceq pc, pc, 0x13c                        ; [0xc:4]=0
+        .-----------.
+        |  0x0      |
+        `-----------'
+              t f
+              | |
+    .---------' |
+    |           '---.
+    |               |
+.----------.    .-----------.
+|  0x404   |    |  0x4      |
+`----------'    `-----------'
+                        f t
+                        | |
+                        | |
+              .---------' |
+              |           |
+          .----------.    |
+          |  0x8     |    |
+          `----------'    |
+              v           |
+              |           |
+              '------.    |
+                     | .--'
+                     | |
+               .-----------.
+               |  0x148    |
+               `-----------'
+EOF
+RUN
+
+NAME=Check MOV gets identified as JUMP if it moves to PC
+FILE==
+ARGS=-a arm -b 16
+CMDS=<<EOF
+s 0x100
+wx bff36f8f2548874680bd000072b680bd
+s 0x19c
+wx 0x0c010000
+s 0x100
+aaa
+pd 10 @ 0x100
+px 4 @ 0x19c
+EOF
+EXPECT=<<EOF
+            ;-- pc:
+            ;-- r15:
+/ fcn.00000100();
+|           0x00000100      isb   sy
+|           0x00000104      ldr   r0, aav.0x0000010c                   ; [0x10c:4]=0xbd80b672 ; "r\xb6\x80\xbd"
+\           0x00000106      mov   pc, r0
+            0x00000108      pop   {r7, pc}
+            0x0000010a      movs  r0, r0
+            ; CODE XREFS from fcn.00000100 @ 0x104, 0x106
+            ; UNKNOWN XREF from aav.0x0000010c @ +0x90
+/ aav.0x0000010c();
+|           0x0000010c      cpsid i
+\           0x0000010e      pop   {r7, pc}
+            0x00000110      movs  r0, r0
+            0x00000112      movs  r0, r0
+            0x00000114      movs  r0, r0
+- offset -   0 1  2 3  4 5  6 7  8 9  A B  C D  E F  0123456789ABCDEF
+0x0000019c  0c01 0000                                ....
+EOF
+RUN

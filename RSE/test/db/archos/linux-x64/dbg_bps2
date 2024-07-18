@@ -1,0 +1,47 @@
+NAME=dbg.dc.loop.swstep
+FILE=bins/elf/analysis/x64-loop
+ARGS=-d
+CMDS=<<EOF
+e scr.color=0
+e dbg.swstep=true
+db @ sym.called_in_loop
+dc ; dr PC
+dc ; dr PC
+dc ; dr PC
+ds ; dr PC
+ds ; dr PC
+ds ; dr PC
+EOF
+EXPECT=<<EOF
+rip = 0x00000000004004ed
+rip = 0x00000000004004ed
+rip = 0x00000000004004ed
+rip = 0x00000000004004ee
+rip = 0x00000000004004f1
+rip = 0x00000000004004f7
+EOF
+RUN
+
+NAME=dbg.dc.loop.hwstep
+FILE=bins/elf/analysis/x64-loop
+ARGS=-d
+CMDS=<<EOF
+e scr.color=0
+e dbg.swstep=false
+db @ sym.called_in_loop
+dc ; dr PC
+dc ; dr PC
+dc ; dr PC
+ds ; dr PC
+ds ; dr PC
+ds ; dr PC
+EOF
+EXPECT=<<EOF
+rip = 0x00000000004004ed
+rip = 0x00000000004004ed
+rip = 0x00000000004004ed
+rip = 0x00000000004004ee
+rip = 0x00000000004004f1
+rip = 0x00000000004004f7
+EOF
+RUN

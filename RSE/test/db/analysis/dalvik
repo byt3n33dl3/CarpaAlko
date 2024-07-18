@@ -1,0 +1,224 @@
+NAME=Dalvik HelloWorld afl
+FILE=bins/dex/HelloWorld.dex
+CMDS=aa; afl
+EXPECT=<<EOF
+0x100000238    1 20           method.public.constructor.Hello.void__init
+0x10000025c    1 34           entry0
+0x100000290    1 84           method.public.Hello.void_foo_int
+0x1000002f4    1 20           method.public.constructor.World.void__init
+0x100000318    1 68           method.public.World.void_foo_int
+0x8000000000    1 2            sym.java.io.PrintStream.void_println_String
+0x8000000002    1 2            sym.Integer.void__init__int
+0x8000000004    1 2            sym.Integer.String_toString
+0x8000000006    1 2            sym.Object.void__init
+0x8000000008    1 2            sym.StringBuilder.void__init
+0x800000000a    1 2            sym.StringBuilder.StringBuilder_append_String
+0x800000000c    1 2            sym.StringBuilder.String_toString
+EOF
+RUN
+
+NAME=Dalvik HelloWorld string xref
+FILE=bins/dex/HelloWorld.dex
+CMDS=aa; axt @ str.Findus
+EXPECT=<<EOF
+entry0 0x100000260 [DATA] const-string v1, str.Findus
+EOF
+RUN
+
+NAME=Dalvik HelloWorld func xref
+FILE=bins/dex/HelloWorld.dex
+CMDS=aa; axt @ sym.Hello.void__init
+EXPECT=<<EOF
+entry0 0x10000026e [CALL] invoke-direct {v0}, LHello;-><init>()V
+EOF
+RUN
+
+NAME=Dalvik HelloWorld func xref to super method
+FILE=bins/dex/org.radare.radare2installer.dex
+CMDS=aaa; axt @ sym.android.app.Activity.void_onDestroy~invoke-super
+EXPECT=<<EOF
+method.public.org.radare.radare2installer.ConsoleActivity.void_onDestroy; void onDestroy() 0x100019e50 [CALL] invoke-super {v1}, Landroid/app/Activity;->onDestroy()V
+method.public.org.radare.radare2installer.LaunchActivity.void_onDestroy 0x10001a256 [CALL] invoke-super {v1}, Landroid/app/Activity;->onDestroy()V
+method.public.org.radare.radare2installer.WebActivity.void_onDestroy; void onDestroy() 0x10001e574 [CALL] invoke-super {v2}, Landroid/app/Activity;->onDestroy()V
+EOF
+RUN
+
+NAME=Dalvik resolve virtual methods called via invoke-virtual
+FILE=apk://bins/dex/org.radare.radare2installer.apk
+CMDS=aaa ; axt @ sym.com.ice.tar.TarEntry.String_getUserName
+EXPECT=<<EOF
+entry0 0x10000c8ba [CALL] invoke-virtual {v1}, Lcom/ice/tar/TarEntry;->getUserName()Ljava/lang/String;
+entry0 0x10000c9e6 [CALL] invoke-virtual {v1}, Lcom/ice/tar/TarEntry;->getUserName()Ljava/lang/String;
+method.public.com.ice.tar.TarEntry.String_toString 0x10000f04a [CALL] invoke-virtual {v4}, Lcom/ice/tar/TarEntry;->getUserName()Ljava/lang/String;
+EOF
+RUN
+
+NAME=Dalvik resolve imports called via invoke-virtual
+FILE=apk://bins/dex/org.radare.radare2installer.apk
+CMDS=aaa ; axt @ sym.java.net.URL.java.io.InputStream_openStream
+EXPECT=<<EOF
+method.public.javax.activation.URLDataSource.java.io.InputStream_getInputStream 0x100021180 [CALL] invoke-virtual {v0}, Ljava/net/URL;->openStream()Ljava/io/InputStream;
+EOF
+RUN
+
+NAME=Dalvik regs
+FILE=
+CMDS=<<EOF
+e asm.arch=dalvik
+ar
+EOF
+EXPECT=<<EOF
+v0 = 0x00000000
+v1 = 0x00000000
+v2 = 0x00000000
+v3 = 0x00000000
+v4 = 0x00000000
+v5 = 0x00000000
+v6 = 0x00000000
+v7 = 0x00000000
+v8 = 0x00000000
+v9 = 0x00000000
+v10 = 0x00000000
+v11 = 0x00000000
+v12 = 0x00000000
+v13 = 0x00000000
+v14 = 0x00000000
+v15 = 0x00000000
+v16 = 0x00000000
+v17 = 0x00000000
+v18 = 0x00000000
+v19 = 0x00000000
+v20 = 0x00000000
+v21 = 0x00000000
+v22 = 0x00000000
+v23 = 0x00000000
+v24 = 0x00000000
+v25 = 0x00000000
+v26 = 0x00000000
+v27 = 0x00000000
+v28 = 0x00000000
+v29 = 0x00000000
+v30 = 0x00000000
+v31 = 0x00000000
+v32 = 0x00000000
+v33 = 0x00000000
+v34 = 0x00000000
+ip = 0x00000000
+sp = 0x00000000
+bp = 0x00000000
+EOF
+RUN
+
+NAME=Resolve also exception paths found after gotos/returns
+FILE=apk://bins/dex/ade8bef0ac29fa363fc9afd958af0074478aef650adeb0318517b48bd996d5d5.apk
+CMDS=<<EOF
+aaa
+axg @ 0x800000021c
+EOF
+EXPECT=<<EOF
+- 0x800000021c fcn 0x800000021c sym.android.telephony.TelephonyManager.String_getDeviceId
+  - 0x100018936 fcn 0x1000186b0 method.public.static.com.network.android.SmsReceiver.void_a_org.xmlpull.v1.XmlSerializer__java.io.StringWriter__android.content.Context
+  - 0x1000186b0 fcn 0x1000186b0 method.public.static.com.network.android.SmsReceiver.void_a_org.xmlpull.v1.XmlSerializer__java.io.StringWriter__android.content.Context
+    - 0x100025f78 fcn 0x100025f70 fcn.100025f70
+    - 0x100025f70 fcn 0x100025f70 fcn.100025f70
+      - 0x10002666c fcn 0x10002653c method.public.static.com.network.android.g.a
+      - 0x10002653c fcn 0x10002653c method.public.static.com.network.android.g.a
+        - 0x100019cac fcn 0x100019c60 method.public.static.com.network.android.a.c.void_a_android.content.Context__int
+        - 0x100019c60 fcn 0x100019c60 method.public.static.com.network.android.a.c.void_a_android.content.Context__int
+          - 0x100019d1c fcn 0x100019c60 method.public.static.com.network.android.a.c.void_a_android.content.Context__int
+          - 0x100019e00 fcn 0x100019c60 method.public.static.com.network.android.a.c.void_a_android.content.Context__int
+          - 0x10001c7a0 fcn 0x10001c6f0 method.public.final.com.network.android.a.j.void_run
+        - 0x10001ac02 fcn 0x10001abb8 method.public.static.com.network.android.a.c.void_a_android.content.Context__byte____boolean__boolean
+        - 0x10001abb8 fcn 0x10001abb8 method.public.static.com.network.android.a.c.void_a_android.content.Context__byte____boolean__boolean
+          - 0x10001ab9e fcn 0x10001ab9c method.public.static.com.network.android.a.c.void_a_android.content.Context__byte
+          - 0x10001ab9c fcn 0x10001ab9c method.public.static.com.network.android.a.c.void_a_android.content.Context__byte
+            - 0x100027fe2 fcn 0x100027fb4 method.public.static.com.network.android.j.boolean_a_android.content.Context__boolean__boolean__short
+            - 0x100027fb4 fcn 0x100027fb4 method.public.static.com.network.android.j.boolean_a_android.content.Context__boolean__boolean__short
+              - 0x100027e8e fcn 0x100027df0 method.public.static.com.network.android.j.boolean_a_android.content.Context__boolean__boolean
+              - 0x100027df0 fcn 0x100027df0 method.public.static.com.network.android.j.boolean_a_android.content.Context__boolean__boolean
+                - 0x10001c948 fcn 0x10001c918 method.public.final.com.network.android.a.l.void_run
+                - 0x10001c918 fcn 0x10001c918 method.public.final.com.network.android.a.l.void_run
+                  - 0x10000ed93 ???
+                - 0x10001dcd4 fcn 0x10001dcb0 method.public.static.com.network.android.agent.NetworkApp.void_b_android.content.Context
+                - 0x10001dcb0 fcn 0x10001dcb0 method.public.static.com.network.android.agent.NetworkApp.void_b_android.content.Context
+                  - 0x10001dc44 fcn 0x10001daf4 method.static.synthetic.com.network.android.agent.NetworkApp.void_a_com.network.android.agent.NetworkApp
+                  - 0x10001daf4 fcn 0x10001daf4 method.static.synthetic.com.network.android.agent.NetworkApp.void_a_com.network.android.agent.NetworkApp
+                    - 0x10001e918 fcn 0x10001e914 method.public.final.com.network.android.agent.c.void_run
+                  - 0x10001ea30 fcn 0x10001ea2c method.public.final.com.network.android.agent.e.void_run
+                - 0x10001dd60 fcn 0x10001dcb0 method.public.static.com.network.android.agent.NetworkApp.void_b_android.content.Context
+                - 0x10001ddb0 fcn 0x10001dcb0 method.public.static.com.network.android.agent.NetworkApp.void_b_android.content.Context
+                - 0x10001ed72 fcn 0x10001eca0 method.protected.final.com.network.android.android.monitor.AppServicePinger.void_onHandleIntent_android.content.Intent
+                - 0x1000285e2 fcn 0x1000285d4 method.public.static.com.network.android.j.boolean_c_android.content.Context
+                - 0x1000285d4 fcn 0x1000285d4 method.public.static.com.network.android.j.boolean_c_android.content.Context
+                  - 0x100028322 fcn 0x1000282fc method.public.static.com.network.android.j.void_b_android.content.Context
+                  - 0x1000282fc fcn 0x1000282fc method.public.static.com.network.android.j.void_b_android.content.Context
+                    - 0x100028812 fcn 0x1000287f4 method.public.final.com.network.android.l.void_run
+                  - 0x100028802 fcn 0x1000287f4 method.public.final.com.network.android.l.void_run
+                - 0x100045a44 fcn 0x100045a1c method.public.final.com.network.h.k.void_run
+              - 0x10002d7aa fcn 0x10002d714 method.protected.static.com.network.android.monitor.observer.BatteryReceiver.void_a_android.content.Intent__android.content.Context
+              - 0x10002d714 fcn 0x10002d714 method.protected.static.com.network.android.monitor.observer.BatteryReceiver.void_a_android.content.Intent__android.content.Context
+                - 0x10002d6f8 fcn 0x10002d6c4 method.public.static.com.network.android.monitor.observer.BatteryReceiver.String_a_android.content.Context
+                - 0x10002d6c4 fcn 0x10002d6c4 method.public.static.com.network.android.monitor.observer.BatteryReceiver.String_a_android.content.Context
+                  - 0x1000188ec fcn 0x1000186b0 method.public.static.com.network.android.SmsReceiver.void_a_org.xmlpull.v1.XmlSerializer__java.io.StringWriter__android.content.Context
+                - 0x10002fc8c fcn 0x10002fc84 method.public.final.com.network.android.monitor.observer.s.void_run
+            - 0x10002811a fcn 0x100028064 method.public.static.com.network.android.j.boolean_a_android.telephony.TelephonyManager__android.content.Context__boolean__android.net.ConnectivityManager
+            - 0x100028064 fcn 0x100028064 method.public.static.com.network.android.j.boolean_a_android.telephony.TelephonyManager__android.content.Context__boolean__android.net.ConnectivityManager
+              - 0x10001eb52 fcn 0x10001eac4 method.public.final.com.network.android.agent.g.void_run
+              - 0x100027f7a fcn 0x100027df0 method.public.static.com.network.android.j.boolean_a_android.content.Context__boolean__boolean
+          - 0x10001c09c fcn 0x10001c074 method.private.static.com.network.android.a.c.void_g_android.content.Context
+          - 0x10001c074 fcn 0x10001c074 method.private.static.com.network.android.a.c.void_g_android.content.Context
+            - 0x100019eae fcn 0x100019e34 method.public.static.com.network.android.a.c.void_a_android.content.Context__int__int__int
+            - 0x100019e34 fcn 0x100019e34 method.public.static.com.network.android.a.c.void_a_android.content.Context__int__int__int
+              - 0x10001c440 fcn 0x10001c404 method.public.final.com.network.android.a.f.void_run
+              - 0x10001c48a fcn 0x10001c404 method.public.final.com.network.android.a.f.void_run
+              - 0x10001ea86 fcn 0x10001ea68 method.public.final.com.network.android.agent.f.void_run
+            - 0x100019f70 fcn 0x100019ed8 method.public.static.com.network.android.a.c.void_a_android.content.Context__int__String
+            - 0x100019ed8 fcn 0x100019ed8 method.public.static.com.network.android.a.c.void_a_android.content.Context__int__String
+              - 0x10001c8d0 fcn 0x10001c7f8 method.public.final.com.network.android.a.k.void_onReceive_android.content.Context__android.content.Intent
+            - 0x10001a1a2 fcn 0x100019f98 method.public.static.com.network.android.a.c.void_a_android.content.Context__int__String__int
+            - 0x100019f98 fcn 0x100019f98 method.public.static.com.network.android.a.c.void_a_android.content.Context__int__String__int
+              - 0x100019d90 fcn 0x100019c60 method.public.static.com.network.android.a.c.void_a_android.content.Context__int
+              - 0x100019de0 fcn 0x100019c60 method.public.static.com.network.android.a.c.void_a_android.content.Context__int
+              - 0x10001b088 fcn 0x10001b084 method.public.static.com.network.android.a.c.void_b_android.content.Context__int
+              - 0x10001b084 fcn 0x10001b084 method.public.static.com.network.android.a.c.void_b_android.content.Context__int
+                - 0x10001c2e2 fcn 0x10001c1c8 method.public.final.com.network.android.a.e.void_run
+                - 0x10001c39e fcn 0x10001c1c8 method.public.final.com.network.android.a.e.void_run
+                - 0x10001c41c fcn 0x10001c404 method.public.final.com.network.android.a.f.void_run
+                - 0x10001c74c fcn 0x10001c6f0 method.public.final.com.network.android.a.j.void_run
+              - 0x10001bf4a fcn 0x10001befc method.public.static.com.network.android.a.c.void_e_android.content.Context
+              - 0x10001befc fcn 0x10001befc method.public.static.com.network.android.a.c.void_e_android.content.Context
+                - 0x10001c9f4 fcn 0x10001c9f0 method.public.final.com.network.android.a.m.void_run
+              - 0x10001c6ba fcn 0x10001c6ac method.public.final.com.network.android.a.i.void_run
+          - 0x10001c962 fcn 0x10001c918 method.public.final.com.network.android.a.l.void_run
+        - 0x10001c248 fcn 0x10001c1c8 method.public.final.com.network.android.a.e.void_run
+        - 0x100028408 fcn 0x1000282fc method.public.static.com.network.android.j.void_b_android.content.Context
+  - 0x10001a24e fcn 0x100019f98 method.public.static.com.network.android.a.c.void_a_android.content.Context__int__String__int
+EOF
+RUN
+
+NAME=Dalvik disassemble single opcode pdfj
+FILE=malloc://32
+CMDS=<<EOF
+e asm.arch=dalvik
+wx 0e00
+af
+pdfj
+EOF
+EXPECT=<<EOF
+{"name":"fcn.00000000","size":2,"addr":0,"ops":[{"offset":0,"esil":"sp,[8],ip,=,8,sp,+=","refptr":false,"fcn_addr":0,"fcn_last":0,"size":2,"opcode":"return-void","disasm":"return-void","bytes":"0e00","family":"cpu","type":"ret","reloc":false,"type_num":5,"type2_num":0,"flags":["fcn.00000000"]}]}
+EOF
+RUN
+
+NAME=Dalvik disassemble single opcode pdf
+FILE=
+CMDS=<<EOF
+e asm.arch=dalvik
+wx 0e00
+af
+pdf
+EOF
+EXPECT=<<EOF
+/ fcn.00000000();
+\           0x00000000      return-void
+EOF
+RUN

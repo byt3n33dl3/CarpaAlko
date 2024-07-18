@@ -1,0 +1,19 @@
+NAME=h8300 regs
+FILE=
+CMDS=<<EOF
+e asm.arch=h8300
+ar
+EOF
+EXPECT=<<EOF
+r0 = 0x0000
+r1 = 0x0000
+r2 = 0x0000
+r3 = 0x0000
+r4 = 0x0000
+r5 = 0x0000
+r6 = 0x0000
+r7 = 0x0000
+pc = 0x0000
+ccr = 0x00
+EOF
+RUN

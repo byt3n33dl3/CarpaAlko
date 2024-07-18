@@ -1,0 +1,47 @@
+NAME=Testing the decryption in emulateme
+FILE=bins/tricore/emulateme.tricore
+TIMEOUT=30
+CMDS=<<EOF
+e io.cache=1
+aaa
+s main
+aezi
+aezv FCX 0x1
+aezsu 0x8000052e
+ps @ obj.seckrit
+EOF
+EXPECT=<<EOF
+FCX = 0x1
+Hello from RzIL!
+EOF
+RUN
+
+NAME=Testing the decryption in emulateme
+FILE=bins/tricore/emulateme-fp.tricore.elf
+TIMEOUT=30
+CMDS=<<EOF
+e io.cache=1
+aezi
+aezsu 0x80000450 # add.f
+ar d2
+aezsu 0x80000460 # sub.f
+ar d2
+aezsu 0x80000470 # mul.f
+ar d2
+aezsu 0x80000480 # div.f
+ar d2
+aezsu 0x80000498 # madd.f
+ar d2
+aezsu 0x800004b0 # msub.f
+ar d2
+EOF
+EXPECT=<<EOF
+d2 = 0x47157f3b
+d2 = 0x47157f3b
+d2 = 0x47157f3b
+d2 = 0x47157f3b
+d2 = 0x47e03ed8
+d2 = 0x489d1884
+EOF
+RUN
+

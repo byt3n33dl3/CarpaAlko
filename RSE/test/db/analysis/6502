@@ -1,0 +1,28 @@
+NAME=6502 af bug introduced in 36e42b3
+FILE=malloc://1024
+CMDS=<<EOF
+e asm.arch=6502
+wx c904c90460
+af
+afl~[2]
+EOF
+EXPECT=<<EOF
+5
+EOF
+RUN
+
+NAME=6502 regs
+FILE=
+CMDS=<<EOF
+e asm.arch=6502
+ar
+EOF
+EXPECT=<<EOF
+a = 0x00
+x = 0x00
+y = 0x00
+flags = 0x00
+sp = 0x00
+pc = 0x0000
+EOF
+RUN

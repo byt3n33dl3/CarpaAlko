@@ -1,0 +1,252 @@
+NAME=pd call sym bug
+FILE=bins/mach0/hello-objc-arm
+CMDS=<<EOF
+e asm.lines.bb=0
+e asm.bytes=0
+e asm.comments=0
+s sym.static_int_Test::callMeNot
+pd 20~?NSLog
+af
+pd 20~?NSLog
+EOF
+EXPECT=<<EOF
+1
+1
+EOF
+RUN
+
+NAME=pd arm cortex-m 0
+FILE==
+ARGS=-a arm -b 16
+CMDS=wx 80f30988; pi 1
+EXPECT=<<EOF
+invalid
+EOF
+EXPECT_ERR=
+RUN
+
+NAME=pd arm cortex-m 1
+FILE==
+ARGS=-a arm -b 16 -e asm.cpu=cortexm
+CMDS=wx 80f30988;pi 1
+EXPECT=<<EOF
+msr psp, r0
+EOF
+EXPECT_ERR=
+RUN
+
+NAME=pd arm cortex-m 2
+FILE==
+ARGS=-a arm -b 16
+CMDS=e asm.cpu=cortexm;wx 80f30988;pi 1
+EXPECT=<<EOF
+msr psp, r0
+EOF
+EXPECT_ERR=
+RUN
+
+NAME=pd call sym bug
+FILE=bins/mach0/hello-objc-arm
+CMDS=<<EOF
+e asm.lines.bb=0
+e asm.bytes=0
+e asm.comments=0
+s sym.static_int_Test::callMeNot
+pi 2
+EOF
+EXPECT=<<EOF
+push {r7, lr}
+mov r7, sp
+EOF
+RUN
+
+NAME=call fcn eip 32bit
+FILE=bins/elf/analysis/ls-alxchk
+CMDS=<<EOF
+s 0x5e50
+e asm.bytes=true
+e asm.bits=32
+af; afn eip
+pd 1 @ 0x5f16~:0
+e asm.lines.bb=0
+e asm.bytes=0
+e asm.comments=0
+EOF
+EXPECT=<<EOF
+            0x00005f16      e835ffffff     call  fcn.00005e50
+EOF
+RUN
+
+NAME=call fcn eip 64bit
+FILE=bins/elf/analysis/ls-alxchk
+BROKEN=1
+CMDS=<<EOF
+s 0x5e50
+e asm.bytes=true
+e asm.bits=64
+af; afn eip
+pd 1 @ 0x5f16~:0
+e asm.lines.bb=0
+e asm.bytes=0
+e asm.comments=0
+EOF
+EXPECT=<<EOF
+|           0x00005f16      e835ffffff     call fcn.eip
+EOF
+RUN
+
+NAME=call fcn rip 64bit
+FILE=bins/elf/analysis/ls-alxchk
+CMDS=<<EOF
+s 0x5e50
+e asm.bits=64
+e asm.bytes=true
+af; afn rip
+pd 1 @ 0x5f16~:0
+e asm.lines.bb=0
+e asm.bytes=0
+e asm.comments=0
+EOF
+EXPECT=<<EOF
+            0x00005f16      e835ffffff     call  fcn.00005e50
+EOF
+RUN
+
+NAME=lea edx bug segfault for x86 32bit #5710@rizin
+FILE=malloc://128
+CMDS=<<EOF
+e asm.arch=x86
+e asm.bytes=true
+e asm.bits=32
+e asm.lines.bb=false
+e asm.comments=false
+pD 6@x:8d15d0830408
+EOF
+EXPECT=<<EOF
+  0x00000000      8d15d0830408   lea   edx, [0x80483d0]
+EOF
+RUN
+
+NAME=p8@x
+FILE=malloc://128
+CMDS=<<EOF
+e asm.comments=false
+p8@x:8d15d0830408
+EOF
+EXPECT=<<EOF
+8d15d0830408
+EOF
+RUN
+
+NAME=px@x
+FILE=malloc://128
+CMDS=<<EOF
+e asm.comments=false
+e hex.header=false
+px@x:8d15d0830408
+EOF
+EXPECT=<<EOF
+0x00000000  8d15 d083 0408                           ......
+EOF
+RUN
+
+NAME=size of function in elf x64 stub
+FILE=bins/other/rz-diff/hellocxx-osx-fat-intel_1
+ARGS=-ax86 -b64
+CMDS=<<EOF
+s 0x100000dae
+af
+afi~^size[1]
+EOF
+EXPECT=<<EOF
+6
+EOF
+RUN
+
+NAME=crackme test
+FILE=bins/elf/crackme
+CMDS=<<EOF
+e asm.bytes=true
+pd 2
+pi 2
+EOF
+EXPECT=<<EOF
+            ;-- entry0:
+            ;-- section..text:
+            ;-- .text:
+            ;-- _start:
+            0x004005c0      31ed           xor   ebp, ebp              ; [13] -r-x section size 584 named .text
+            0x004005c2      4989d1         mov   r9, rdx
+xor ebp, ebp
+mov r9, rdx
+EOF
+RUN
+
+NAME=indent asm.lines.fcn=0, asm.lines.bb=1 for issue 9316
+FILE==
+CMDS=<<EOF
+e asm.bytes=true
+e asm.arch=x86
+e asm.bits=64
+af+ test @ 0
+e asm.lines.fcn=0
+e asm.lines.bb=1
+pd 2
+EOF
+EXPECT=<<EOF
+test();
+          0x00000000      0000           add   byte [rax], al
+          0x00000002      0000           add   byte [rax], al
+EOF
+RUN
+
+NAME=indent asm.lines.fcn=1, asm.lines.bb=0 for issue 9316
+FILE==
+CMDS=<<EOF
+e asm.arch=x86
+e asm.bytes=true
+e asm.bits=64
+af+ test @ 0
+e asm.lines.fcn=1
+e asm.lines.bb=0
+pd 2
+EOF
+EXPECT=<<EOF
+/ test();
+  0x00000000      0000           add   byte [rax], al
+  0x00000002      0000           add   byte [rax], al
+EOF
+RUN
+
+NAME=asm.flgoff indent
+FILE=bins/elf/crackme0x05
+CMDS=<<EOF
+e asm.bytes=true
+e asm.flags.offset=1
+s sym.check
+pd 1
+EOF
+EXPECT=<<EOF
+            0x080484c8  ;-- check:
+            0x080484c8      55             push  ebp
+EOF
+RUN
+
+NAME=pxj 4 expects 4 bytes
+FILE=malloc://128
+CMDS=<<EOF
+wx 9030405011223344
+px 4
+pxj 4
+px 6 @ 2
+pxj 6 @ 2
+EOF
+EXPECT=<<EOF
+- offset -   0 1  2 3  4 5  6 7  8 9  A B  C D  E F  0123456789ABCDEF
+0x00000000  9030 4050                                .0@P
+[144,48,64,80]
+- offset -   0 1  2 3  4 5  6 7  8 9  A B  C D  E F  0123456789ABCDEF
+0x00000002  4050 1122 3344                           @P."3D
+[64,80,17,34,51,68]
+EOF
+RUN

@@ -1,0 +1,52 @@
+#!/bin/bash
+#
+# SPDX-FileCopyrightText: 2021 ret2libc <sirmy15@gmail.com>
+# SPDX-License-Identifier: LGPL-3.0-only
+
+set -x
+
+export PATH=${TRAVIS_BUILD_DIR}/install/bin:${PATH}
+export LD_LIBRARY_PATH=${TRAVIS_BUILD_DIR}/install/lib/$(uname -m)-linux-gnu:${TRAVIS_BUILD_DIR}/install/lib:${TRAVIS_BUILD_DIR}/install/lib64:${LD_LIBRARY_PATH}
+
+echo "Installing with meson + ninja"
+
+OPTS=""
+if [ "${RZ_SYS_CAPSTONE}" != "" ] ; then
+	OPTS="${OPTS} -D use_sys_capstone=${RZ_SYS_CAPSTONE}"
+fi
+if [ "${RZ_SYS_MAGIC}" != "" ] ; then
+	OPTS="${OPTS} -D use_sys_magic=${RZ_SYS_MAGIC}"
+fi
+if [ "${RZ_SYS_ZLIB}" != "" ] ; then
+	OPTS="${OPTS} -D use_sys_zlib=${RZ_SYS_ZLIB}"
+fi
+if [ "${RZ_SYS_ZIP}" != "" ] ; then
+	OPTS="${OPTS} -D use_sys_libzip=${RZ_SYS_ZIP}"
+fi
+if [ "${RZ_SYS_LZ4}" != "" ] ; then
+	OPTS="${OPTS} -D use_sys_lz4=${RZ_SYS_LZ4}"
+fi
+if [ "${RZ_SYS_OPENSSL}" != "" ] ; then
+	OPTS="${OPTS} -D use_sys_openssl=${RZ_SYS_OPENSSL}"
+fi
+if [ "${RZ_RZSHELL}" != "" ] ; then
+	OPTS="${OPTS} -D use_treesitter=${RZ_RZSHELL}"
+fi
+if [ "${COVERAGE}" == "1" ] ; then
+	OPTS="${OPTS} -Db_coverage=true"
+fi
+
+meson setup --prefix=${TRAVIS_BUILD_DIR}/install ${OPTS} build || exit 1
+ninja -C build || exit 1
+ninja -C build install || exit 1
+export PKG_CONFIG_PATH=$(pwd)/build/meson-private:${PKG_CONFIG_PATH}
+
+if [ "${RZ_TESTS_DISABLE}" != "1" ] ; then
+	export NOREPORT=1
+	git clone https://github.com/rizinorg/rizin-testbins test/bins
+	# Unit tests
+	VERBOSE=1 RZ_TEST_ARGS=-t1920 ninja -C build test || exit 1
+	# Integration tests
+	cd test
+	rz-test -L -o results.json
+fi

@@ -1,0 +1,311 @@
+NAME=fatmach0 string location
+FILE=bins/mach0/BatteryLife
+CMDS=<<EOF
+s str.batteryLevel
+ps @e:str.search.encoding=utf8
+EOF
+EXPECT=<<EOF
+batteryLevel
+EOF
+RUN
+
+NAME=fatmach0 -b64
+FILE=bins/mach0/BatteryLife
+ARGS=-aarm -b64
+CMDS=<<EOF
+e asm.bits
+e asm.bytes=0
+e asm.flags=0
+e asm.lines.bb=0
+pd 1
+EOF
+EXPECT=<<EOF
+64
+  0x100010f7c      stp   x22, x21, [sp, -0x30]!
+EOF
+RUN
+
+NAME=fatmach0 arm64
+FILE=bins/mach0/BatteryLife.arm_64.1
+CMDS=<<EOF
+e asm.bytes=0
+e asm.flags=0
+e asm.lines.bb=0
+pd 1
+EOF
+EXPECT=<<EOF
+  0x100010f7c      stp   x22, x21, [sp, -0x30]!
+EOF
+RUN
+
+NAME=fatmach0 arm32 string location
+FILE=bins/mach0/BatteryLife.arm_32.0
+CMDS=<<EOF
+s str.batteryLevel
+ps @e:str.search.encoding=utf8
+EOF
+EXPECT=<<EOF
+batteryLevel
+EOF
+RUN
+
+NAME=fatmach0 arm16 symbol alignment
+ARGS=-aarm -b32
+FILE=bins/mach0/a.out
+CMDS=<<EOF
+s sym._call
+pi 1
+EOF
+EXPECT=<<EOF
+push {r7, lr}
+EOF
+RUN
+
+NAME=mach0 arm16 symbol alignment
+FILE=bins/mach0/a.out.fat/a.out.arm_32.0
+CMDS=<<EOF
+s sym._call
+pi 1
+EOF
+EXPECT=<<EOF
+push {r7, lr}
+EOF
+RUN
+
+NAME=fatmach0 arm64 symbol alignment
+FILE=bins/mach0/a.out
+ARGS=-a arm -b 64
+CMDS=<<EOF
+s sym._call
+pi 1
+EOF
+EXPECT=<<EOF
+stp fp, lr, [sp, -0x10]!
+EOF
+RUN
+
+NAME=mach0 arm64 symbol alignment
+FILE=bins/mach0/a.out.fat/a.out.arm_64.1
+CMDS=<<EOF
+s sym._call
+pi 1
+EOF
+EXPECT=<<EOF
+stp fp, lr, [sp, -0x10]!
+EOF
+RUN
+
+NAME=fatmach0 entry0
+FILE=bins/mach0/fatmach0-3true
+CMDS=%v entry0
+EXPECT=<<EOF
+0x100000ef8
+EOF
+RUN
+
+NAME=fatmach0 entry0 data
+FILE=bins/mach0/fatmach0-3true
+CMDS=p8 16 @ entry0
+EXPECT=<<EOF
+6a004889e54883e4f0488b7d08488d75
+EOF
+RUN
+
+NAME=fatmach0 entry1
+FILE=bins/mach0/fatmach0-3true
+ARGS=-a x86 -b 32
+CMDS=%v entry0
+EXPECT=<<EOF
+0x1f44
+EOF
+RUN
+
+NAME=fatmach0 entry1 data
+FILE=bins/mach0/fatmach0-3true
+ARGS=-a x86 -b 32
+CMDS=p8 16 @ entry0
+EXPECT=<<EOF
+6a0089e583e4f083ec108b5d04891c24
+EOF
+RUN
+
+NAME=fatmach0 entry1 rz-bin
+FILE=bins/mach0/fatmach0-3true
+ARGS=-n
+CMDS=!rz-bin -a x86 -b 32 -qe bins/mach0/fatmach0-3true
+EXPECT=<<EOF
+0x00001f44
+EOF
+RUN
+
+NAME=fatmach0 entry1 rz-bin
+FILE=bins/mach0/fatmach0-3true
+ARGS=-n
+CMDS=!rz-bin -p -a x86 -b 32 -qe bins/mach0/fatmach0-3true
+EXPECT=<<EOF
+0x00005f44
+EOF
+RUN
+
+NAME=fatmach0 entry1 rz-bin (2)
+FILE=bins/mach0/fatmach0-3true
+ARGS=-n
+CMDS=!rz-bin -a x86 -b 32 -e bins/mach0/fatmach0-3true | grep program
+EXPECT=<<EOF
+0x00001f44 0x00005f44 ---------- 0x00000420 program
+EOF
+RUN
+
+NAME=fatmach0 entry2
+FILE=bins/mach0/fatmach0-3true
+ARGS=-a ppc -b 32
+CMDS=%v entry0
+EXPECT=<<EOF
+0x1f64
+EOF
+RUN
+
+NAME=fatmach0 entry2 data
+FILE=bins/mach0/fatmach0-3true
+ARGS=-a ppc -b 32
+CMDS=p8 16 @ entry0
+EXPECT=<<EOF
+7c3a0b783821fffc5421003438000000
+EOF
+RUN
+
+NAME=fatmach0 archs iA iAj
+FILE=bins/mach0/fatmach0-3true
+CMDS=<<EOF
+iA
+iAj
+EOF
+EXPECT=<<EOF
+offset     size  arch   machine    
+-----------------------------------
+0x00001000 13792 x86_64 x86 64 all
+0x00005000 13760 x86_32 386
+0x00009000 13616 ppc_32 7400
+[{"arch":"x86","bits":64,"offset":4096,"size":13792,"machine":"x86 64 all"},{"arch":"x86","bits":32,"offset":20480,"size":13760,"machine":"386"},{"arch":"ppc","bits":32,"offset":36864,"size":13616,"machine":"7400"}]
+EOF
+RUN
+
+NAME=fatmach0 rz-bin archs
+FILE=bins/mach0/fatmach0-3true
+CMDS=<<EOF
+!rz-bin -A bins/mach0/fatmach0-3true
+!rz-bin -Aj bins/mach0/fatmach0-3true
+EOF
+EXPECT=<<EOF
+[Archs]
+offset     size  arch   machine    
+-----------------------------------
+0x00001000 13792 x86_64 x86 64 all
+0x00005000 13760 x86_32 386
+0x00009000 13616 ppc_32 7400
+
+{"archs":[{"arch":"x86","bits":64,"offset":4096,"size":13792,"machine":"x86 64 all"},{"arch":"x86","bits":32,"offset":20480,"size":13760,"machine":"386"},{"arch":"ppc","bits":32,"offset":36864,"size":13616,"machine":"7400"}]}
+EOF
+RUN
+
+NAME=fatmach0 extract
+FILE=bins/mach0/fatmach0-3true
+ARGS=-n
+CMDS=!rz-bin -x bins/mach0/fatmach0-3true;!rm -rf fatmach0-3true.fat
+EXPECT=<<EOF
+fatmach0-3true.fat/fatmach0-3true.x86_64.0 created (13792)
+fatmach0-3true.fat/fatmach0-3true.x86_32.1 created (13760)
+fatmach0-3true.fat/fatmach0-3true.ppc_32.2 created (13616)
+EOF
+RUN
+
+NAME=fatmach0 sections
+FILE=bins/mach0/fatmach0-3true
+ARGS=-a x86 -b 64
+CMDS=oml~?
+EXPECT=<<EOF
+4
+EOF
+RUN
+
+NAME=fatmach0 rebase
+FILE=bins/mach0/fatmach0-3true
+ARGS=-a x86 -b32 -B 0x90000000
+CMDS=is
+EXPECT=<<EOF
+nth paddr      vaddr      bind   type size lib name                
+-------------------------------------------------------------------
+0   0x00005000 0x90000000 GLOBAL FUNC 0        __mh_execute_header
+1   0x00005000 0x95613542 LOCAL  FUNC 0        radr://5614542
+2   0x00005f94 0x90000f94 LOCAL  FUNC 0        imp.exit
+EOF
+RUN
+
+NAME=fatmach0 arm64e objc classes
+FILE=bins/mach0/modernobjc-noarm64
+ARGS=-a arm -b 64
+CMDS=<<EOF
+ic
+icf ViewController
+icm ViewController
+icf AppDelegate
+icm AppDelegate
+icf SceneDelegate
+icm SceneDelegate
+EOF
+EXPECT=<<EOF
+address     min         max         name           super            
+--------------------------------------------------------------------
+0x100009298 0x100001e90 0x100001e90 ViewController UIViewController
+0x1000092c0 0x100001ee4 0x1000020a4 AppDelegate    UIResponder
+0x100009310 0x1000021d0 0x100002494 SceneDelegate  UIResponder
+address index class flags name type 
+------------------------------------
+address     index class          flags name        
+---------------------------------------------------
+0x100001e90 0     ViewController       viewDidLoad
+address    index class       flags name                                    type 
+--------------------------------------------------------------------------------
+---------- 0     AppDelegate       AppDelegate::(property)debugDescription 
+---------- 1     AppDelegate       AppDelegate::(property)description      
+---------- 2     AppDelegate       AppDelegate::(property)hash             
+---------- 3     AppDelegate       AppDelegate::(property)superclass       
+---------- 4     AppDelegate       AppDelegate::(property)window           
+address     index class       flags name                                                        
+------------------------------------------------------------------------------------------------
+0x100001ee4 0     AppDelegate       application:didFinishLaunchingWithOptions:
+0x100001f74 1     AppDelegate       application:configurationForConnectingSceneSession:options:
+0x1000020a4 2     AppDelegate       application:didDiscardSceneSessions:
+address     index class         flags name                                      type                
+----------------------------------------------------------------------------------------------------
+----------  0     SceneDelegate       SceneDelegate::(property)debugDescription 
+----------  1     SceneDelegate       SceneDelegate::(property)description      
+----------  2     SceneDelegate       SceneDelegate::(property)hash             
+----------  3     SceneDelegate       SceneDelegate::(property)superclass       
+----------  4     SceneDelegate       SceneDelegate::(property)window           
+----------  5     SceneDelegate       isa                                       struct objc_class *
+0x100009268 6     SceneDelegate       SceneDelegate::(ivar)_window              @"UIWindow"
+address     index class         flags name                                
+--------------------------------------------------------------------------
+0x1000021d0 0     SceneDelegate       scene:willConnectToSession:options:
+0x100002280 1     SceneDelegate       sceneDidDisconnect:
+0x1000022d4 2     SceneDelegate       sceneDidBecomeActive:
+0x100002328 3     SceneDelegate       sceneWillResignActive:
+0x10000237c 4     SceneDelegate       sceneWillEnterForeground:
+0x1000023d0 5     SceneDelegate       sceneDidEnterBackground:
+0x100002424 6     SceneDelegate       window
+0x100002450 7     SceneDelegate       setWindow:
+0x100002494 8     SceneDelegate       .cxx_destruct
+EOF
+RUN
+
+NAME=fatmach0 arm64e rebasing and stripping
+FILE=bins/mach0/modernobjc-noarm64
+ARGS=-a arm -b 64
+CMDS=pxr 0x18 @ 0x100004080
+EXPECT=<<EOF
+0x100004080 0x0000000100009270   p....... @ section.10.__DATA_CONST.__objc_classlist 4295004784 18.__DATA.__objc_data section.18.__DATA.__objc_data,class ViewController R 0x100009298
+0x100004088 0x00000001000092e8   ........ 4295004904 18.__DATA.__objc_data class AppDelegate R 0x1000092c0
+0x100004090 0x0000000100009338   8....... 4295004984 18.__DATA.__objc_data class SceneDelegate R 0x100009310
+EOF
+RUN

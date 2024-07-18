@@ -1,0 +1,63 @@
+=========================
+One digit repeat statements
+=========================
+
+7/x 90
+
+---
+
+(statements
+  (repeat_stmt
+    (number)
+    (arged_stmt (cmd_identifier)
+      (args (arg (arg_identifier))))))
+
+
+=========================
+Multiple digits repeat statements
+=========================
+
+17/x 90
+
+---
+
+(statements
+  (repeat_stmt
+    (number)
+    (arged_stmt (cmd_identifier)
+      (args (arg (arg_identifier))))))
+
+
+=======================
+Repeat with redirection
+=======================
+
+2p8 8 > /tmp/out.txt
+
+---
+
+(statements
+  (redirect_stmt
+    (repeat_stmt
+      (number)
+      (arged_stmt (cmd_identifier)
+	(args (arg (arg_identifier)))))
+    (fdn_redirect_operator)
+    (arg (arg_identifier))))
+
+
+====================
+Repeat with tmp seek
+====================
+
+2p8 8 @ 0xdeadbeef
+
+---
+
+(statements
+  (tmp_seek_stmt
+    (repeat_stmt
+      (number)
+      (arged_stmt (cmd_identifier)
+        (args (arg (arg_identifier)))))
+    (args (arg (arg_identifier)))))

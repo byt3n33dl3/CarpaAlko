@@ -1,0 +1,53 @@
+NAME=an flag
+FILE=bins/elf/hello_world
+CMDS=<<EOF
+# create flag
+an test_label1 @ 0x804
+fi 1 @ 0x844
+# rename flag
+an test_label2 @ 0x804
+fi 1 @ 0x844
+anj @ 0x804
+EOF
+EXPECT=<<EOF
+0x00000844 1 test_label1
+0x00000844 1 test_label2
+[{"name":"test_label2","realname":"test_label2","type":"flag","offset":2116}]
+EOF
+RUN
+
+NAME=an function
+FILE=bins/elf/hello_world
+CMDS=<<EOF
+aa
+s 0x7cf
+anj
+an renamed_strlen
+anj
+afl. @ 1632
+EOF
+EXPECT=<<EOF
+[{"name":"sym.imp.strlen","type":"function","offset":1632}]
+[{"name":"renamed_strlen","type":"function","offset":1632}]
+0x00000660 renamed_strlen
+EOF
+RUN
+
+NAME=an address
+FILE=bins/elf/crackme0x05
+CMDS=<<EOF
+s 0x0804840d
+an
+anj
+an jumptarget
+an
+anj
+EOF
+EXPECT=<<EOF
+0x8048411
+[{"type":"address","offset":134513681}]
+jumptarget
+[{"name":"jumptarget","realname":"jumptarget","type":"flag","offset":134513681}]
+EOF
+EXPECT_ERR=
+RUN

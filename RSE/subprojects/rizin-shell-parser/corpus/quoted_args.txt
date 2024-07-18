@@ -1,0 +1,74 @@
+==============================
+Echo with (double) quoted args
+==============================
+
+echo "This;is.one@string"
+
+---
+
+(statements
+  (arged_stmt command: (cmd_identifier)
+    args: (args (arg (double_quoted_arg)))))
+
+==============================
+Echo with (single) quoted args
+==============================
+
+echo 'This;is.one@string'
+
+---
+
+(statements
+  (arged_stmt command: (cmd_identifier)
+    args: (args (arg (single_quoted_arg)))))
+
+
+===========================
+Legacy command - all quoted
+===========================
+
+"echo This;is.one@string"
+
+---
+
+(statements
+  (legacy_quoted_stmt))
+
+
+=======================================
+Double quoted arg with cmd substitution
+=======================================
+
+echo "This is $(echo "a command")"
+
+---
+
+(statements
+  (arged_stmt command: (cmd_identifier)
+    args: (args
+             (arg (double_quoted_arg
+	       (cmd_substitution_arg
+	         (arged_stmt command: (cmd_identifier)
+		   args: (args
+		            (arg (double_quoted_arg))))))))))
+
+==================
+Quoted hash
+==================
+
+echo "#"
+echo " #$(pdf)"
+echo '#'
+
+---
+
+(statements
+  (arged_stmt command: (cmd_identifier)
+    args: (args (arg (double_quoted_arg))))
+  (arged_stmt command: (cmd_identifier)
+    args: (args
+            (arg (double_quoted_arg
+	           (cmd_substitution_arg
+		     (arged_stmt command: (cmd_identifier)))))))
+  (arged_stmt command: (cmd_identifier)
+    args: (args (arg (single_quoted_arg)))))

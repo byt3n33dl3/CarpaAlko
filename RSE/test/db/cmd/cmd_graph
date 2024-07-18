@@ -1,0 +1,938 @@
+NAME=one node
+FILE==
+CMDS=<<EOF
+agn title1 body1
+agg k~nodes=
+agg k~nodes.title1.body
+agg k~nodes.title1.w
+agg k~nodes.title1.h
+EOF
+EXPECT=<<EOF
+agraph.nodes=title1
+agraph.nodes.title1.body=base64:Ym9keTE=
+agraph.nodes.title1.w=0xc
+agraph.nodes.title1.h=0x4
+EOF
+RUN
+
+NAME=two nodes
+FILE==
+CMDS=<<EOF
+agn "Title with super long text and space" body1
+agn title2 "SuperLongBodyWithALot Of text and spaces"
+agg k~nodes=
+agg k~nodes.Title with super long text and space.body=
+agg k~nodes.title2.body=
+agg k~nodes.Title with super long text and space.w
+agg k~nodes.Title with super long text and space.h
+agg k~nodes.title2.w
+agg k~nodes.title2.h
+EOF
+EXPECT=<<EOF
+agraph.nodes=Title with super long text and space,title2
+agraph.nodes.Title with super long text and space.body=base64:Ym9keTE=
+agraph.nodes.title2.body=base64:U3VwZXJMb25nQm9keVdpdGhBTG90IE9mIHRleHQgYW5kIHNwYWNlcw==
+agraph.nodes.Title with super long text and space.w=0x2a
+agraph.nodes.Title with super long text and space.h=0x4
+agraph.nodes.title2.w=0x2c
+agraph.nodes.title2.h=0x4
+EOF
+RUN
+
+NAME=base64 body
+FILE==
+CMDS=<<EOF
+agn title1 base64:aGVsbG8gd29ybGQ=
+agg k~nodes.title1.body=
+EOF
+EXPECT=<<EOF
+agraph.nodes.title1.body=base64:aGVsbG8gd29ybGQ=
+EOF
+RUN
+
+NAME=long base64 body
+FILE==
+CMDS=<<EOF
+agn title1 base64:dGhpcyBpcyBhIHZlcnkgbG9uZyB0ZXh0IHRoYXQgd2hlbiBlbmNvZGVkIHdpbGwgY2F1c2UgYSAKIGluIHRoZSBiYXNlNjQ=
+agg k~nodes.title1.body=
+EOF
+EXPECT=<<EOF
+agraph.nodes.title1.body=base64:dGhpcyBpcyBhIHZlcnkgbG9uZyB0ZXh0IHRoYXQgd2hlbiBlbmNvZGVkIHdpbGwgY2F1c2UgYSAKIGluIHRoZSBiYXNlNjQ=
+EOF
+RUN
+
+NAME=two nodes same title
+FILE==
+CMDS=<<EOF
+agn title1 body1
+agn title1 "Super long body with something"
+agn title1 "Super super super long body to do tests........"
+agg k~nodes=
+agg k~nodes.title1.body=
+agg k~nodes.title1.w=
+EOF
+EXPECT=<<EOF
+agraph.nodes=title1
+agraph.nodes.title1.body=base64:Ym9keTE=
+agraph.nodes.title1.w=0xc
+EOF
+RUN
+
+NAME=remove node
+FILE==
+CMDS=<<EOF
+agn title1 body1
+agn- title1
+agg k~nodes=
+agg k~nodes.title1
+EOF
+EXPECT=<<EOF
+EOF
+RUN
+
+NAME=remove node with title that contain spaces
+FILE==
+CMDS=<<EOF
+agn "Title with spaces" body1
+agn- "Title with spaces"
+agg k~nodes=
+agg k~nodes.Title with spaces
+EOF
+EXPECT=<<EOF
+EOF
+RUN
+
+NAME=remove non-existent node
+FILE==
+CMDS=<<EOF
+agn "Title with spaces" body1
+agn- NotValid
+agg k~nodes=
+agg k~nodes.Title with spaces.body=
+EOF
+EXPECT=<<EOF
+agraph.nodes=Title with spaces
+agraph.nodes.Title with spaces.body=base64:Ym9keTE=
+EOF
+RUN
+
+NAME=remove edge
+FILE==
+CMDS=<<EOF
+agn "Title with spaces" body1
+agn "Title with spaces 2" body2
+age- "Title with spaces" "Title with spaces 2"
+agg k~nodes=
+agg k~nodes.Title with spaces.neighbours=
+EOF
+EXPECT=<<EOF
+agraph.nodes=Title with spaces,Title with spaces 2
+EOF
+RUN
+
+NAME=get graph of a function
+FILE=bins/elf/analysis/hello-linux-x86_64
+BROKEN=1
+CMDS=<<EOF
+af
+agg k $$~nodes=
+EOF
+EXPECT=<<EOF
+agraph.nodes=0x400410
+EOF
+RUN
+
+NAME=no selected node in non-interactive
+FILE==
+CMDS=<<EOF
+agn title1 body1
+agg
+EOF
+EXPECT=<<EOF
+.----------.
+|  title1  |
+| body1    |
+`----------'
+EOF
+RUN
+
+NAME=agf one
+FILE==
+CMDS=<<EOF
+e asm.arch=x86
+e asm.bits=32
+e asm.calls=false
+wa "push ebp;mov ebp,esp;pop ebp;ret"
+af
+agf
+EOF
+EXPECT=<<EOF
+.-----------------.
+|  0x0            |
+| fcn.00000000(); |
+| push ebp        |
+| mov ebp, esp    |
+| pop ebp         |
+| ret             |
+`-----------------'
+EOF
+RUN
+
+NAME=agg one
+FILE==
+CMDS=<<EOF
+agn 0x0 base64:cHVzaCBlYnAKbW92IGVicCwgZXNwCnBvcCBlYnAKcmV0
+agg
+EOF
+EXPECT=<<EOF
+.--------------.
+|  0x0         |
+| push ebp     |
+| mov ebp, esp |
+| pop ebp      |
+| ret          |
+`--------------'
+EOF
+RUN
+
+NAME=graph size
+FILE==
+CMDS=<<EOF
+agg k~agraph.w=
+agg k~agraph.h=
+agn title1 body1
+agg k~agraph.w=
+agg k~agraph.h=
+EOF
+EXPECT=<<EOF
+agraph.w=0
+agraph.h=0
+agraph.w=12
+agraph.h=7
+EOF
+RUN
+
+NAME=graph size with edges
+FILE==
+CMDS=<<EOF
+agn title1 body1
+agn title2 "body2 long body with a lot of spaces and dots...."
+agn title3 body3
+age title1 title2
+age title2 title3
+age title1 title3
+age title3 title1
+agg k~agraph.w=0x35
+agg | head -2 | tail -1 | tr -d " " | grep "=----------------="
+EOF
+EXPECT=<<EOF
+EOF
+RUN
+
+NAME=graph size with self-referenced bb
+FILE==
+CMDS=<<EOF
+agn title1 body1
+age title1 title1
+agg k~agraph.w=0x16
+agg k~agraph.h=0x4
+EOF
+EXPECT=<<EOF
+EOF
+RUN
+
+NAME=graph title
+FILE==
+CMDS=<<EOF
+agn title1 body1
+e graph.title="This is the graph title"
+agg
+EOF
+EXPECT=<<EOF
+This is the graph title
+.----------.
+|  title1  |
+| body1    |
+`----------'
+EOF
+RUN
+
+NAME=print r2 commands to create graph
+FILE==
+CMDS=<<EOF
+agn title1 body1
+agn title2 body2
+agn title3 base64:dGhpcyBpcyBteSBib2R5CndpdGggbmV3bGluZXM=
+age title1 title2
+age title3 title1
+agg *
+EOF
+EXPECT=<<EOF
+agn "title3" base64:dGhpcyBpcyBteSBib2R5CndpdGggbmV3bGluZXM=
+agn "title2" base64:Ym9keTI=
+agn "title1" base64:Ym9keTE=
+age "title3" "title1"
+age "title1" "title2"
+EOF
+RUN
+
+NAME=graph self-ref block
+FILE==
+CMDS=<<EOF
+agn title1 body1
+age title1 title1
+agg
+EOF
+EXPECT=<<EOF
+.----.
+|    |
+|.----------.
+||  title1  |
+|| body1    |
+|`----------'
+|    v
+|    |
+`----'
+EOF
+RUN
+
+NAME=with analysis.nopskip
+FILE=bins/elf/analysis/ls-alxchk
+CMDS=<<EOF
+e analysis.nopskip=true
+aaa
+s 0x00011390
+agf > /dev/null
+EOF
+EXPECT=<<EOF
+EOF
+RUN
+
+NAME=super mario block (#8788)
+FILE=bins/elf/analysis/hello-android-mips
+CMDS=<<EOF
+e emu.str=true
+e io.cache=true
+s 0x0008049c
+af+ super_mario_fix @ 0x0008049c
+afb+ 0x0008049c 0x0008049c 8
+wx c2a2c2a2c2a2 @ 0x80510
+e str.search.encoding=utf8
+agf
+e scr.strconv=asciidot
+agf
+EOF
+EXPECT=<<EOF
+.--------------------------------------------.
+|  0x8049c                                   |
+| super_mario_fix();                         |
+|    ; segment.ehdr                          |
+| lui v0, 8                                  |
+|    ; "\u00a2\u00a2\u00a2World" sym..rodata |
+| addiu a0, v0, 0x510                        |
+`--------------------------------------------'
+.-----------------------------.
+|  0x8049c                    |
+| super_mario_fix();          |
+|    ; segment.ehdr           |
+| lui v0, 8                   |
+|    ; "...World" sym..rodata |
+| addiu a0, v0, 0x510         |
+`-----------------------------'
+EOF
+RUN
+
+NAME=agf
+FILE=bins/mach0/ls-osx-x86_64
+CMDS=<<EOF
+af
+agf > /dev/null
+EOF
+EXPECT=<<EOF
+EOF
+RUN
+
+NAME=Test iCFG generation
+FILE=bins/elf/analysis/x86_icfg_test
+CMDS=<<EOF
+aac
+aap
+agCi
+EOF
+EXPECT=<<EOF
+.------.
+|      |
+|.-------------.   .-------------.         .-------------.
+||  0x80000fe  |   |  0x80001d8  |         |  0x800028a  |
+|`-------------'   `-------------'         `-------------'
+|          t                                     t
+|          |                                     |
+|       .--'                                     |
+|       |                                        |
+|       |                                  .-------------.
+|       |                                  |  0x800026f  |
+|       |                                  `-------------'
+|       |                                        t
+|       |                                        |
+|       |                         .--------------|
+|       |                         |              '---------------.
+|       |                         |                              |
+|       |                   .-------------.                .-------------.
+|       |                   |  0x80000c0  |                |  0x8000254  |
+|       |                   `-------------'                `-------------'
+|       |                         v   v                          t
+|       |                         |   |                          |
+|       |                         |   '-------------.            |
+|       |                     .---|                 |            |
+|       |         .---------------|                 |            |
+|       |         |           |   '-----.           |            |
+|       |         |           |         |           |   .--------|
+|       |         |           |         |           |   |        '---------.
+|       |         |           |         |           |   |                  |
+|       |   .-------------.   |   .-------------.   |   |            .-------------.
+|       |   |  0x800006c  |   |   |  0x8000082  |   |   |            |  0x8000239  |
+|       |   `-------------'   |   `-------------'   |   |            `-------------'
+|       |                     |         t   t       |   |                  t
+|       |                     |         |   |       |   |                  |
+|       |                     |         |   |       |   |                  |
+|       |                 .---|---------'   |       |   |                  |
+|       |                 |   |             |       |   |         .--------|
+|       |                 |   |             |       |   |         |        '--------.
+|       |                 .---'             |       |   |         |                 |
+|       |                 |                 .-------'   |         |                 |
+|       |                 |                 |           |         |                 |
+|       |           .-------------.   .-------------.   |   .-------------.   .-------------.
+|       |           |  0x8000056  |   |  0x8000040  |   |   |  0x80001e8  |   |  0x8000228  |
+|       |           `-------------'   `-------------'   |   `-------------'   `-------------'
+|       |                                               |         t                 t
+|       |                                               |         |                 |
+|       |     .-----------------------------------------|---------|                 |
+|       |     |           .-----------------------------|---------'                 |
+|       |     |           |   .-------------------------|---------------------------'
+|       '-----.           |   |                         |
+|             .-----------------------------------------'
+|             |           |   |
+|       .-------------.   |   |
+|       |  0x8000160  |   |   |
+|       `-------------'   |   |
+|             t           |   |
+|             |           |   |
+|      .------'           |   |
+|      .------------------'   |
+|      |                 .----'
+|      |                 .---------.
+|      |                 |         |
+|.-------------.   .-------------. |
+||  0x800012f  |   |  0x800019c  | |
+|`-------------'   `-------------' |
+|      t                 t         |
+|      |                 |         |
+`------'                 |         |
+                         `---------'
+EOF
+RUN
+
+NAME=Test CFG generation - all
+FILE=bins/elf/analysis/x86_cfg_test
+CMDS=<<EOF
+s sym.main
+agF
+EOF
+EXPECT=<<EOF
+                                     .-----------------.
+                                     |  0x8000040 (e)  |
+                                     `-----------------'
+                                         v
+                                         |
+                                         |
+                                     .-----------------.
+                                     |  0x8000041 (.)  |
+                                     `-----------------'
+                                         v
+                                         |
+                                         |
+                                     .-----------------.
+                                     |  0x8000044 (.)  |
+                                     `-----------------'
+                                         v
+                                         |
+                                         |
+                                     .-----------------.
+                                     |  0x8000048 (.)  |
+                                     `-----------------'
+                                         v
+                                         |
+                                         |
+                                     .-----------------.
+                                     |  0x800004f (C)  |
+                                     `-----------------'
+                                         v
+                                         |
+                                         |
+                                     .-----------------.
+                                     |  0x8000054 (.)  |
+                                     `-----------------'
+                                         v
+                                         |
+                                         |
+                                     .-----------------.
+                                     |  0x8000057 (.)  |
+                                     `-----------------'
+                                         v
+                                         |
+                                         |
+                                     .-----------------.
+                                     |  0x8000059 (.)  |
+                                     `-----------------'
+                                         v
+                                         |
+                                         |
+                                     .-----------------.
+                                     |  0x800005c (.)  |
+                                     `-----------------'
+                                         v
+                                         |
+                                         |
+                                     .-----------------.
+                                     |  0x8000063 (c)  |
+                                     `-----------------'
+                                           t f
+                                           | |
+                              .------------' |
+                              |              '------.
+                              |                     |
+                          .-----------------.   .-----------------.
+                          |  0x8000067 (.)  |   |  0x8000065 (.)  |
+                          `-----------------'   `-----------------'
+                              v                     v
+                              |                     |
+                          .---'                     |
+                          |                     .---'
+                          |                     |
+                      .-----------------.       |
+                      |  0x800006b (c)  |       |
+                      `-----------------'       |
+                            t f                 |
+                            | |                 |
+               .------------' |                 |
+               |              '-----------------|---------.
+               |                                '---------------------------------.
+               |                                          |                       | .-----------.
+               |                                          |                       | |           |
+           .-----------------.                        .-----------------.   .-----------------. |
+           |  0x8000074 (.)  |                        |  0x800006d (.)  |   |  0x8000090 (.)  | |
+           `-----------------'                        `-----------------'   `-----------------' |
+               v                                          v                     v               |
+               |                                          |                     |               |
+               |                                          |                     `---------------'
+               |                                      .---'
+               |                                      |
+           .-----------------.                    .-----------------.
+           |  0x8000078 (c)  |                    |  0x8000072 (.)  |
+           `-----------------'                    `-----------------'
+                 t f                                  v
+                 | |                                  |
+                 | |                                  '----.
+    .------------' |                                       |
+    |              '------.                                |
+    |                     |                                |
+.-----------------.   .-----------------.                  |
+|  0x8000088 (.)  |   |  0x800007a (.)  |                  |
+`-----------------'   `-----------------'                  |
+    v                     v                                |
+    |                     |                                |
+    '-------.             |                                |
+            |             '---.                            |
+            |                 | .----------------------------.
+            |                 | |                          | |
+            |           .-----------------.                | |
+            |           |  0x8000080 (.)  |                | |
+            |           `-----------------'                | |
+            |               v                              | |
+            |               |                              | |
+            |               |                              | |
+            |           .-----------------.                | |
+            |           |  0x8000084 (c)  |                | |
+            |           `-----------------'                | |
+            |                   f t                        | |
+            |                   | |                        | |
+            |                   | '------.                 | |
+            |      .------------'        |                 | |
+            |      |                     |                 | |
+            |  .-----------------.   .-----------------.   | |
+            |  |  0x8000086 (.)  |   |  0x800007c (.)  |   | |
+            |  `-----------------'   `-----------------'   | |
+            |      v                     v                 | |
+            |      |                     |                 | |
+            |      |                     `-------------------'
+            |  .---'                                       |
+            '----.                                         |
+               | |                                         |
+         .-----------------.                               |
+         |  0x8000089 (.)  |                               |
+         `-----------------'                               |
+             v                                             |
+             |                                             |
+             |                                             |
+         .-----------------.                               |
+         |  0x800008e (.)  |                               |
+         `-----------------'                               |
+             v                                             |
+             |                                             |
+             '---------------------.                       |
+                                   | .---------------------'
+                                   | |
+                             .-----------------.
+                             |  0x8000092 (.)  |
+                             `-----------------'
+                                 v
+                                 |
+                                 |
+                             .-----------------.
+                             |  0x8000093 (r)  |
+                             `-----------------'
+EOF
+RUN
+
+
+NAME=Test CFG generation - self reference
+FILE=bins/elf/analysis/x86_cfg_test
+CMDS=<<EOF
+s sym.endless
+agF
+EOF
+EXPECT=<<EOF
+ .-----------------.
+ |  0x8000094 (e)  |
+ `-----------------'
+     v
+     |
+     |
+ .-----------------.
+ |  0x8000095 (.)  |
+ `-----------------'
+     v
+     |
+     '----.
+          |
+          |
+          |
+       .--'
+.--------.
+|      | |
+|.-----------------.
+||  0x8000098 (.)  |
+|`-----------------'
+|    v
+|    |
+`----'
+EOF
+RUN
+
+NAME=Test CFG generation - ignore calls
+FILE=bins/elf/analysis/x86_cfg_test
+CMDS=<<EOF
+s sym.ignore_call
+agF
+EOF
+EXPECT=<<EOF
+.-----------------.
+|  0x80000c3 (e)  |
+`-----------------'
+    v
+    |
+    |
+.-----------------.
+|  0x80000c4 (.)  |
+`-----------------'
+    v
+    |
+    |
+.-----------------.
+|  0x80000c7 (C)  |
+`-----------------'
+    v
+    |
+    |
+.-----------------.
+|  0x80000cc (.)  |
+`-----------------'
+    v
+    |
+    |
+.-----------------.
+|  0x80000cd (.)  |
+`-----------------'
+    v
+    |
+    |
+.-----------------.
+|  0x80000ce (r)  |
+`-----------------'
+EOF
+RUN
+
+
+NAME=Test CFG generation - loop
+FILE=bins/elf/analysis/x86_cfg_test
+CMDS=<<EOF
+s sym.loop
+agF
+EOF
+EXPECT=<<EOF
+             .-----------------.
+             |  0x800009a (e)  |
+             `-----------------'
+                 v
+                 |
+                 |
+             .-----------------.
+             |  0x800009b (.)  |
+             `-----------------'
+                 v
+                 |
+                 |
+             .-----------------.
+             |  0x800009e (.)  |
+             `-----------------'
+                 v
+                 |
+                 '-. .----------------------.
+                   | |                      |
+             .-----------------.            |
+             |  0x80000a5 (.)  |            |
+             `-----------------'            |
+                 v                          |
+                 |                          |
+                 |                          |
+             .-----------------.            |
+             |  0x80000ac (.)  |            |
+             `-----------------'            |
+                 v                          |
+                 |                          |
+ .-------------------.                      |
+ |                 | |                      |
+ |           .-----------------.            |
+ |           |  0x80000b7 (.)  |            |
+ |           `-----------------'            |
+ |               v                          |
+ |               |                          |
+ |               |                          |
+ |           .-----------------.            |
+ |           |  0x80000bb (c)  |            |
+ |           `-----------------'            |
+ |                 t f                      |
+ |                 | |                      |
+ |    .------------' |                      |
+ |    |              '------.               |
+ |    |                     |               |
+ |.-----------------.   .-----------------. |
+ ||  0x80000ae (.)  |   |  0x80000bd (.)  | |
+ |`-----------------'   `-----------------' |
+ |    v                     v               |
+ |    |                     |               |
+ |    |                     |               |
+ |.-----------------.   .-----------------. |
+ ||  0x80000b2 (.)  |   |  0x80000c1 (.)  | |
+ |`-----------------'   `-----------------' |
+ |    v                     v               |
+ |    |                     |               |
+ |    |                     `---------------'
+ |    |
+ |.-----------------.
+ ||  0x80000b3 (.)  |
+ |`-----------------'
+ |    v
+ |    |
+ `----'
+EOF
+RUN
+
+NAME=Test CFG generation - invalid
+FILE=bins/elf/analysis/x86_cfg_test
+CMDS=<<EOF
+s 0x0
+agF
+s 0xffffffffffffffff
+agF
+EOF
+EXPECT=<<EOF
+.-----------.
+|  0x0 (e)  |
+`-----------'
+.--------------------------.
+|  0xffffffffffffffff (e)  |
+`--------------------------'
+EOF
+RUN
+
+NAME=CFG generation jumps beyond buffer
+FILE==
+CMDS=<<EOF
+e asm.arch=x86
+e analysis.arch=x86
+wx 4839f87466e8900000000000488d3def000000488d3def000000488d3def000000488d3def000000488d3def000000488d3def000000488d3def000000488d3def000000488d3def000000488d3def000000488d3def000000488d3def000000488d3def00000000000000e890000000c3
+agF
+EOF
+EXPECT=<<EOF
+      .-----------.
+      |  0x0 (e)  |
+      `-----------'
+          v
+          |
+          |
+      .-----------.
+      |  0x3 (c)  |
+      `-----------'
+              f t
+              | |
+              | '-.
+     .--------'   |
+     |            |
+ .-----------.    |
+ |  0x5 (C)  |    |
+ `-----------'    |
+     v            |
+     |            |
+     |            |
+ .-----------.    |
+ |  0xa (.)  |    |
+ `-----------'    |
+     v            |
+     |            |
+     |            |
+ .-----------.    |
+ |  0xc (.)  |    |
+ `-----------'    |
+     v            |
+     |            |
+    .'            |
+    |             |
+.------------.    |
+|  0x13 (.)  |    |
+`------------'    |
+    v             |
+    |             |
+    |             |
+.------------.    |
+|  0x1a (.)  |    |
+`------------'    |
+    v             |
+    |             |
+    |             |
+.------------.    |
+|  0x21 (.)  |    |
+`------------'    |
+    v             |
+    |             |
+    |             |
+.------------.    |
+|  0x28 (.)  |    |
+`------------'    |
+    v             |
+    |             |
+    |             |
+.------------.    |
+|  0x2f (.)  |    |
+`------------'    |
+    v             |
+    |             |
+    |             |
+.------------.    |
+|  0x36 (.)  |    |
+`------------'    |
+    v             |
+    |             |
+    |             |
+.------------.    |
+|  0x3d (.)  |    |
+`------------'    |
+    v             |
+    |             |
+    |             |
+.------------.    |
+|  0x44 (.)  |    |
+`------------'    |
+    v             |
+    |             |
+    |             |
+.------------.    |
+|  0x4b (.)  |    |
+`------------'    |
+    v             |
+    |             |
+    |             |
+.------------.    |
+|  0x52 (.)  |    |
+`------------'    |
+    v             |
+    |             |
+    |             |
+.------------.    |
+|  0x59 (.)  |    |
+`------------'    |
+    v             |
+    |             |
+    |             |
+.------------.    |
+|  0x60 (.)  |    |
+`------------'    |
+    v             |
+    |             |
+    |             |
+.------------.    |
+|  0x67 (.)  |    |
+`------------'    |
+    v             |
+    |             |
+    |             |
+.------------.    |
+|  0x69 (.)  |    |
+`------------'    |
+    v             |
+    |             |
+    '------.      |
+           | .----'
+           | |
+     .------------.
+     |  0x6b (C)  |
+     `------------'
+         v
+         |
+         |
+     .------------.
+     |  0x70 (r)  |
+     `------------'
+EOF
+RUN
+
+
+NAME=Test iCFG generation - iCFG with malloc
+FILE=bins/elf/analysis/x86_icfg_malloc_test
+CMDS=<<EOF
+aa
+agCi
+EOF
+EXPECT=<<EOF
+.----------.    .----------.    .----------.    .----------.    .----------.    .----------.    .----------.
+|  0x1070  |    |  0x10d0  |    |  0x1110  |    |  0x1150  |    |  0x11cc  |    |  0x11b4  |    |  0x1000  |
+`----------'    `----------'    `----------'    `----------'    `----------'    `----------'    `----------'
+                                      t                                               t
+                                      |                                               |
+                              .-------|                                               |
+                              |       '-------.                                       |
+                              |               |                                       |
+                        .----------.    .----------.                            .----------.
+                        |  0x10a0  |    |  0x1060  |                            |  0x1159  |
+                        `----------'    `----------'                            `----------'
+                                                                                      v
+                                                                                      |
+                                                      .-------------------------------|
+                                                      |                       .-------|
+                                                      |                       |       '---------------.
+                                                      |                       |                       |
+                                                .------------------.    .------------------.    .------------------.
+                                                |  0x1040 (alloc)  |    |  0x1030 (alloc)  |    |  0x1050 (alloc)  |
+                                                `------------------'    `------------------'    `------------------'
+EOF
+RUN

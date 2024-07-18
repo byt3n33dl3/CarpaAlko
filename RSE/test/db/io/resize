@@ -1,0 +1,46 @@
+NAME=r xx
+FILE=.resize.V1OzXt
+ARGS=-w
+CMDS=<<EOF
+i~^size[1]
+r 10
+i~^size[1]
+r 4
+i~^size[1]
+r+ 6
+i~^size[1]
+r- 4
+i~^size[1]
+o--
+!rm ${RZ_FILE}
+EOF
+EXPECT=<<EOF
+0x0
+0xa
+0x4
+0xa
+0x6
+EOF
+RUN
+
+NAME=r/wx nn
+FILE=.resize.V11zXt
+ARGS=-w
+CMDS=<<EOF
+e io.va=0
+i~^size[1]
+wx 010203
+i~^size[1]
+w hello world
+i~^size[1]
+ps
+o--
+!rm ${RZ_FILE}
+EOF
+EXPECT=<<EOF
+0x0
+0x3
+0xb
+hello world
+EOF
+RUN

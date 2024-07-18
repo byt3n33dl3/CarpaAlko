@@ -1,0 +1,464 @@
+NAME=af localflag
+FILE=bins/mach0/mac-ls2
+CMDS=<<EOF
+e analysis.calls=false
+af
+aflc
+e analysis.calls=true
+af-*
+af
+aflc
+EOF
+EXPECT=<<EOF
+1
+33
+EOF
+RUN
+
+NAME=af display current offset function
+FILE=bins/elf/ls
+CMDS=<<EOF
+s main
+af
+afl.
+sd 1
+afl.
+EOF
+EXPECT=<<EOF
+0x00004070 main
+0x00004070 main
+EOF
+RUN
+
+NAME=af localflag disasm
+FILE=bins/mach0/mac-ls2
+CMDS=<<EOF
+e asm.bytes=true
+af
+f. foobar @ 0x100001216
+pd 20~foo
+EOF
+EXPECT=<<EOF
+|       ,=< 0x10000120f      7f05           jg    .foobar              ; main.foobar
+|       |    .foobar:
+EOF
+RUN
+
+NAME=af switch test
+FILE=bins/mach0/mac-ls2
+CMDS=<<EOF
+af
+axf @ 0x100001308
+EOF
+EXPECT=<<EOF
+c 0x1000012dc case.0x100001308.50
+c 0x10000130a case.0x100001308.49
+c 0x100001321 case.0x100001308.114
+c 0x10000132a case.0x100001308.120
+c 0x100001347 case.0x100001308.118
+c 0x100001353 case.0x100001308.99
+c 0x100001370 case.0x100001308.102
+c 0x100001392 case.0x100001308.97
+c 0x100001396 case.0x100001308.65
+c 0x1000013a2 case.0x100001308.84
+c 0x1000013b1 case.0x100001308.107
+c 0x1000013bd case.0x100001308.115
+c 0x1000013cc case.0x100001308.76
+c 0x1000013fb case.0x100001308.104
+c 0x10000140a case.0x100001308.80
+c 0x10000141a case.0x100001308.110
+c 0x10000143f case.0x100001308.108
+c 0x10000144b case.0x100001308.103
+c 0x100001473 case.0x100001308.83
+c 0x10000147f case.0x100001308.100
+c 0x100001492 case.0x100001308.111
+c 0x1000014d0 case.0x100001308.79
+c 0x1000014df case.0x100001308.113
+c 0x1000014f0 case.0x100001308.64
+c 0x1000014ff case.0x100001308.67
+c 0x100001519 case.0x100001308.82
+c 0x100001525 case.0x100001308.70
+c 0x10000153e case.0x100001308.66
+c 0x10000155b case.0x100001308.105
+c 0x10000156a case.0x100001308.119
+c 0x100001583 case.0x100001308.85
+c 0x1000015a0 case.0x100001308.87
+c 0x1000015ac case.0x100001308.71
+c 0x1000015c9 case.0x100001308.72
+c 0x1000015f7 case.0x100001308.112
+c 0x10000160d case.0x100001308.98
+c 0x10000162a case.0x100001308.116
+c 0x100001636 case.0x100001308.101
+c 0x100001645 case.0x100001308.109
+c 0x100001665 case.0x100001308.117
+c 0x100001682 case.default.0x100001308
+EOF
+RUN
+
+NAME=af import
+FILE=bins/mach0/ls-osx-x86_64
+BROKEN=1
+CMDS=<<EOF
+s sym.imp.write
+af
+%v $FS
+EOF
+EXPECT=<<EOF
+before:
+EOF
+RUN
+
+NAME=afll
+FILE=bins/mach0/ls-osx-x86_64
+CMDS=aa ; afll~?entry0
+EXPECT=<<EOF
+1
+EOF
+RUN
+
+NAME=missing bb fix
+FILE=bins/elf/before-after-main
+CMDS=<<EOF
+e asm.bytes=false
+e asm.comments=false
+s sym.register_tm_clones
+af
+pdf
+EOF
+EXPECT=<<EOF
+/ sym.register_tm_clones();
+|           0x08048410      mov   eax, obj.completed.6891
+|           0x08048415      sub   eax, obj.completed.6891
+|           0x0804841a      sar   eax, 2
+|           0x0804841d      mov   edx, eax
+|           0x0804841f      shr   edx, 0x1f
+|           0x08048422      add   eax, edx
+|           0x08048424      sar   eax, 1
+|       ,=< 0x08048426      je    0x8048448
+|       |   0x08048428      mov   edx, 0
+|       |   0x0804842d      test  edx, edx
+|      ,==< 0x0804842f      je    0x8048448
+|      ||   0x08048431      push  ebp
+|      ||   0x08048432      mov   ebp, esp
+|      ||   0x08048434      sub   esp, 0x10
+|      ||   0x08048437      push  eax
+|      ||   0x08048438      push  obj.completed.6891
+|      ||   0x0804843d      call  edx
+|      ||   0x0804843f      add   esp, 0x10
+|      ||   0x08048442      leave
+|      ||   0x08048443      ret
+..
+\      ``-> 0x08048448      ret
+EOF
+RUN
+
+NAME=afb+
+FILE=bins/pe/a.exe
+CMDS=<<EOF
+e asm.bytes=true
+s 0x004017c0
+af+ fcn2.0x004017c0 @ 0x004017c0
+afb+ 0x4017c0 0x4017c0 13 0x4017dd 0x4017cd
+afi~size
+afb
+echo
+pdf
+echo
+af-
+af+ fcn2.0x004017c0 @ 0x004017c0
+afb+ 0x4017c0 0x4017c0 6 0x4017dd 0x4017cd
+afi~size
+afb
+echo
+pdf
+echo
+afb+ 0x4017c0 0x4017c0 11 0x4017dd 0x4017cd
+afi~size
+afb
+echo
+pdf
+EOF
+EXPECT=<<EOF
+size: 13
+0x004017c0 0x004017cd 00:0000 13 j 0x004017dd f 0x004017cd
+
+/ fcn2.0x004017c0();
+|           0x004017c0      51             push  ecx
+|           0x004017c1      89e1           mov   ecx, esp
+|           0x004017c3      83c108         add   ecx, 8
+|           0x004017c6      3d00100000     cmp   eax, 0x1000
+\       ,=< 0x004017cb      7210           jb    0x4017dd
+
+size: 6
+0x004017c0 0x004017c6 00:0000 6 j 0x004017dd f 0x004017cd
+
+/ fcn2.0x004017c0();
+|           0x004017c0      51             push  ecx
+|           0x004017c1      89e1           mov   ecx, esp
+\           0x004017c3      83c108         add   ecx, 8
+
+size: 11
+0x004017c0 0x004017cb 00:0000 11 j 0x004017dd f 0x004017cd
+
+/ fcn2.0x004017c0();
+|           0x004017c0      51             push  ecx
+|           0x004017c1      89e1           mov   ecx, esp
+|           0x004017c3      83c108         add   ecx, 8
+\           0x004017c6      3d00100000     cmp   eax, 0x1000
+EOF
+EXPECT_ERR=
+RUN
+
+NAME=afb+ with wrong size
+FILE=bins/pe/a.exe
+CMDS=<<EOF
+e asm.bytes=true
+s 0x004017c0
+af+ fcn2.0x004017c0 @ 0x004017c0
+afb+ 0x4017c0 0x4017c0 9 0x4017dd 0x4017cd
+afi~size
+afb
+echo
+pdf
+echo
+pdr
+echo
+afb+ 0x4017c0 0x4017c0 12 0x4017dd 0x4017cd
+afi~size
+afb
+echo
+pdf
+echo
+pdr
+EOF
+EXPECT=<<EOF
+size: 9
+0x004017c0 0x004017c9 00:0000 9 j 0x004017dd f 0x004017cd
+
+/ fcn2.0x004017c0();
+|           0x004017c0      51             push  ecx
+|           0x004017c1      89e1           mov   ecx, esp
+|           0x004017c3      83c108         add   ecx, 8
+..
+
+/ fcn2.0x004017c0();
+| 0x004017c0      51             push  ecx
+| 0x004017c1      89e1           mov   ecx, esp
+| 0x004017c3      83c108         add   ecx, 8
+| 0x004017c6      3d             invalid
+\ 0x004017c7      0010           add   byte [eax], dl
+| ----------- true: 0x004017dd  false: 0x004017cd
+
+size: 12
+0x004017c0 0x004017cc 00:0000 12 j 0x004017dd f 0x004017cd
+
+/ fcn2.0x004017c0();
+|           0x004017c0      51             push  ecx
+|           0x004017c1      89e1           mov   ecx, esp
+|           0x004017c3      83c108         add   ecx, 8
+|           0x004017c6      3d00100000     cmp   eax, 0x1000
+..
+
+/ fcn2.0x004017c0();
+| 0x004017c0      51             push  ecx
+| 0x004017c1      89e1           mov   ecx, esp
+| 0x004017c3      83c108         add   ecx, 8
+| 0x004017c6      3d00100000     cmp   eax, 0x1000
+| 0x004017cb      72             invalid
+| ----------- true: 0x004017dd  false: 0x004017cd
+EOF
+RUN
+
+NAME=afs
+FILE=bins/elf/crackme0x05
+CMDS=<<EOF
+af @ main
+afs @ main
+afsj @ main
+EOF
+EXPECT=<<EOF
+int main(int argc, char **argv, char **envp);
+{"name":"main","noreturn":false,"ret":"int","cc":"cdecl","args":[{"name":"argc","type":"int","cc":"eax"},{"name":"argv","type":"char **","cc":"ebx"},{"name":"envp","type":"char **","cc":"ecx"}]}
+EOF
+RUN
+
+NAME=afs (vars)
+FILE=bins/elf/ls
+CMDS=<<EOF
+s 0x00013c70
+af
+afs
+afsj
+EOF
+EXPECT=<<EOF
+void fcn.00013c70(int64_t arg1, int64_t arg2, int64_t arg3);
+{"name":"fcn.00013c70","noreturn":false,"ret":"void","cc":"amd64","args":[{"name":"arg1","type":"int64_t","cc":"rdi"},{"name":"arg2","type":"int64_t","cc":"rsi"},{"name":"arg3","type":"int64_t","cc":"rdx"}]}
+EOF
+RUN
+
+NAME=float args afli
+FILE=bins/elf/float_point
+BROKEN=1
+CMDS=<<EOF
+aa
+afi sym.sum_float
+EOF
+EXPECT=<<EOF
+#
+offset: 0x00001119
+name: sym.sum_float
+size: 26
+realsz: 26
+stackframe: 8
+call-convention: amd64
+cyclomatic-cost: 11
+cyclomatic-complexity: 1
+bits: 64
+type: sym [new]
+num-bbs: 1
+edges: 0
+end-bbs: 1
+call-refs:
+data-refs:
+code-xrefs: 0x00001165 C
+in-degree: 1
+out-degree: 0
+data-xrefs:
+locals: 2
+args: 2
+var int local_8h @ rbp-0x8
+var int local_4h @ rbp-0x4
+arg int arg1 @ xmm0
+arg int arg2 @ xmm1
+EOF
+RUN
+
+NAME=double args afli
+FILE=bins/elf/float_point
+BROKEN=1
+CMDS=<<EOF
+aa
+afi sym.sum_double
+EOF
+EXPECT=<<EOF
+#
+offset: 0x00001133
+name: sym.sum_double
+size: 26
+realsz: 26
+stackframe: 8
+call-convention: amd64
+cyclomatic-cost: 11
+cyclomatic-complexity: 1
+bits: 64
+type: sym [new]
+num-bbs: 1
+edges: 0
+end-bbs: 1
+call-refs:
+data-refs:
+code-xrefs: 0x00001181 C
+in-degree: 1
+out-degree: 0
+data-xrefs:
+locals: 2
+args: 2
+var int local_10h @ rbp-0x10
+var int local_8h @ rbp-0x8
+arg int arg1 @ xmm0
+arg int arg2 @ xmm1
+EOF
+RUN
+
+NAME=duplicate af+
+FILE==
+CMDS=<<EOF
+af+ func @ 0x1337
+af+ func @ 0x1337
+af+ func @ 0x1337
+afl
+EOF
+EXPECT=<<EOF
+0x00001337    0 0            func
+EOF
+REGEXP_FILTER_ERR=ERROR.*
+EXPECT_ERR=<<EOF
+ERROR: Cannot add function (duplicated)
+ERROR: Cannot add function (duplicated)
+EOF
+RUN
+
+NAME=af skips symbols
+FILE=bins/elf/analysis/guess-number-riscv64
+CMDS=<<EOF
+af @ sym.fstatat
+af @ sym.__syscall_error
+afl
+EOF
+EXPECT=<<EOF
+0x0001f7cc    1 48           sym.__syscall_error
+0x0001f8b8    2 20           sym.fstatat
+0x00021484    1 8            sym.__errno
+EOF
+RUN
+
+NAME=function naming
+FILE==
+CMDS=<<EOF
+e asm.arch=x86
+e asm.bits=64
+wx c3c3c3c3c3c3c3c3c3
+f sym.some_func @ 0
+f sym.some_other_func @ 1
+f a @ 2
+f aa @ 3
+f aaa @ 4
+f aaaa @ 5
+f sym @ 6
+f sym. @ 7
+f sym.b @ 8
+e asm.flags.real=0
+af @@f
+afl
+echo --
+af- @@f
+afl
+echo --
+e asm.flags.real=1
+af @@f
+afl
+EOF
+EXPECT=<<EOF
+0x00000000    1 1            sym.some_func
+0x00000001    1 1            sym.some_other_func
+0x00000002    1 1            a
+0x00000003    1 1            aa
+0x00000004    1 1            aaa
+0x00000005    1 1            aaaa
+0x00000006    1 1            sym
+0x00000007    1 1            sym.
+0x00000008    1 1            sym.b
+--
+--
+0x00000000    1 1            sym.some_func
+0x00000001    1 1            sym.some_other_func
+0x00000002    1 1            a
+0x00000003    1 1            aa
+0x00000004    1 1            aaa
+0x00000005    1 1            aaaa
+0x00000006    1 1            sym
+0x00000007    1 1            sym.
+0x00000008    1 1            sym.b
+EOF
+RUN
+
+NAME=afd
+FILE=bins/elf/ls
+CMDS=<<EOF
+af @ main
+afd @ main+12
+EOF
+EXPECT=<<EOF
+main + 12
+EOF
+RUN

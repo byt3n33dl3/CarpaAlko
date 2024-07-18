@@ -1,0 +1,401 @@
+NAME=foreach iterator
+FILE=bins/elf/ls
+CMDS=aa ; fd @@F
+EXPECT=<<EOF
+entry0
+sym._obstack_begin
+sym._obstack_begin_1
+sym._obstack_allocated_p
+sym._obstack_memory_used
+sym._obstack_free
+fcn.00015bd0
+sym._obstack_newchunk
+main
+entry.init0
+entry.fini0
+fcn.00005b10
+EOF
+RUN
+
+NAME=iter file lines
+FILE==
+CMDS=<<EOF
+rm .iter-file-lines.tmp
+echo 10 > .iter-file-lines.tmp
+echo 20 >> .iter-file-lines.tmp
+echo 30 >> .iter-file-lines.tmp
+echo 0xdeadbeef >> .iter-file-lines.tmp
+s @@. .iter-file-lines.tmp
+rm .iter-file-lines.tmp
+EOF
+EXPECT=<<EOF
+0xa
+0x14
+0x1e
+0xdeadbeef
+EOF
+RUN
+
+NAME=iter offsets
+FILE==
+CMDS=<<EOF
+s @@=10 20 30 0xdeadbeef
+EOF
+EXPECT=<<EOF
+0xa
+0x14
+0x1e
+0xdeadbeef
+EOF
+RUN
+
+NAME=iter offsetssizes
+FILE==
+CMDS=<<EOF
+(_; s; b)() @@@=10 1 20 2 30 3 0xdeadbeef 10
+EOF
+EXPECT=<<EOF
+0xa
+0x1
+0x14
+0x2
+0x1e
+0x3
+0xdeadbeef
+0xa
+EOF
+RUN
+
+NAME=iter hit
+FILE==
+CMDS=<<EOF
+wx 000090000000009000
+s @@/x 90
+EOF
+EXPECT=<<EOF
+0x00000002 hit0_0 90
+0x2
+0x00000007 hit0_1 90
+0x7
+EOF
+RUN
+
+NAME=iter interpret
+FILE==
+CMDS=<<EOF
+s @@c:echo 10 20
+EOF
+EXPECT=<<EOF
+0xa
+0x14
+EOF
+RUN
+
+NAME=iter interpret offsetssizes
+FILE==
+CMDS=<<EOF
+(_;s;b)() @@@c:echo 10 1 20 2
+EOF
+EXPECT=<<EOF
+0xa
+0x1
+0x14
+0x2
+EOF
+RUN
+
+NAME=iter comment
+FILE==
+CMDS=<<EOF
+CC hello
+CC world @ 0xdeadbeef
+CC hello_all @ 0xcafebabe
+CC. @@C
+echo
+CC. @@C:hello*
+EOF
+EXPECT=<<EOF
+hello
+hello_all
+world
+
+hello
+hello_all
+EOF
+RUN
+
+NAME=iter dbt
+FILE==
+CMDS=<<EOF
+EOF
+EXPECT=<<EOF
+EOF
+RUN
+
+NAME=iter threads
+FILE==
+CMDS=<<EOF
+EOF
+EXPECT=<<EOF
+EOF
+RUN
+
+NAME=iter bbs
+FILE=./bins/elf/hello_world
+ARGS=-A
+CMDS=<<EOF
+s main
+(_;s;b)() @@b
+EOF
+EXPECT=<<EOF
+0x7aa
+0x5c
+0x806
+0x3e
+0x844
+0x3
+EOF
+RUN
+
+NAME=iter instrs
+FILE=./bins/elf/hello_world
+ARGS=-A
+CMDS=<<EOF
+s 0x844
+(_;s;b;pi 0x1)() @@i
+EOF
+EXPECT=<<EOF
+0x844
+0x1
+nop
+0x845
+0x1
+leave
+0x846
+0x1
+ret
+EOF
+RUN
+
+NAME=iter import
+FILE=./bins/elf/hello_world
+CMDS=<<EOF
+s @@ii
+EOF
+EXPECT=<<EOF
+0x630
+0x640
+0x650
+0x660
+0x670
+0x680
+0x690
+EOF
+RUN
+
+NAME=iter sections
+FILE=./bins/elf/hello_world
+CMDS=<<EOF
+s @@iS
+EOF
+EXPECT=<<EOF
+0x238
+0x254
+0x274
+0x298
+0x2b8
+0x3d8
+0x47c
+0x498
+0x4b8
+0x578
+0x608
+0x620
+0x690
+0x6a0
+0x8c4
+0x8d0
+0x8e4
+0x920
+0x200d90
+0x200d98
+0x200da0
+0x200f90
+0x201000
+0x201010
+EOF
+RUN
+
+NAME=iter segments
+FILE=./bins/elf/hello_world
+CMDS=<<EOF
+s @@iSS
+EOF
+EXPECT=<<EOF
+0x40
+0x238
+0x0
+0x200d90
+0x200da0
+0x254
+0x8e4
+0x0
+0x200d90
+0x0
+EOF
+RUN
+
+NAME=iter symbols
+FILE=./bins/elf/hello_world
+CMDS=<<EOF
+s @@is~?
+EOF
+EXPECT=<<EOF
+67
+EOF
+RUN
+
+NAME=iter string
+FILE=./bins/elf/hello_world
+CMDS=<<EOF
+ps @@iz
+EOF
+EXPECT=<<EOF
+Hello
+ r2-folks
+EOF
+RUN
+
+NAME=iter flag
+FILE==
+CMDS=<<EOF
+f hello @ 0x30
+f world @ 0xdeadbeef
+f hello_all @ 0xcafebabe
+s @@f
+echo
+s @@f:hello*
+EOF
+EXPECT=<<EOF
+0x30
+0xcafebabe
+0xdeadbeef
+
+0x30
+0xcafebabe
+EOF
+RUN
+
+NAME=iter function
+FILE=./bins/elf/hello_world
+ARGS=-A
+CMDS=<<EOF
+s @@F~?
+s @@F:*register*
+EOF
+EXPECT=<<EOF
+17
+0x6d0
+0x710
+EOF
+RUN
+
+NAME=iter iomap
+FILE=./bins/elf/hello_world
+CMDS=<<EOF
+s @@om
+EOF
+EXPECT=<<EOF
+0x200d90
+0x0
+EOF
+BROKEN=1
+RUN
+
+NAME=iter dbgmap
+FILE==
+CMDS=<<EOF
+EOF
+EXPECT=<<EOF
+EOF
+RUN
+
+NAME=iter register
+FILE==
+CMDS=<<EOF
+e asm.arch=x86
+e asm.bits=32
+ar oeax=0xeadbeef
+ar eax=0xdeadbeef
+ar ebx=0xcafebabe
+ar ecx=0x11111111
+ar edx=0x22222222
+ar esi=0x33333333
+ar edi=0x44444444
+ar esp=0x55555555
+ar ebp=0x66666666
+ar eip=0x77777777
+s @@r
+EOF
+EXPECT=<<EOF
+oeax: 0xeadbeef
+eax: 0xdeadbeef
+ebx: 0xcafebabe
+ecx: 0x11111111
+edx: 0x22222222
+esi: 0x33333333
+edi: 0x44444444
+esp: 0x55555555
+ebp: 0x66666666
+eip: 0x77777777
+dr0: 0x0
+dr1: 0x0
+dr2: 0x0
+dr3: 0x0
+dr4: 0x0
+dr5: 0x0
+dr6: 0x0
+dr7: 0x0
+eflags: 0x0
+xds: 0x0
+xes: 0x0
+xfs: 0x0
+xgs: 0x0
+xss: 0x0
+xcs: 0x0
+cr0: 0x0
+cr1: 0x0
+cr2: 0x0
+cr3: 0x0
+cr4: 0x0
+cr5: 0x0
+cr6: 0x0
+cr7: 0x0
+EOF
+RUN
+
+NAME=iter step
+FILE==
+CMDS=<<EOF
+s @@s:0x1000 0x2000 0x400
+EOF
+EXPECT=<<EOF
+0x1000
+0x1400
+0x1800
+0x1c00
+EOF
+RUN
+
+NAME=iter flags with newline
+FILE=bins/elf/ls
+CMDS=<<EOF
+(_;%v $$;echo)() @@f:reloc.std*
+EOF
+EXPECT=<<EOF
+0x22288
+
+0x222c0
+
+EOF
+RUN

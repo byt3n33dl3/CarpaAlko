@@ -1,0 +1,28 @@
+NAME=PE: corkami nosectionXP.exe - open
+FILE=bins/pe/nosectionXP.exe
+CMDS=q!
+EXPECT=<<EOF
+EOF
+RUN
+
+NAME=PE: nosectionXP - section
+FILE=bins/pe/nosectionXP.exe
+CMDS=oml
+EXPECT=<<EOF
+ 1 fd: 4 +0x00000000 0x00400237 - 0x00400fff r-- mmap.header
+ 2 fd: 3 +0x00000000 0x00400000 - 0x00400236 r-- fmap.header
+ 3 fd: 3 +0x00000138 0x00400138 * 0x00400236 r-x fmap.blob
+EOF
+RUN
+
+NAME=PE: nosectionXP - entrypoint 2
+FILE=bins/pe/nosectionXP.exe
+CMDS=pi 5
+EXPECT=<<EOF
+push str.Low_alignment_PE_with_no_section__XP
+call dword [sym.imp.msvcrt.dll_printf]
+add esp, 4
+nop
+push 0
+EOF
+RUN

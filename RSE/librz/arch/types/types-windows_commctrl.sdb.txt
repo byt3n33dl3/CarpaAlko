@@ -1,0 +1,16 @@
+### commctrl.h ###
+
+DISPLAY_DEVICE_TYPE=typedef
+typedef.DISPLAY_DEVICE_TYPE=int
+
+MONITOR_DPI_TYPE=typedef
+typedef.MONITOR_DPI_TYPE=int
+
+PROCESS_DPI_AWARENESS=typedef
+typedef.PROCESS_DPI_AWARENESS=int
+
+SCALE_CHANGE_FLAGS=typedef
+typedef.SCALE_CHANGE_FLAGS=int
+
+SHELL_UI_COMPONENT=typedef
+typedef.SHELL_UI_COMPONENT=int

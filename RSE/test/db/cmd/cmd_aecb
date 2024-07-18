@@ -1,0 +1,60 @@
+NAME=ESIL continue back until breakpoint
+FILE=bins/elf/analysis/calls_x64
+CMDS=<<EOF
+e asm.emu=true
+e asm.bits=64
+e asm.arch=x86
+e emu.write=true
+s loc.main
+aei
+aeim
+aeip
+aets+
+aeso
+db @ rip
+aeso
+ar rip
+ar rsp
+4 aeso
+aecb
+ar rip
+ar rsp
+dk 9
+aets-
+EOF
+EXPECT=<<EOF
+rip = 0x000000000040052f
+rsp = 0x0000000000177ff0
+rip = 0x0000000000400575
+rsp = 0x0000000000177ff8
+EOF
+RUN
+
+NAME=ESIL continue back no breakpoint
+FILE=bins/elf/analysis/calls_x64
+CMDS=<<EOF
+e asm.emu=true
+e asm.bits=64
+e asm.arch=x86
+e emu.write=true
+s loc.main
+aei
+aeim
+aeip
+aets+
+ar rip
+ar rsp
+5 aeso
+aecb
+ar rip
+ar rsp
+dk 9
+aets-
+EOF
+EXPECT=<<EOF
+rip = 0x0000000000400574
+rsp = 0x0000000000178000
+rip = 0x0000000000400574
+rsp = 0x0000000000178000
+EOF
+RUN

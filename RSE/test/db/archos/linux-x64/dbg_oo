@@ -1,0 +1,120 @@
+NAME=dbg.oo 10
+FILE=/bin/ls
+ARGS=-d
+BROKEN=1
+CMDS=<<EOF
+10oo
+e file.path
+EOF
+EXPECT=<<EOF
+dbg:///bin/ls
+EOF
+RUN
+
+NAME=dbg.ood 10
+FILE=/bin/ls
+ARGS=-d
+BROKEN=1
+CMDS=<<EOF
+10ood
+e file.path
+EOF
+EXPECT=<<EOF
+dbg:///bin/ls
+EOF
+RUN
+
+NAME=ood after open in debug mode
+FILE=bins/elf/analysis/x86-helloworld-gcc
+ARGS=-d
+CMDS=<<EOF
+ood > $_
+dc
+ood > $_
+dc
+EOF
+EXPECT=<<EOF
+Hello world!
+Hello world!
+EOF
+RUN
+
+NAME=oo ; dc
+FILE=bins/elf/analysis/x86-helloworld-gcc
+ARGS=-d
+CMDS=<<EOF
+oo
+dc
+EOF
+EXPECT=<<EOF
+Hello world!
+EOF
+RUN
+
+NAME=ood & om
+FILE=bins/elf/analysis/x86-helloworld-gcc
+ARGS=-d
+CMDS=<<EOF
+oml
+echo
+ood > /dev/null
+oml
+EOF
+EXPECT=<<EOF
+ 1 fd: 3 +0x00000000 0x00000000 * 0x7ffffffffffffffe rwx 
+
+ 1 fd: 4 +0x00000000 0x00000000 * 0x7ffffffffffffffe rwx 
+EOF
+RUN
+
+NAME=breakpoints after double ood
+FILE=bins/elf/analysis/x86-helloworld-gcc
+ARGS=
+CMDS=<<EOF
+db @ main
+db @ main+3
+ood > $_
+dc # should hit the first breakpoint
+.drf
+%v eip-main
+ood > $_
+dc # should hit the first breakpoint
+.drf
+%v eip-main
+dc # should hit the the second breakpoint
+.drf
+%v eip-main
+EOF
+EXPECT=<<EOF
+0x0
+0x0
+0x3
+EOF
+RUN
+
+NAME=dm flags after ood
+FILE=bins/elf/analysis/x86-helloworld-gcc
+ARGS=-e log.level=4
+CMDS=<<EOF
+ood
+fl@F:maps~?
+dm*~?
+EOF
+EXPECT=<<EOF
+9
+11
+EOF
+RUN
+
+NAME=ood check for ptrace errors
+FILE=bins/elf/analysis/x86-helloworld-gcc
+ARGS=-e log.level=3
+CMDS=<<EOF
+ood
+EOF
+REGEXP_FILTER_ERR=(Process\swith\sPID)|(helloworld-gcc\sreopened\sin\sread-write\smode)
+EXPECT_ERR=<<EOF
+Process with PID
+helloworld-gcc reopened in read-write mode
+EOF
+RUN

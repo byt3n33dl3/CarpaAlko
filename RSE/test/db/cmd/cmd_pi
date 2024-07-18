@@ -1,0 +1,48 @@
+NAME=tbz
+FILE=bins/other/tbz.arm64
+ARGS=-a arm -b64 -m 0x100000000
+CMDS=pi 4
+EXPECT=<<EOF
+tbz x0, 0x20, 0x100004000
+tbz x0, 0x20, 0xffff8004
+tbnz x0, 0x20, 0x100004008
+tbnz x0, 0x20, 0xffff800c
+EOF
+RUN
+
+NAME=color pi
+FILE=bins/elf/analysis/x64-loop
+CMDS=e scr.color=1 ; pi 1
+EXPECT=<<EOF
+[36mxor[0m[37m [0m[36mebp[0m[37m, [0m[36mebp[0m
+EOF
+RUN
+
+NAME=negative pi
+FILE=malloc://1024
+CMDS=<<EOF
+e asm.arch=x86
+e asm.bits=64
+wx 0x90
+s 0x1
+pi -1
+EOF
+EXPECT=<<EOF
+nop
+EOF
+RUN
+
+NAME=negative pI
+FILE=malloc://1024
+CMDS=<<EOF
+e asm.arch=x86
+e asm.bits=64
+wx 0x9090
+s 0x2
+pI -2
+EOF
+EXPECT=<<EOF
+nop
+nop
+EOF
+RUN

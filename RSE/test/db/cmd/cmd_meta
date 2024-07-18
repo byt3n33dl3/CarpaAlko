@@ -1,0 +1,142 @@
+NAME=Cf. crash
+FILE==
+CMDS=<<EOF
+Cf.
+EOF
+EXPECT=<<EOF
+EOF
+RUN
+
+NAME=vars commenting
+FILE=malloc://1024
+CMDS=<<EOF
+e asm.arch=x86
+e asm.bits=64
+
+s 0x10
+af
+
+afvs 8 arg_8h int
+afvs -8 var_8h uint32_t
+afvr rax var_rax uint64_t
+
+Cv arg_8h comment for arg_8h
+Cv var_8h comment for var_8h
+Cv var_rax comment for var_rax
+
+pd 1 ~comment
+echo --
+Cvr
+Cvr*
+echo --
+Cvs
+Cvs*
+echo --
+
+Cv- arg_8h
+pd 1 ~comment
+echo --
+Cv- var_8h
+pd 1 ~comment
+echo --
+Cv- var_rax
+pd 1 ~comment
+echo --
+EOF
+EXPECT=<<EOF
+|           ; var uint64_t var_rax @ rax    ; comment for var_rax
+|           ; var uint32_t var_8h @ stack - 0x8    ; comment for var_8h
+|           ; arg int arg_8h @ stack + 0x8    ; comment for arg_8h
+--
+var_rax : comment for var_rax
+"Cvr var_rax base64:Y29tbWVudCBmb3IgdmFyX3JheA== @ 0x00000010"
+--
+arg_8h : comment for arg_8h
+var_8h : comment for var_8h
+"Cvs arg_8h base64:Y29tbWVudCBmb3IgYXJnXzho @ 0x00000010"
+"Cvs var_8h base64:Y29tbWVudCBmb3IgdmFyXzho @ 0x00000010"
+--
+|           ; var uint64_t var_rax @ rax    ; comment for var_rax
+|           ; var uint32_t var_8h @ stack - 0x8    ; comment for var_8h
+--
+|           ; var uint64_t var_rax @ rax    ; comment for var_rax
+--
+--
+EOF
+RUN
+
+
+NAME=Cvb variable null pointer deref
+FILE=bins/elf/analysis/x64-simple
+CMDS=<<EOF
+aaa
+Cvb local_10
+EOF
+EXPECT=<<EOF
+EOF
+RUN
+
+NAME=CC.
+FILE==
+CMDS=<<EOF
+CC hello @ 10
+CC.
+CC. @ 10
+CCl @ 10
+EOF
+EXPECT=<<EOF
+hello
+0x0000000a CCu "hello"
+EOF
+RUN
+
+NAME=Cs
+FILE==
+CMDS=<<EOF
+w "Friendly Conversation"
+Cs
+C
+EOF
+EXPECT=<<EOF
+0x00000000 ascii[22] "Friendly Conversation"
+EOF
+RUN
+
+NAME=Cs without bin
+FILE==
+CMDS=<<EOF
+ob-*
+w "Friendly Conversation"
+Cs
+# Right now, this does nothing. We just check that it doesn't crash.
+# Later, it will be nice if it also actually detects the string.
+C
+EOF
+EXPECT=
+RUN
+
+NAME=Cs8 without bin
+FILE==
+CMDS=<<EOF
+ob-*
+w "Friendly Conversation"
+Cs8
+C
+EOF
+EXPECT=<<EOF
+0x00000000 utf8[22] "Friendly Conversation"
+EOF
+RUN
+
+NAME=Csb without bin
+FILE==
+CMDS=<<EOF
+ob-*
+w "Friendly Conversation"
+Csb
+C
+EOF
+EXPECT=<<EOF
+0x00000000 ascii[22] "Friendly Conversation"
+EOF
+RUN

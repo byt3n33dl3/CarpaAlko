@@ -1,0 +1,48 @@
+NAME=PE: corkami CoST.exe - open and analyze
+FILE=bins/pe/CoST.exe
+ARGS=-A
+CMDS=q!
+EXPECT=<<EOF
+EOF
+RUN
+
+NAME=PE: corkami CoST.exe - entrypoint VA
+FILE=bins/pe/CoST.exe
+CMDS=ie
+EXPECT=<<EOF
+vaddr      paddr      hvaddr     haddr      type    
+----------------------------------------------------
+0x7efd0000 0x00000000 ---------- 0x0000506c program
+EOF
+RUN
+
+NAME=PE: corkami CoST.exe - tls VA
+FILE=bins/pe/CoST.exe
+CMDS=iee
+EXPECT=<<EOF
+vaddr      paddr      hvaddr     haddr      type 
+-------------------------------------------------
+0x7efd0148 0x00000148 ---------- 0x000001cc tls
+EOF
+RUN
+
+NAME=PE: corkami CoST.exe - sections list
+FILE=bins/pe/CoST.exe
+CMDS=oml
+EXPECT=<<EOF
+ 1 fd: 4 +0x00000000 0x7efd5169 - 0x7efd5fff r-- mmap.header
+ 2 fd: 3 +0x00000000 0x7efd0000 - 0x7efd5168 r-- fmap.header
+ 3 fd: 3 +0x00000000 0x7efd0000 * 0x7efd5169 r-x fmap.blob
+EOF
+RUN
+
+NAME=PE: corkami CoST.exe - pi 1
+FILE=bins/pe/CoST.exe
+CMDS=<<EOF
+e asm.sub.names=false
+pi 1
+EOF
+EXPECT=<<EOF
+dec ebp
+EOF
+RUN
