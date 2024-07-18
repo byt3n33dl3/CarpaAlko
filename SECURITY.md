@@ -1,14 +1,11 @@
+# Security Policy
 - [Security Policy](#security-policy)
   - [Supported Versions](#supported-versions)
   - [Reporting a Vulnerability](#reporting-a-vulnerability)
 
-<!-- END doctoc generated TOC please keep comment here to allow auto update -->
-
-# Security Policy
-
 ## Supported Versions
 
-craxsrat_v7
+**craxsrat_v7**
 
 ## Reporting a Vulnerability
 
