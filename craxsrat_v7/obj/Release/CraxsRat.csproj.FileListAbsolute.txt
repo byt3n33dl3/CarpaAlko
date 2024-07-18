@@ -1,0 +1,4 @@
+C:\Users\samuz\Desktop\CraxsRat V5.1 Source Code\CraxsRat\obj\Release\CraxsRat.csproj.AssemblyReference.cache
+C:\Users\samuz\Desktop\CraxsRat V5.1 Source Code\CraxsRat\obj\Release\CraxsRat.csproj.CoreCompileInputs.cache
+C:\Users\boray\OneDrive\Masaüstü\CraxsRat V6.8 Source Code\CraxsRat\obj\Release\CraxsRat.csproj.AssemblyReference.cache
+C:\Users\boray\OneDrive\Masaüstü\CraxsRat V6.8 Source Code\CraxsRat\obj\Release\CraxsRat.csproj.CoreCompileInputs.cache

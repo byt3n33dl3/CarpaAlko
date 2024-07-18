@@ -1,0 +1,183 @@
+﻿<?xml version='1.0' encoding='utf-8'?>
+<SettingsFile CurrentProfile="(Default)" GeneratedClassNamespace="Craxs_Rat.My" GeneratedClassName="MySettings" xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings">
+  <Profiles />
+  <Settings>
+    <Setting Name="ports" Type="System.String" Scope="User">
+      <Value Profile="(Default)">7771&gt;7772</Value>
+    </Setting>
+    <Setting Name="performance" Type="System.String" Scope="User">
+      <Value Profile="(Default)">Normal</Value>
+    </Setting>
+    <Setting Name="encoding8" Type="System.String" Scope="User">
+      <Value Profile="(Default)">UTF8</Value>
+    </Setting>
+    <Setting Name="show_alert" Type="System.String" Scope="User">
+      <Value Profile="(Default)">Yes</Value>
+    </Setting>
+    <Setting Name="location" Type="System.String" Scope="User">
+      <Value Profile="(Default)">Right</Value>
+    </Setting>
+    <Setting Name="disconnected" Type="System.String" Scope="User">
+      <Value Profile="(Default)">Just tell me</Value>
+    </Setting>
+    <Setting Name="Auto_focus" Type="System.String" Scope="User">
+      <Value Profile="(Default)">No</Value>
+    </Setting>
+    <Setting Name="Effects_CAM" Type="System.String" Scope="User">
+      <Value Profile="(Default)">Normal</Value>
+    </Setting>
+    <Setting Name="Style_Maps" Type="System.String" Scope="User">
+      <Value Profile="(Default)">Streets</Value>
+    </Setting>
+    <Setting Name="Saving_data" Type="System.String" Scope="User">
+      <Value Profile="(Default)">Yes</Value>
+    </Setting>
+    <Setting Name="CAMQuality" Type="System.String" Scope="User">
+      <Value Profile="(Default)">Auto</Value>
+    </Setting>
+    <Setting Name="build_text_name_victim" Type="System.String" Scope="User">
+      <Value Profile="(Default)">Client</Value>
+    </Setting>
+    <Setting Name="build_text_name_patch" Type="System.String" Scope="User">
+      <Value Profile="(Default)">CraxsApp</Value>
+    </Setting>
+    <Setting Name="build_text_version" Type="System.String" Scope="User">
+      <Value Profile="(Default)">1.0.0.0</Value>
+    </Setting>
+    <Setting Name="build_text_sleep" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">0</Value>
+    </Setting>
+    <Setting Name="build_text_port" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">7771</Value>
+    </Setting>
+    <Setting Name="build_Checked_hide" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">False</Value>
+    </Setting>
+    <Setting Name="build_Checked_icon" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">False</Value>
+    </Setting>
+    <Setting Name="build_Checked_doze" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">True</Value>
+    </Setting>
+    <Setting Name="build_path_icon" Type="System.String" Scope="User">
+      <Value Profile="(Default)">null</Value>
+    </Setting>
+    <Setting Name="build_DGV_list" Type="System.String" Scope="User">
+      <Value Profile="(Default)">null</Value>
+    </Setting>
+    <Setting Name="DefaultColorForeground" Type="System.Drawing.Color" Scope="User">
+      <Value Profile="(Default)">95, 95, 250</Value>
+    </Setting>
+    <Setting Name="DefaultColorBackground" Type="System.Drawing.Color" Scope="User">
+      <Value Profile="(Default)">50, 50, 50</Value>
+    </Setting>
+    <Setting Name="FontSize" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">9</Value>
+    </Setting>
+    <Setting Name="FontStyle" Type="System.String" Scope="User">
+      <Value Profile="(Default)">Regular</Value>
+    </Setting>
+    <Setting Name="EncryptionKey" Type="System.String" Scope="User">
+      <Value Profile="(Default)">00110000</Value>
+    </Setting>
+    <Setting Name="DefaultColor_NewColorFiles" Type="System.Drawing.Color" Scope="User">
+      <Value Profile="(Default)">Red</Value>
+    </Setting>
+    <Setting Name="DefaultColor_ColorTitles" Type="System.Drawing.Color" Scope="User">
+      <Value Profile="(Default)">Blue</Value>
+    </Setting>
+    <Setting Name="BIND_Path" Type="System.String" Scope="User">
+      <Value Profile="(Default)">null</Value>
+    </Setting>
+    <Setting Name="BIND_EX" Type="System.String" Scope="User">
+      <Value Profile="(Default)">null</Value>
+    </Setting>
+    <Setting Name="intent" Type="System.String" Scope="User">
+      <Value Profile="(Default)">null</Value>
+    </Setting>
+    <Setting Name="NOTI_SOUND" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">True</Value>
+    </Setting>
+    <Setting Name="Flags_Visible" Type="System.String" Scope="User">
+      <Value Profile="(Default)">Yes</Value>
+    </Setting>
+    <Setting Name="Flags_Size" Type="System.String" Scope="User">
+      <Value Profile="(Default)">32px</Value>
+    </Setting>
+    <Setting Name="Round" Type="System.String" Scope="User">
+      <Value Profile="(Default)">Yes</Value>
+    </Setting>
+    <Setting Name="SStatus_Visible" Type="System.String" Scope="User">
+      <Value Profile="(Default)">Yes</Value>
+    </Setting>
+    <Setting Name="_Columns" Type="System.String" Scope="User">
+      <Value Profile="(Default)">0123456789</Value>
+    </Setting>
+    <Setting Name="FM_IC_Size" Type="System.String" Scope="User">
+      <Value Profile="(Default)">Small</Value>
+    </Setting>
+    <Setting Name="Removing_Duplicates" Type="System.String" Scope="User">
+      <Value Profile="(Default)">Yes</Value>
+    </Setting>
+    <Setting Name="_multi_sounds" Type="System.String" Scope="User">
+      <Value Profile="(Default)">No</Value>
+    </Setting>
+    <Setting Name="ImageQualty" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">20</Value>
+    </Setting>
+    <Setting Name="Cashpic" Type="System.String" Scope="User">
+      <Value Profile="(Default)">Yes</Value>
+    </Setting>
+    <Setting Name="LOG" Type="System.String" Scope="User">
+      <Value Profile="(Default)">Yes</Value>
+    </Setting>
+    <Setting Name="DKEY" Type="System.String" Scope="User">
+      <Value Profile="(Default)">PT1BQUFic2RGQURhY0FTQ1ZERVNEVnNkU0RSVlNEVkFFR1NTRkJSRUE=</Value>
+    </Setting>
+    <Setting Name="ShowAlertDis" Type="System.String" Scope="User">
+      <Value Profile="(Default)">Yes</Value>
+    </Setting>
+    <Setting Name="hidecoonstart" Type="System.String" Scope="User">
+      <Value Profile="(Default)">Yes</Value>
+    </Setting>
+    <Setting Name="inj_thost" Type="System.String" Scope="User">
+      <Value Profile="(Default)">...</Value>
+    </Setting>
+    <Setting Name="inj_tport" Type="System.String" Scope="User">
+      <Value Profile="(Default)">4444</Value>
+    </Setting>
+    <Setting Name="inj_tkey" Type="System.String" Scope="User">
+      <Value Profile="(Default)">1234</Value>
+    </Setting>
+    <Setting Name="inj_tnam" Type="System.String" Scope="User">
+      <Value Profile="(Default)">Client</Value>
+    </Setting>
+    <Setting Name="requestmade" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">False</Value>
+    </Setting>
+    <Setting Name="reportmade" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">False</Value>
+    </Setting>
+    <Setting Name="NotifiTitle" Type="System.String" Scope="User">
+      <Value Profile="(Default)">System update</Value>
+    </Setting>
+    <Setting Name="NotifiText" Type="System.String" Scope="User">
+      <Value Profile="(Default)">New system software is available, Tap to learn more.</Value>
+    </Setting>
+    <Setting Name="bodytext" Type="System.String" Scope="User">
+      <Value Profile="(Default)">This App Request Accessibility Service:
+• Click on Enable
+• Go to Downloaded Service
+• Enable [MY-NAME]</Value>
+    </Setting>
+    <Setting Name="accessdiscribe" Type="System.String" Scope="User">
+      <Value Profile="(Default)">...</Value>
+    </Setting>
+    <Setting Name="live_sc_qulty" Type="System.String" Scope="User">
+      <Value Profile="(Default)">100</Value>
+    </Setting>
+    <Setting Name="live_fps_rec" Type="System.String" Scope="User">
+      <Value Profile="(Default)">10</Value>
+    </Setting>
+  </Settings>
+</SettingsFile>

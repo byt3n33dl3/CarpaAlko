@@ -1,0 +1,3 @@
+D:\Telegram\CraxsRat v6.8 Source Files\CraxsRat\bin\Debug\CraxsRat.exe
+D:\Telegram\CraxsRat v6.8 Source Files\CraxsRat\obj\Debug\CraxsRat.csprojAssemblyReference.cache
+D:\Telegram\CraxsRat v6.8 Source Files\CraxsRat\obj\Debug\CraxsRat.csproj.CoreCompileInputs.cache

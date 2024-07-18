@@ -1,0 +1,2 @@
+C:\Users\samuz\Desktop\CraxsRat V5.1 Source Code\CraxsRat\obj\Debug\CraxsRat.csproj.AssemblyReference.cache
+C:\Users\samuz\Desktop\CraxsRat V5.1 Source Code\CraxsRat\obj\Debug\CraxsRat.csproj.CoreCompileInputs.cache

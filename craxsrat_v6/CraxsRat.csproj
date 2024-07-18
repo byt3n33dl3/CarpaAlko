@@ -1,0 +1,548 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{EB8C74CC-D38B-4F5F-978A-43B7C404D511}</ProjectGuid>
+    <OutputType>WinExe</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Craxs_Rat</RootNamespace>
+    <AssemblyName>CraxsRat</AssemblyName>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <ApplicationManifest>app.manifest</ApplicationManifest>
+    <ApplicationIcon>CraxsRat.ico</ApplicationIcon>
+    <StartupObject>Craxs_Rat.My.MyApplication</StartupObject>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Accord">
+      <HintPath>..\..\..\Downloads\CraxsRats v4.9.5 Unpack\Accord.dll</HintPath>
+    </Reference>
+    <Reference Include="Accord.Video.FFMPEG.x64">
+      <HintPath>..\..\..\Downloads\CraxsRats v4.9.5 Unpack\Accord.Video.FFMPEG.x64.dll</HintPath>
+    </Reference>
+    <Reference Include="DrakeUI.Framework">
+      <HintPath>..\..\..\Downloads\CraxsRats v4.9.5 Unpack\DrakeUI.Framework.dll</HintPath>
+    </Reference>
+    <Reference Include="GeoIPCitys">
+      <HintPath>..\..\..\Downloads\CraxsRats v4.9.5 Unpack\GeoIPCitys.dll</HintPath>
+    </Reference>
+    <Reference Include="LiveCharts">
+      <HintPath>..\..\..\Downloads\CraxsRats v4.9.5 Unpack\LiveCharts.dll</HintPath>
+    </Reference>
+    <Reference Include="LiveCharts.WinForms">
+      <HintPath>..\..\..\Downloads\CraxsRats v4.9.5 Unpack\LiveCharts.WinForms.dll</HintPath>
+    </Reference>
+    <Reference Include="MetroSet\u0020UI">
+      <HintPath>..\..\..\Downloads\CraxsRats v4.9.5 Unpack\MetroSet UI.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.VisualBasic" />
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.IO.Compression.FileSystem" />
+    <Reference Include="System.Management" />
+    <Reference Include="System.Security" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml" />
+    <Reference Include="Vip.Notification">
+      <HintPath>..\..\..\Downloads\CraxsRats v4.9.5 Unpack\Vip.Notification.dll</HintPath>
+    </Reference>
+    <Reference Include="WinMM.Net">
+      <HintPath>..\..\..\Downloads\CraxsRats v4.9.5 Unpack\WinMM.Net.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <AppDesigner Include="Properties\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="-Module-.cs" />
+    <Compile Include="-Module-{14C782A1-ACD2-467A-B549-8F6A646A096C}.cs" />
+    <Compile Include="AccountManager.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="AccountManager.Designer.cs">
+      <DependentUpon>AccountManager.cs</DependentUpon>
+    </Compile>
+    <Compile Include="AddNumber.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="AddNumber.Designer.cs">
+      <DependentUpon>AddNumber.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Applications.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Applications.Designer.cs">
+      <DependentUpon>Applications.cs</DependentUpon>
+    </Compile>
+    <Compile Include="AppsProperties.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="AppsProperties.Designer.cs">
+      <DependentUpon>AppsProperties.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Attribute0.cs" />
+    <Compile Include="Auto_Clicker.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Auto_Clicker.Designer.cs">
+      <DependentUpon>Auto_Clicker.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Build.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Build.Designer.cs">
+      <DependentUpon>Build.cs</DependentUpon>
+    </Compile>
+    <Compile Include="CallPhone.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="CallPhone.Designer.cs">
+      <DependentUpon>CallPhone.cs</DependentUpon>
+    </Compile>
+    <Compile Include="CallsManager.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="CallsManager.Designer.cs">
+      <DependentUpon>CallsManager.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Calls_Records.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Calls_Records.Designer.cs">
+      <DependentUpon>Calls_Records.cs</DependentUpon>
+    </Compile>
+    <Compile Include="CameraManager.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="CameraManager.Designer.cs">
+      <DependentUpon>CameraManager.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Class2.cs" />
+    <Compile Include="Class3.cs" />
+    <Compile Include="Class34.cs" />
+    <Compile Include="Class37.cs" />
+    <Compile Include="Class39.cs" />
+    <Compile Include="Class4.cs" />
+    <Compile Include="ClipboardManager.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ClipboardManager.Designer.cs">
+      <DependentUpon>ClipboardManager.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Color_Box0.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Color_Box0.Designer.cs">
+      <DependentUpon>Color_Box0.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ContactsManager.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ContactsManager.Designer.cs">
+      <DependentUpon>ContactsManager.cs</DependentUpon>
+    </Compile>
+    <Compile Include="CraxsAbout.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="CraxsAbout.Designer.cs">
+      <DependentUpon>CraxsAbout.cs</DependentUpon>
+    </Compile>
+    <Compile Include="craxscallslog.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="craxscallslog.Designer.cs">
+      <DependentUpon>craxscallslog.cs</DependentUpon>
+    </Compile>
+    <Compile Include="CraxsMsgbox.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="CraxsMsgbox.Designer.cs">
+      <DependentUpon>CraxsMsgbox.cs</DependentUpon>
+    </Compile>
+    <Compile Include="craxsnotification.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="craxsnotification.Designer.cs">
+      <DependentUpon>craxsnotification.cs</DependentUpon>
+    </Compile>
+    <Compile Include="CraxsSettings.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="CraxsSettings.Designer.cs">
+      <DependentUpon>CraxsSettings.cs</DependentUpon>
+    </Compile>
+    <Compile Include="CraxsStore.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="CraxsStore.Designer.cs">
+      <DependentUpon>CraxsStore.cs</DependentUpon>
+    </Compile>
+    <Compile Include="CypherRat.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="CypherRat.Designer.cs">
+      <DependentUpon>CypherRat.cs</DependentUpon>
+    </Compile>
+    <Compile Include="dia.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="dia.Designer.cs">
+      <DependentUpon>dia.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Dialog1.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Dialog1.Designer.cs">
+      <DependentUpon>Dialog1.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Dialog2.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Dialog2.Designer.cs">
+      <DependentUpon>Dialog2.cs</DependentUpon>
+    </Compile>
+    <Compile Include="DialogPloice.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="DialogPloice.Designer.cs">
+      <DependentUpon>DialogPloice.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Download.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Download.Designer.cs">
+      <DependentUpon>Download.cs</DependentUpon>
+    </Compile>
+    <Compile Include="EditConnections.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="EditConnections.Designer.cs">
+      <DependentUpon>EditConnections.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Editor.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Editor.Designer.cs">
+      <DependentUpon>Editor.cs</DependentUpon>
+    </Compile>
+    <Compile Include="EditSocket.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="EditSocket.Designer.cs">
+      <DependentUpon>EditSocket.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Faker.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Faker.Designer.cs">
+      <DependentUpon>Faker.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FileManager.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FileManager.Designer.cs">
+      <DependentUpon>FileManager.cs</DependentUpon>
+    </Compile>
+    <Compile Include="GClass0.cs" />
+    <Compile Include="GClass10.cs" />
+    <Compile Include="GClass11.cs" />
+    <Compile Include="GClass12.cs" />
+    <Compile Include="GClass3.cs" />
+    <Compile Include="GClass4.cs" />
+    <Compile Include="GClass5.cs" />
+    <Compile Include="GClass6.cs" />
+    <Compile Include="GClass7.cs" />
+    <Compile Include="GClass8.cs" />
+    <Compile Include="GClass9.cs" />
+    <Compile Include="GControl0.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="GModule0.cs" />
+    <Compile Include="GModule1.cs" />
+    <Compile Include="GProgressBar0.cs" />
+    <Compile Include="GRichTextBox0.cs" />
+    <Compile Include="GUserControl0.cs" />
+    <Compile Include="GWebClient0.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Icons.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Icons.Designer.cs">
+      <DependentUpon>Icons.cs</DependentUpon>
+    </Compile>
+    <Compile Include="information.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="information.Designer.cs">
+      <DependentUpon>information.cs</DependentUpon>
+    </Compile>
+    <Compile Include="inp.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="inp.Designer.cs">
+      <DependentUpon>inp.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Jector.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Jector.Designer.cs">
+      <DependentUpon>Jector.cs</DependentUpon>
+    </Compile>
+    <Compile Include="KeyboardManager.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="KeyboardManager.Designer.cs">
+      <DependentUpon>KeyboardManager.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Keylogger.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Keylogger.Designer.cs">
+      <DependentUpon>Keylogger.cs</DependentUpon>
+    </Compile>
+    <Compile Include="LanguageSelector.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="LanguageSelector.Designer.cs">
+      <DependentUpon>LanguageSelector.cs</DependentUpon>
+    </Compile>
+    <Compile Include="LocationManager.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="LocationManager.Designer.cs">
+      <DependentUpon>LocationManager.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Microphone.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Microphone.Designer.cs">
+      <DependentUpon>Microphone.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Module0.cs" />
+    <Compile Include="Module10.cs" />
+    <Compile Include="Module11.cs" />
+    <Compile Include="Module12.cs" />
+    <Compile Include="Module13.cs" />
+    <Compile Include="Module2.cs" />
+    <Compile Include="Module3.cs" />
+    <Compile Include="Module4.cs" />
+    <Compile Include="Module5.cs" />
+    <Compile Include="Module6.cs" />
+    <Compile Include="Module7.cs" />
+    <Compile Include="Module8.cs" />
+    <Compile Include="Module9.cs" />
+    <Compile Include="My\MyApplication.cs" />
+    <Compile Include="My\MyComputer.cs" />
+    <Compile Include="My\MyProject.cs" />
+    <Compile Include="My\MySettings.Designer.cs">
+      <DependentUpon>MySettings.settings</DependentUpon>
+      <AutoGen>True</AutoGen>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+    </Compile>
+    <Compile Include="My\MySettingsProperty.cs" />
+    <Compile Include="NativeMethods.cs" />
+    <Compile Include="NativeMethods_1.cs" />
+    <Compile Include="nonetform.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="nonetform.Designer.cs">
+      <DependentUpon>nonetform.cs</DependentUpon>
+    </Compile>
+    <Compile Include="PermissionsManager.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="PermissionsManager.Designer.cs">
+      <DependentUpon>PermissionsManager.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Ports.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Ports.Designer.cs">
+      <DependentUpon>Ports.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Report.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Report.Designer.cs">
+      <DependentUpon>Report.cs</DependentUpon>
+    </Compile>
+    <Compile Include="requestapk.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="requestapk.Designer.cs">
+      <DependentUpon>requestapk.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ScreenLoger.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ScreenLoger.Designer.cs">
+      <DependentUpon>ScreenLoger.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ScreenReader.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ScreenReader.Designer.cs">
+      <DependentUpon>ScreenReader.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ScreenReaderV2.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ScreenReaderV2.Designer.cs">
+      <DependentUpon>ScreenReaderV2.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ScreenShoter.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ScreenShoter.Designer.cs">
+      <DependentUpon>ScreenShoter.cs</DependentUpon>
+    </Compile>
+    <Compile Include="SelfRemove.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="SelfRemove.Designer.cs">
+      <DependentUpon>SelfRemove.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Settings.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Settings.Designer.cs">
+      <DependentUpon>Settings.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ShellTerminal.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ShellTerminal.Designer.cs">
+      <DependentUpon>ShellTerminal.cs</DependentUpon>
+    </Compile>
+    <Compile Include="smsMaker.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="smsMaker.Designer.cs">
+      <DependentUpon>smsMaker.cs</DependentUpon>
+    </Compile>
+    <Compile Include="SMSManager.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="SMSManager.Designer.cs">
+      <DependentUpon>SMSManager.cs</DependentUpon>
+    </Compile>
+    <Compile Include="TextMessage.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="TextMessage.Designer.cs">
+      <DependentUpon>TextMessage.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Upload.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Upload.Designer.cs">
+      <DependentUpon>Upload.cs</DependentUpon>
+    </Compile>
+    <Compile Include="WebViewMonitor.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="WebViewMonitor.Designer.cs">
+      <DependentUpon>WebViewMonitor.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Win_Users.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Win_Users.Designer.cs">
+      <DependentUpon>Win_Users.cs</DependentUpon>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="AccountManager.resources" />
+    <EmbeddedResource Include="AddNumber.resources" />
+    <EmbeddedResource Include="Applications.resources" />
+    <EmbeddedResource Include="AppsProperties.resources" />
+    <EmbeddedResource Include="aR3nbf8dQp2feLmk31.lSfgApatkdxsVcGcrktoFd.resources" />
+    <EmbeddedResource Include="Auto_Clicker.resources" />
+    <EmbeddedResource Include="Build.resources" />
+    <EmbeddedResource Include="CallPhone.resources" />
+    <EmbeddedResource Include="CallsManager.resources" />
+    <EmbeddedResource Include="Calls_Records.resources" />
+    <EmbeddedResource Include="CameraManager.resources" />
+    <EmbeddedResource Include="ClipboardManager.resources" />
+    <EmbeddedResource Include="Color_Box0.resources" />
+    <EmbeddedResource Include="ContactsManager.resources" />
+    <EmbeddedResource Include="CraxsAbout.resources" />
+    <EmbeddedResource Include="craxscallslog.resources" />
+    <EmbeddedResource Include="CraxsMsgbox.resources" />
+    <EmbeddedResource Include="craxsnotification.resources" />
+    <EmbeddedResource Include="CraxsRat.g.resources" />
+    <EmbeddedResource Include="CraxsSettings.resources" />
+    <EmbeddedResource Include="CraxsStore.resources" />
+    <EmbeddedResource Include="CypherRat.resources" />
+    <EmbeddedResource Include="dia.resources" />
+    <EmbeddedResource Include="Dialog1.resources" />
+    <EmbeddedResource Include="Dialog2.resources" />
+    <EmbeddedResource Include="DialogPloice.resources" />
+    <EmbeddedResource Include="Download.resources" />
+    <EmbeddedResource Include="EditConnections.resources" />
+    <EmbeddedResource Include="Editor.resources" />
+    <EmbeddedResource Include="EditSocket.resources" />
+    <EmbeddedResource Include="Faker.resources" />
+    <EmbeddedResource Include="FileManager.resources" />
+    <EmbeddedResource Include="Icons.resources" />
+    <EmbeddedResource Include="information.resources" />
+    <EmbeddedResource Include="inp.resources" />
+    <EmbeddedResource Include="Jector.resources" />
+    <EmbeddedResource Include="KeyboardManager.resources" />
+    <EmbeddedResource Include="Keylogger.resources" />
+    <EmbeddedResource Include="LanguageSelector.resources" />
+    <EmbeddedResource Include="LocationManager.resources" />
+    <EmbeddedResource Include="Microphone.resources" />
+    <EmbeddedResource Include="nonetform.resources" />
+    <EmbeddedResource Include="PermissionsManager.resources" />
+    <EmbeddedResource Include="Ports.resources" />
+    <EmbeddedResource Include="Report.resources" />
+    <EmbeddedResource Include="requestapk.resources" />
+    <EmbeddedResource Include="Resources.resources" />
+    <EmbeddedResource Include="ScreenLoger.resources" />
+    <EmbeddedResource Include="ScreenReader.resources" />
+    <EmbeddedResource Include="ScreenReaderV2.resources" />
+    <EmbeddedResource Include="ScreenShoter.resources" />
+    <EmbeddedResource Include="SelfRemove.resources" />
+    <EmbeddedResource Include="Settings.resources" />
+    <EmbeddedResource Include="ShellTerminal.resources" />
+    <EmbeddedResource Include="smsMaker.resources" />
+    <EmbeddedResource Include="SMSManager.resources" />
+    <EmbeddedResource Include="TextMessage.resources" />
+    <EmbeddedResource Include="Upload.resources" />
+    <EmbeddedResource Include="WebViewMonitor.resources" />
+    <EmbeddedResource Include="Win_Users.resources" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="app.manifest" />
+    <None Include="My\MySettings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>MySettings.Designer.cs</LastGenOutput>
+    </None>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+</Project>
