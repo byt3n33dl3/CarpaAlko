@@ -22,7 +22,7 @@
 
 ## CraxsRat Source Code
 
-This repository contains the leaked source code of CraxsRat, a sophisticated Android remote access trojan ( **RAT** ) developed by "EVLF DEV". CraxsRat has been used in various cyber-attacks to grant cybercriminals extensive control over infected devices.
+This repository contains the leaked source code of CraxsRat, a sophisticated Android && iOS remote access trojan ( **RAT** ) developed by "EVLF DEV". CraxsRat has been used in various cyber-attacks to grant cybercriminals extensive control over infected devices.
 
 ## Disclaimer
 
@@ -141,8 +141,8 @@ This repository contains the leaked source code of CraxsRat, a sophisticated And
 
 1. **Clone the Repository**:
    ```sh
-   git clone https://github.com/pxcs/craxsrat_v7.git
-   cd craxsrat_v7
+   git clone https://github.com/pxcs/CraxsRat_v7.git
+   cd CraxsRat_v7
    ```
 
 2. **Open it with vs & Builder Configuration**:
