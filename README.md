@@ -26,7 +26,7 @@ This repository contains the leaked source code of CraxsRat, a sophisticated And
 
 ## Disclaimer
 
-**Warning:** Im not the code writer ,the source code got leaked by another person on telegram, This repository contains malicious code and is intended for cybersecurity research and educational purposes only. The use of this code for any unauthorized or illegal activities is strictly prohibited and punishable by law. By using this code, you agree to use it responsibly and comply with all applicable laws and regulations.
+**Warning:** This repository contains malicious code and is intended for cybersecurity research and educational purposes only. The use of this code for any unauthorized or illegal activities is strictly prohibited and punishable by law. By using this code, you agree to use it responsibly and comply with all applicable laws and regulations.
 
 ## Features
 
