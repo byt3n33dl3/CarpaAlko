@@ -1,7 +1,20 @@
-<!-- AUTO-GENERATED, DO NOT EDIT! -->
-<!-- Please edit the original at https://github.com/ory/meta/blob/master/templates/repository/common/CODE_OF_CONDUCT.md -->
+## Contributor [CraxsRat_v7](https://github.com/pxcs/CraxsRat_v7/) Code of Conduct
 
-# Contributor Covenant Code of Conduct
+```asm
+⠀           ⠀⠀⠀⠀⠀⠀⠀   ⠀⠀⠀⢀⠤⢤⣤⣤⣀⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+           ⠀ ⣀⣠⣤⠤⠤⠤⠤⢤⣀⣀⠀⡇⠀⠀⠈⠑⣮⠛⠟⠦⢤⣀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+⠀⠀⠀⠀⠀⠀⠀⠀⠀⣠⠶⠋⠉⠀⠀⠀⠀⠀⠀⠀⠀⠀⠉⠛⢦⣀⠀⡤⠋⠀⠀⢀⣠⣬⠙⢦⣀⠀⠀⠀⠀⠀⠀⠀
+⠀⠀⠀⠀⠀⠀⠀⢠⣾⠅⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠙⠋⠀⠀⠀⠀⠀⠉⠉⣀⣀⠊⣱⠆⠀⠀⠀⠀⠀
+⠀⠀⠀⠀⠀⠀⢀⡿⡇⠀⠀⠀⠀CraxsRat_v7⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣸⣿⣿⠟⠁⠀⠀⠀⠀⠀⠀
+⠀⠀⠀⠀⢀⡔⣿⡄⠀⠀⠀⠀⠀⠀⢀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠑⠒⢒⡾⠋⠉⢸⠋⠀⠀⠀⠀⠀⠀⠀⠀
+⠀⠀⢀⡔⣣⣼⣿⠁⠀⠀⠀⠀⠀⢀⡎⠀⠀⠀⠀⠀⢠⠀⠀⠀⠀⠀⣆⣤⡴⠚⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+⠀⢠⢋⣼⠿⣟⢯⡀⠀⠀⠀⠀⣠⣮⠤⠖⠛⠋⠉⠓⠻⣦⡠⠀⠀⢀⣿⠯⢄⡀⣠⣄⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+⢰⢃⡞⠁⠀⠈⠻⣝⠒⣶⣶⣮⡁⠀⠀⠀⠀⠀⠀⠀⠀⠈⠙⠒⠺⢎⡛⣻⣶⡞⠋⠙⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+⡇⢸⠀⠀⠀⠀⠀⠘⠳⠼⠿⠿⠃⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣀⣀⡨⢭⣽⣷⣶⣶⣾⠿⠿⠯⠝⠛⠿⠿⠶⣦⣄⠀
+⢣⠘⢦⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣀⣀⡠⠤⢖⣒⡈⠭⠕⠒⠉⠉⠉⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⣹⠇
+⠀⠑⢤⣙⡓⠂⠄⠀⠀⠒⢒⣒⣛⣉⡩⠭⠔⠒⠚⠉⠉⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠉⠁⠀
+⠀⠀⠀⠀⠉⠉⠉⠉⠉⠉⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+```
 
 ## Our Pledge
 
@@ -47,7 +60,7 @@ individual problems. If Ory open source software is used in production in a
 for-profit company or enterprise environment, we mandate a paid support contract
 where Ory is obligated under their service level agreements (SLAs) to offer a
 defined level of availability and responsibility. For more information about
-paid support please contact us at sales@ory.sh.
+paid support please contact us at pxmxx3csz@outlook.com
 
 ## Enforcement Responsibilities
 
@@ -73,7 +86,7 @@ representative at an online or offline event.
 
 Instances of abusive, harassing, or otherwise unacceptable behavior may be
 reported to the community leaders responsible for enforcement at
-[office@ory.sh](mailto:office@ory.sh). All complaints will be reviewed and
+[pxmxx3csz@outlook.com](pxmxx3csz@outlook.com). All complaints will be reviewed and
 investigated promptly and fairly.
 
 All community leaders are obligated to respect the privacy and security of the
@@ -127,19 +140,16 @@ community.
 
 ## Attribution
 
-This Code of Conduct is adapted from the [Contributor Covenant][homepage],
-version 2.1, available at
-[https://www.contributor-covenant.org/version/2/1/code_of_conduct.html][v2.1].
+This Code of Conduct is adapted from the [Contributor Covenant](#homepage),
+version 2.1, available in [here](https://www.contributor-covenant.org/version/2/1/code_of_conduct.html)
 
-Community Impact Guidelines were inspired by [Mozilla's code of conduct
-enforcement ladder][mozilla coc].
+Community Impact Guidelines were inspired by [Mozilla's code of conductenforcement ladder](mozilla.coc).
 
-For answers to common questions about this code of conduct, see the FAQ at
-[https://www.contributor-covenant.org/faq][faq]. Translations are available at
-[https://www.contributor-covenant.org/translations][translations].
+For answers to common questions about this code of conduct, see the FAQ in [here](https://www.contributor-covenant.org/faq). Translations are available in [here](https://www.contributor-covenant.org/translations).
 
-[homepage]: https://www.contributor-covenant.org
-[v2.1]: https://www.contributor-covenant.org/version/2/1/code_of_conduct.html
-[mozilla coc]: https://github.com/mozilla/diversity
-[faq]: https://www.contributor-covenant.org/faq
-[translations]: https://www.contributor-covenant.org/translations
+> ## More
+- [homepage](https://www.contributor-covenant.org)
+- [v2.1](https://www.contributor-covenant.org/version/2/1/code_of_conduct.html)
+- [mozilla coc](https://github.com/mozilla/diversity)
+- [faq](https://www.contributor-covenant.org/faq)
+- [translations](https://www.contributor-covenant.org/translations)
