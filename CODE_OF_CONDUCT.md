@@ -1,4 +1,4 @@
-## Contributor [CraxsRat_v7](https://github.com/pxcs/CraxsRat_v7/) Code of Conduct
+### Contributor [CraxsRat_v7](https://github.com/pxcs/CraxsRat_v7/) Code of Conduct
 
 ```asm
 ⠀           ⠀⠀⠀⠀⠀⠀⠀   ⠀⠀⠀⢀⠤⢤⣤⣤⣀⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
