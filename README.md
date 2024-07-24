@@ -1,23 +1,23 @@
-# CraxsRat_v7
+# CraxsRat
 
 ```shell
          ____
         |    |
-        |____|
+  @xxxx[{:::::::::>
        _|____|_  
         /  ee`.    
-      .<     __O   
-     /\ \.-.' \   
+      .<     __0   
+     /\ \.-.' \         …ᘛ⁐̤ᕐᐷ___X
     J  `.|`.\/ \   
-    | |_.|  | | |  C R A X S R A T
-     \__.'`.|-' /
+    | |_.|  | | |  CraxsRat - Broken trust
+     \__.'`.|-' /        Could be v7
      L   /|o`--'\ 
      |  /\/\/\   \           
      J /      `.__\
      |/         /  \     
-      \\      .'`.  `.     .'
-    ____)_/\_(____`.  `-..'/
-   (___._/  \_.___) `-.___/
+      \\      .'`.  `.     
+    ____)_/\_(____`.  '/
+   (___._/  \_.___) `-/
 ```
 
 ## CraxsRat Source Code
@@ -141,8 +141,9 @@ This repository contains the leaked source code of CraxsRat, a sophisticated And
 
 1. **Clone the Repository**:
    ```sh
-   git clone https://github.com/pxcs/CraxsRat_v7.git
-   cd CraxsRat_v7
+   git clone https://github.com/pxcs/CraxsRat.git
+   cd CraxsRat
+   cd craxsrat_v7
    ```
 
 2. **Open it with vs & Builder Configuration**:
@@ -169,7 +170,7 @@ This repository contains the leaked source code of CraxsRat, a sophisticated And
        __             ___
       // )    ___--""    "-.
  \ |,"( /`--""              `.   K A R Y A A N A K B A N G S A
-  \/ o                        \    CraxsRat_v7 - trust attack
+  \/ o                        \     CraxsRat - trust attack
   (   _.-.              ,'"    ;  
    |\"   /`. \  ,      /       |      by: pxcs && maxamin
    | \  ' .'`.; |      |       \.______________________________
