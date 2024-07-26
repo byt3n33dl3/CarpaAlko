@@ -14,7 +14,7 @@ CraxsRat - Access - Deployed
 
 ## Supported Versions
 
-**craxsrat_v7**
+**CraxsRat**
 ```shell
  _____                    ______      _         
 /  __ \   CraxsRat_v7     | ___ \    | |    _   
