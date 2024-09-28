@@ -1,4 +1,4 @@
-## CraxsRat_v7
+# CarpaAlko
 ```python
     CraxsRat - Access - Deployed
               _..----.._    _
@@ -8,9 +8,9 @@
 ```
 
 ## Security Policy
-- [Security Policy](https://github.com/pxcs/craxsrat_v7/)
-  - [Supported Versions](pxmxx3csz@outlook.com)
-  - [Reporting a Vulnerability](pxmxx3csz@outlook.com)
+- [Security Policy](https://github.com/byt3n33dl3/CarpaAlko/)
+  - [Supported Versions](byt3n33dl3@proton.me)
+  - [Reporting a Vulnerability](byt3n33dl3@proton.me)
 
 ## Supported Versions
 
@@ -27,6 +27,6 @@
 ## Reporting a Vulnerability
 
 Please report ( **suspected** ) security vulnerabilities to
-**[pxmxx3csz@outlook.com](pxmxx3csz@outlook.com)**. You will receive a response from
+**[byt3n33dl3@proton.me](byt3n33dl3@proton.me)**. You will receive a response from
 us within 48 hours. If the issue is confirmed, we will release a patch as soon
 as possible depending on complexity but historically within a few days.

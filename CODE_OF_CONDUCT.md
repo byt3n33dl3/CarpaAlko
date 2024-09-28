@@ -1,4 +1,4 @@
-### Contributor [CraxsRat_v7](https://github.com/pxcs/CraxsRat_v7/) Code of Conduct
+### Contributor [CarpaAlko](https://github.com/byt3n33dl3/CarpaAlko/) Code of Conduct
 
 ```asm
 ⠀           ⠀⠀⠀⠀⠀⠀⠀   ⠀⠀⠀⢀⠤⢤⣤⣤⣀⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
@@ -16,7 +16,7 @@
 ⠀⠀⠀⠀⠉⠉⠉⠉⠉⠉⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
 ```
 
-## Our Pledge
+# Our Pledge
 
 We as members, contributors, and leaders pledge to make participation in our
 community a harassment-free experience for everyone, regardless of age, body
